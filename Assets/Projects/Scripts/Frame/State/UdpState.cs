@@ -12,15 +12,29 @@ public class QueueData
     public ParmaterCodes parmaterCodes;
 }
 
+/// <summary>
+/// 传输类型枚举，用来做事件名称
+/// </summary>
 public enum TransportType
 {
+    /// <summary>
+    /// 将Udp接收到的数据传到当前脚本将其转为主线程数据
+    /// </summary>
     UdpToState,
+    /// <summary>
+    /// 切换UI页面
+    /// </summary>
     SwitchPanel,
 }
 
+/// <summary>
+/// UI页面名字枚举
+/// </summary>
 public enum PanelName
 {
     WaitPanel,
+    LoadingPanel,
+    DisplayPanel,
 }
 
 public class UdpState : BaseState
@@ -56,12 +70,20 @@ public class UdpState : BaseState
             GetVs.Enqueue(queueData);
         }
 
+        //页面切换
         if(parameteData.EvendName == TransportType.SwitchPanel.ToString())
         {
             PanelName panelName = parameteData.GetParameter<PanelName>()[0];
             switch (panelName)
             {
                 case PanelName.WaitPanel:
+                    CurrentTask.ChangeTask(new WaitTask(this));
+                    break;
+                case PanelName.LoadingPanel:
+                    CurrentTask.ChangeTask(new LoadingTask(this));
+                    break;
+                case PanelName.DisplayPanel:
+                    CurrentTask.ChangeTask(new DisplayTask(this));
                     break;
                 default:
                     break;
@@ -72,7 +94,7 @@ public class UdpState : BaseState
     public override void Enter()
     {
         base.Enter();
-        CurrentTask.ChangeTask(new UdpTask(this));
+        CurrentTask.ChangeTask(new WaitTask(this));
         EventManager.AddUpdateListener(UpdateEventEnumType.Update,"OnUpdate",Onupdate);
     }
 

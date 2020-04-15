@@ -328,6 +328,7 @@ MonoBehaviour:
   _disableSkirt: 0
   _followViewpoint: 1
   _verifySRPVersionInEditor: 1
+  _verifyOpaqueAndDepthTexturesEnabled: 1
   _lodTransform: {fileID: 0}
   _lodDataAnimWaves: {fileID: 0}
   _lodDataSeaDepths: {fileID: 0}
@@ -347,8 +348,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f63235a3a133804593f4348e83f77ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _showSimTargets: 1
-  _guiVisible: 1
+  _showSimTargets: 0
+  _guiVisible: 0
 --- !u!1 &1445008803 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 4685030058618317645, guid: 5f1992c77f41ed043bd6e095eb2cdf0f,
@@ -975,6 +976,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Main Camera
       objectReference: {fileID: 0}
+    - target: {fileID: 1472634388493261335, guid: 1652698e687333f41a064765912c15fd,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1472634388493261328, guid: 1652698e687333f41a064765912c15fd,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1073,7 +1079,7 @@ PrefabInstance:
     - target: {fileID: 1472634388493261343, guid: 1652698e687333f41a064765912c15fd,
         type: 3}
       propertyPath: _environmentScene
-      value: PirateCove-Environment
+      value: PirateCove2
       objectReference: {fileID: 0}
     - target: {fileID: 1472634388493261329, guid: 1652698e687333f41a064765912c15fd,
         type: 3}

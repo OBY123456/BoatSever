@@ -83,6 +83,13 @@ public class UdpSeverLink : MonoBehaviour
         }
         localServerEngine?.SendData(response);
     }
+
+    public void PanelChange(PanelName panelName)
+    {
+        EventParamete eventParamete = new EventParamete();
+        eventParamete.AddParameter(panelName);
+        EventManager.TriggerEvent(GenericEventEnumType.Message, TransportType.SwitchPanel.ToString(), eventParamete);
+    }
 }
 
 

@@ -5,6 +5,8 @@
 public class Main : MonoBehaviour
 {
     public static Main Instance;
+
+    public Transform MainCamera;
 #if UNITY_STANDALONE_WIN
     /// <summary>
     /// 屏幕分辨率

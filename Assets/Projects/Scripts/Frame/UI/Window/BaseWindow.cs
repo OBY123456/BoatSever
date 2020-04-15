@@ -19,9 +19,9 @@ public abstract class BaseWindow : MainBehavior
         name = GetType().Name;
         base.Awake();
         UIManager.AddWindow(this);//添加窗口
-        Canvas canvas= GetComponent<Canvas>();
-        if (canvas)
-            canvas.worldCamera = Camera.main;
+        //Canvas canvas= GetComponent<Canvas>();
+        //if (canvas)
+        //    canvas.worldCamera = Camera.main;
     }
 
     protected override void OnDestroy()
