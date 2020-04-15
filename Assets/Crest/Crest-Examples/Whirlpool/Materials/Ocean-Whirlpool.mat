@@ -130,6 +130,9 @@ Material:
     - _ShorelineFoamMinDepth: 0.27
     - _SkyDirectionality: 0.875
     - _Smoothness: 0.8
+    - _SmoothnessFar: 0.35
+    - _SmoothnessFarDistance: 2000
+    - _SmoothnessPower: 0.5
     - _Specular: 0.7
     - _StartLevel: 0.157
     - _SubSurfaceBase: 0.231
@@ -147,6 +150,7 @@ Material:
     - _Transparency: 1
     - _Underwater: 0
     - _Update: 0.083
+    - _VarySmoothnessOverDistance: 0
     - _WaveFoamBubblesCoverage: 1.68
     - _WaveFoamBubblesFeather: 0.32
     - _WaveFoamBubblesStart: 0.115
