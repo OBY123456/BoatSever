@@ -648,6 +648,7 @@ GameObject:
   - component: {fileID: 7053348532779768835}
   - component: {fileID: 7053348532779768893}
   - component: {fileID: 7053348532779768834}
+  - component: {fileID: -2932282020614899957}
   m_Layer: 0
   m_Name: LoadingPanel
   m_TagString: Untagged
@@ -703,3 +704,15 @@ MonoBehaviour:
   IsOpen: 1
   slider: {fileID: 8957754036434088284}
   text: {fileID: 3878161226864040968}
+--- !u!225 &-2932282020614899957
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7053348532779768832}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 0
+  m_IgnoreParentGroups: 0

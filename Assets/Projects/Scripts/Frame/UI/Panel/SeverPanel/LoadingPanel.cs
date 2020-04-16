@@ -34,7 +34,7 @@ public class LoadingPanel : BasePanel
         Reset();
         Main.Instance.MainCamera.gameObject.SetActive(true);
         SceneManager.LoadSceneAsync(WaitPanel.Instance.sceneName.ToString(), MTFrame.MTScene.LoadingModeType.UnityLocal,
-    () => { StartCoroutine(LoadingSlide()); }, null, () => { IsComplete = true; });
+    () => { StartCoroutine(LoadingSlide()); GC.Collect(); }, null, () => { IsComplete = true; });
     }
 
     private void Reset()
@@ -46,6 +46,7 @@ public class LoadingPanel : BasePanel
 
     IEnumerator LoadingSlide()
     {
+        
         while (true)
         {
             yield return new WaitForSeconds(0.01f);
@@ -73,10 +74,8 @@ public class LoadingPanel : BasePanel
         TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 2.0f, ()=> {
             Main.Instance.MainCamera.gameObject.SetActive(false);
             UdpSeverLink.Instance.PanelChange(WaitPanel.Instance.panelName);
-            if(WaitPanel.Instance.panelName == PanelName.WaitPanel)
-            {
-                Main.Instance.MainCamera.gameObject.SetActive(true);
-            }
+            Debug.Log("Complete==" + WaitPanel.Instance.panelName.ToString());
+            Hide();
         });
         Debug.Log("读条完成！");
     }

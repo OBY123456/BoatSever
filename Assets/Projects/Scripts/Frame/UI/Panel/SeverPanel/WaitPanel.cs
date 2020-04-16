@@ -23,16 +23,16 @@ public class WaitPanel : BasePanel
     public override void InitFind()
     {
         base.InitFind();
-        button = FindTool.FindChildComponent<Button>(transform, "Image");
+        //button = FindTool.FindChildComponent<Button>(transform, "Image");
     }
 
     public override void InitEvent()
     {
         base.InitEvent();
-        button.onClick.AddListener(() => {
-            SetName(SceneName.PirateCove1, PanelName.DisplayPanel);
-            UdpSeverLink.Instance.PanelChange(PanelName.LoadingPanel);
-        });
+        //button.onClick.AddListener(() => {
+        //    SetName(SceneName.PirateCove1, PanelName.DisplayPanel);
+        //    UdpSeverLink.Instance.PanelChange(PanelName.LoadingPanel);
+        //});
     }
 
     public override void Open()

@@ -12,15 +12,7 @@ public class GameHandle : HandleBase
 
     public override void OnReceiveProcess(INetEngine netEngine, NetPeer netPeer, OperationResponse operation)
     {
-        //这里获取相应数据类型的数据，这里获取的string类型数据
-        string people = operation.GetParemater<string>(ParmaterCodes.People);
-        //当传输的数据中可能出现0的时候，需要自定义一个类来存储这个0
-        if (people != null)
-        {
-            SentDataToState(people, ParmaterCodes.People);
-            return;
-        }
-
+        //字符串数据
         string index = operation.GetParemater<string>(ParmaterCodes.index);
         //引用类型判断是否为null
         if (index != null)
@@ -28,6 +20,39 @@ public class GameHandle : HandleBase
             SentDataToState(index, ParmaterCodes.index);
             return;
         }
+
+        //页面切换数据
+        string PanelData = operation.GetParemater<string>(ParmaterCodes.PanelSwitchData);
+        //引用类型判断是否为null
+        if (PanelData != null)
+        {
+            SentDataToState(PanelData, ParmaterCodes.PanelSwitchData);
+            return;
+        }
+
+        /*船体展示页数据*/
+        string rotateX = operation.GetParemater<string>(ParmaterCodes.BoatRotateX);
+        if(rotateX!=null)
+        {
+            SentDataToState(rotateX, ParmaterCodes.BoatRotateX);
+            return;
+        }
+
+        string rotateY = operation.GetParemater<string>(ParmaterCodes.BoatRotateY);
+        if (rotateX != null)
+        {
+            SentDataToState(rotateY, ParmaterCodes.BoatRotateY);
+            return;
+        }
+
+        string rotateZ = operation.GetParemater<string>(ParmaterCodes.BoatRotateZ);
+        if (rotateX != null)
+        {
+            SentDataToState(rotateZ, ParmaterCodes.BoatRotateZ);
+            return;
+        }
+
+
     }
 
     public override void OnUnconnectedRequestProcess(INetEngine netEngine, IPEndPoint endPoint, OperationResponse operation)
@@ -40,13 +65,13 @@ public class GameHandle : HandleBase
 
     }
 
-    private void SentDataToState(string msg, ParmaterCodes parmater)
+    private void SentDataToState(string msg, ParmaterCodes parmater,TransportType type = TransportType.UdpToState)
     {
         QueueData queueData = new QueueData();
         queueData.msg = msg;
         queueData.parmaterCodes = parmater;
         eventParamete.AddParameter(queueData);
         UnityEngine.Debug.Log(msg);
-        EventManager.TriggerEvent(MTFrame.MTEvent.GenericEventEnumType.Message, TransportType.UdpToState.ToString(), eventParamete);
+        EventManager.TriggerEvent(MTFrame.MTEvent.GenericEventEnumType.Message, type.ToString(), eventParamete);
     }
 }
