@@ -31,27 +31,19 @@ public class GameHandle : HandleBase
         }
 
         /*船体展示页数据*/
-        string rotateX = operation.GetParemater<string>(ParmaterCodes.BoatRotateX);
-        if(rotateX!=null)
+        string rotate = operation.GetParemater<string>(ParmaterCodes.BoatRotate);
+        if(rotate!=null)
         {
-            SentDataToState(rotateX, ParmaterCodes.BoatRotateX);
+            SentDataToState(rotate, ParmaterCodes.BoatRotate);
             return;
         }
 
         string rotateY = operation.GetParemater<string>(ParmaterCodes.BoatRotateY);
-        if (rotateX != null)
+        if (rotateY != null)
         {
             SentDataToState(rotateY, ParmaterCodes.BoatRotateY);
             return;
         }
-
-        string rotateZ = operation.GetParemater<string>(ParmaterCodes.BoatRotateZ);
-        if (rotateX != null)
-        {
-            SentDataToState(rotateZ, ParmaterCodes.BoatRotateZ);
-            return;
-        }
-
 
     }
 

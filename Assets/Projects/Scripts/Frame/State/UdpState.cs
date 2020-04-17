@@ -160,14 +160,11 @@ public class UdpState : BaseState
                     case ParmaterCodes.PanelSwitchData:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.PanelSwitchData.ToString(), eventParamete);
                         break;
-                    case ParmaterCodes.BoatRotateX:
-                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotateX.ToString(), eventParamete);
+                    case ParmaterCodes.BoatRotate:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotate.ToString(), eventParamete);
                         break;
                     case ParmaterCodes.BoatRotateY:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotateY.ToString(), eventParamete);
-                        break;
-                    case ParmaterCodes.BoatRotateZ:
-                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotateZ.ToString(), eventParamete);
                         break;
                     default:
                         break;

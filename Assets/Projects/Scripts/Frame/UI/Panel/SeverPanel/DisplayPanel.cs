@@ -6,14 +6,20 @@ using UnityEngine.UI;
 using System;
 using MTFrame.MTEvent;
 using Newtonsoft.Json;
+using DG.Tweening;
 
 public class DisplayPanel : BasePanel
 {
-    public GameObject Cube;
+    public GameObject Boat;
 
-    private BoatRotateX rotateDataX = new BoatRotateX();
-    private BoatRotateY rotateDataY = new BoatRotateY();
-    private BoatRotateZ rotateDataZ = new BoatRotateZ();
+    private BoatRotateY rotateData = new BoatRotateY();
+
+    protected override void Start()
+    {
+        base.Start();
+        EventManager.AddListener(MTFrame.MTEvent.GenericEventEnumType.Message, ParmaterCodes.BoatRotateY.ToString(), Callback);
+        EventManager.AddListener(MTFrame.MTEvent.GenericEventEnumType.Message, ParmaterCodes.BoatRotate.ToString(), Callback);
+    }
 
     public override void InitFind()
     {
@@ -25,36 +31,30 @@ public class DisplayPanel : BasePanel
         base.InitEvent();
     }
 
-    public override void Open()
-    {
-        base.Open();
-        EventManager.AddListener(MTFrame.MTEvent.GenericEventEnumType.Message, ParmaterCodes.BoatRotateX.ToString(), Callback);
-    }
-
     private void Callback(EventParamete parameteData)
     {
-        if(parameteData.EvendName == ParmaterCodes.BoatRotateX.ToString())
+        if(parameteData.EvendName == ParmaterCodes.BoatRotateY.ToString())
         {
-            rotateDataX = JsonConvert.DeserializeObject<BoatRotateX>(parameteData.GetParameter<string>()[0]);
-            Cube.transform.localEulerAngles = new Vector3(rotateDataX.X, Cube.transform.localEulerAngles.y, Cube.transform.localEulerAngles.z);
+            rotateData = JsonConvert.DeserializeObject<BoatRotateY>(parameteData.GetParameter<string>()[0]);
+            //Vector3 temp = new Vector3(0, rotateData.Y, 0);
+            Boat.transform.localEulerAngles = new Vector3(-90, rotateData.y, 0);
         }
 
-        if (parameteData.EvendName == ParmaterCodes.BoatRotateY.ToString())
+        if (parameteData.EvendName == ParmaterCodes.BoatRotate.ToString())
         {
-            rotateDataY = JsonConvert.DeserializeObject<BoatRotateY>(parameteData.GetParameter<string>()[0]);
-            Cube.transform.localEulerAngles = new Vector3(Cube.transform.localEulerAngles.x, rotateDataY.Y, Cube.transform.localEulerAngles.z);
-        }
-
-        if (parameteData.EvendName == ParmaterCodes.BoatRotateZ.ToString())
-        {
-            rotateDataZ = JsonConvert.DeserializeObject<BoatRotateZ>(parameteData.GetParameter<string>()[0]);
-            Cube.transform.localEulerAngles = new Vector3(Cube.transform.localEulerAngles.x, Cube.transform.localEulerAngles.y, rotateDataZ.Z);
+            BoatRotate rotate = JsonConvert.DeserializeObject<BoatRotate>(parameteData.GetParameter<string>()[0]);
+            Vector3 temp = new Vector3(rotate.X, rotate.Y, rotate.Z);
+            //Boat.transform.localEulerAngles = Vector3.Lerp(Boat.transform.localEulerAngles, temp, 0.5f);
+            Boat.transform.localEulerAngles = temp;
         }
     }
 
-    public override void Hide()
+
+
+    protected override void OnDestroy()
     {
-        base.Hide();
-        EventManager.RemoveListener(MTFrame.MTEvent.GenericEventEnumType.Message, ParmaterCodes.BoatRotateX.ToString(), Callback);
+        base.OnDestroy();
+        EventManager.RemoveListener(MTFrame.MTEvent.GenericEventEnumType.Message, ParmaterCodes.BoatRotateY.ToString(), Callback);
+        EventManager.RemoveListener(MTFrame.MTEvent.GenericEventEnumType.Message, ParmaterCodes.BoatRotate.ToString(), Callback);
     }
 }
