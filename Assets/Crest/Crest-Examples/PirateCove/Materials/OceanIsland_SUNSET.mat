@@ -90,7 +90,7 @@ Material:
     - _CausticsDistortionStrength: 0.0361
     - _CausticsFocalDepth: 5.5
     - _CausticsStrength: 10
-    - _CausticsTextureAverage: 0.063
+    - _CausticsTextureAverage: 0.22
     - _CausticsTextureScale: 7.8
     - _CompileShaderWithDebugInfo: 0
     - _ComputeDirectionalLight: 1
@@ -135,7 +135,7 @@ Material:
     - _SmoothnessFar: 0.35
     - _SmoothnessFarDistance: 2000
     - _SmoothnessPower: 0.5
-    - _Specular: 1
+    - _Specular: 0.5
     - _StartLevel: 0.157
     - _StencilFunction: 0
     - _SubSurfaceBase: 0.019

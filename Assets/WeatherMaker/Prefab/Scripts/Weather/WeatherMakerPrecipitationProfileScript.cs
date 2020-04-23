@@ -54,7 +54,7 @@ namespace DigitalRuby.WeatherMaker
         /// <summary>
         /// Custom precipitation
         /// </summary>
-        Custom = 127
+        Custom = 127,
     }
 
     /// <summary>

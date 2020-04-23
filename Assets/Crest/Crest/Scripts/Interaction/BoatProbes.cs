@@ -38,9 +38,9 @@ namespace Crest
 
         [Header("Control")]
         [SerializeField, FormerlySerializedAs("EnginePower")]
-        float _enginePower = 7;
+        public float _enginePower = 7;
         [SerializeField, FormerlySerializedAs("TurnPower")]
-        float _turnPower = 0.5f;
+        public float _turnPower = 0.5f;
         [SerializeField]
         bool _playerControlled = true;
         [Tooltip("Used to automatically add throttle input"), SerializeField]

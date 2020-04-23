@@ -160,11 +160,37 @@ public class UdpState : BaseState
                     case ParmaterCodes.PanelSwitchData:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.PanelSwitchData.ToString(), eventParamete);
                         break;
+                        /* 船体展示页 */
                     case ParmaterCodes.BoatRotate:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotate.ToString(), eventParamete);
                         break;
                     case ParmaterCodes.BoatRotateY:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotateY.ToString(), eventParamete);
+                        break;
+                       /* 模拟航行页 */
+                    case ParmaterCodes.BoatSpeed:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatSpeed.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.DayNightTime:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.DayNightTime.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.OceanLightData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.OceanLightData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.OceanWaveSize:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.OceanWaveSize.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.WeatherIntensity:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.WeatherIntensity.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.WeatherType:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.WeatherType.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.CameraState:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.TargetPosition:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), eventParamete);
                         break;
                     default:
                         break;

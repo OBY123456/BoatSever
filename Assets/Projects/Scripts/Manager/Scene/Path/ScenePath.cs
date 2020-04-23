@@ -3,7 +3,7 @@
 {
     public const string Main ="Main";
 
-    public const string PirateCove1 = "PirateCove1";
+    public const string Sailing = "Sailing";
 
     public const string WaitScene = "WaitScene";
 
@@ -16,7 +16,7 @@
 
 public enum SceneName
 {
-    PirateCove1,
+    Sailing,
     WaitScene,
     DisplayScene,
     DPScene,

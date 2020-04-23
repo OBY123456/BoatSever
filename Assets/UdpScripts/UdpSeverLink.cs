@@ -93,9 +93,9 @@ public class UdpSeverLink : MonoBehaviour
                     break;
 
                 case PanelName.SailingPanel:
-                    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == SceneName.PirateCove1.ToString())
+                    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == SceneName.Sailing.ToString())
                         return;
-                    WaitPanel.Instance.SetName(SceneName.PirateCove1, PanelName.SailingPanel);
+                    WaitPanel.Instance.SetName(SceneName.Sailing, PanelName.SailingPanel);
                     PanelChange(PanelName.LoadingPanel);
                     break;
 

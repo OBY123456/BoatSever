@@ -12,12 +12,12 @@ public class SailingTask : BaseTask
     public override void Enter()
     {
         base.Enter();
-        UIManager.CreatePanel<SailingPanel>(WindowTypeEnum.ForegroundScreen);
+        //UIManager.CreatePanel<SailingPanel>(WindowTypeEnum.ForegroundScreen);
     }
 
     public override void Exit()
     {
         base.Exit();
-        UIManager.ChangePanelState<SailingPanel>(WindowTypeEnum.ForegroundScreen, UIPanelStateEnum.Hide);
+        //UIManager.ChangePanelState<SailingPanel>(WindowTypeEnum.ForegroundScreen, UIPanelStateEnum.Hide);
     }
 }
