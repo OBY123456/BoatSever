@@ -53,6 +53,7 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
 
         //Time_Night();
+        Time_Day();
     }
 
     private void Callback(EventParamete parameteData)
@@ -237,10 +238,10 @@ public class SailingSceneManage : MonoBehaviour
     private void Time_Night()
     {
         PPV.SetActive(false);
-        SceneLight.intensity = 0.05f;
+        SceneLight.intensity = 0.01f;
         WeatherLight.enabled = false;
         RenderSettings.skybox = Skybox[1];
-        OceanManager.Instance.SetOceanLight(0.044f);
+        OceanManager.Instance.SetOceanLight(0);
     }
 
     private void OnDestroy()

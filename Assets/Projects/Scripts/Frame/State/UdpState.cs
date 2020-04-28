@@ -38,34 +38,14 @@ public enum PanelName
     WaitPanel = 0,
 
     /// <summary>
-    /// 产品介绍页
-    /// </summary>
-    IntroductionPanel = 1,
-
-    /// <summary>
     /// 船体展示页
     /// </summary>
-    DisplayPanel = 2,
-
-    /// <summary>
-    /// DP动力定位页
-    /// </summary>
-    DpPanel = 3,
-
-    /// <summary>
-    /// 作业工况页
-    /// </summary>
-    WorkPanel = 4,
+    DisplayPanel = 1,
 
     /// <summary>
     /// 海上航行页
     /// </summary>
-    SailingPanel = 5,
-
-    /// <summary>
-    /// 加载页
-    /// </summary>
-    LoadingPanel = 6,
+    SailingPanel = 2,
 }
 
 public class UdpState : BaseState
@@ -110,23 +90,11 @@ public class UdpState : BaseState
                 case PanelName.WaitPanel:
                     CurrentTask.ChangeTask(new WaitTask(this));
                     break;
-                case PanelName.IntroductionPanel:
-                    CurrentTask.ChangeTask(new IntroductionTask(this));
-                    break;
                 case PanelName.DisplayPanel:
                     CurrentTask.ChangeTask(new DisplayTask(this));
                     break;
-                case PanelName.DpPanel:
-                    CurrentTask.ChangeTask(new DpTask(this));
-                    break;
-                case PanelName.WorkPanel:
-                    CurrentTask.ChangeTask(new WorkTask(this));
-                    break;
                 case PanelName.SailingPanel:
                     CurrentTask.ChangeTask(new SailingTask(this));
-                    break;
-                case PanelName.LoadingPanel:
-                    CurrentTask.ChangeTask(new LoadingTask(this));
                     break;
                 default:
                     break;
@@ -157,17 +125,21 @@ public class UdpState : BaseState
                     case ParmaterCodes.index:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.index.ToString(), eventParamete);
                         break;
-                    case ParmaterCodes.PanelSwitchData:
-                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.PanelSwitchData.ToString(), eventParamete);
+                    case ParmaterCodes.SceneSwitch:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.SceneSwitch.ToString(), eventParamete);
                         break;
-                        /* 船体展示页 */
+                    /* 船体展示页 */
                     case ParmaterCodes.BoatRotate:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotate.ToString(), eventParamete);
                         break;
-                    case ParmaterCodes.BoatRotateY:
-                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotateY.ToString(), eventParamete);
+                    case ParmaterCodes.Display_PlayVideo:
+                        Debug.Log("333");
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.Display_PlayVideo.ToString(), eventParamete);
                         break;
-                       /* 模拟航行页 */
+                    case ParmaterCodes.Display_VideoControl:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.Display_VideoControl.ToString(), eventParamete);
+                        break;
+                    /* 模拟航行页 */
                     case ParmaterCodes.BoatSpeed:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatSpeed.ToString(), eventParamete);
                         break;

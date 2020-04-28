@@ -9,21 +9,18 @@ EditorBuildSettings:
     path: Assets/Scenes/Main.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
-    path: Assets/Crest/Crest-Examples/PirateCove/Scenes/PirateCove1.unity
-    guid: a93855c1e8fab3d4eb03bee28e12df21
-  - enabled: 1
     path: Assets/Scenes/WaitScene.unity
     guid: 2b8a6911c21296a4fbc7fefee103c93d
   - enabled: 1
-    path: Assets/Crest/Crest-Examples/PirateCove/Scenes/SubScenes/PirateCove2.unity
-    guid: 8a81f37e0bd389c4c97992c0039fb588
-  - enabled: 1
     path: Assets/Scenes/DisplayScene.unity
     guid: d61d77e920be7f24db1a2e5e04e5b6d1
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/DPScene.unity
-    guid: e4ab72f4ba3feea43b6440009a7774bd
-  - enabled: 1
-    path: Assets/Scenes/WorkScene.unity
-    guid: 5eda7ded5c6f757449d3e8598f2f9278
+    path: Assets/Scenes/Sailing.unity
+    guid: b3944f57e33790f43b1baee238b0ada0
   m_configObjects: {}

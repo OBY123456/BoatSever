@@ -39,70 +39,37 @@ public class UdpSeverLink : MonoBehaviour
         localServerEngine = new GameLocalServerEngineListener(9999, "Test4");
         localServerEngine.Creat();
 
-        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PanelSwitchData.ToString(), callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.SceneSwitch.ToString(), callback);
     }
 
     private void callback(EventParamete parameteData)
     {
-        if(parameteData.EvendName == ParmaterCodes.PanelSwitchData.ToString())
+        if (parameteData.EvendName == ParmaterCodes.SceneSwitch.ToString())
         {
             string data = parameteData.GetParameter<string>()[0];
-            PanelSwitchData switchData = new PanelSwitchData();
-            switchData = JsonConvert.DeserializeObject<PanelSwitchData>(data);
+            SceneSwitch switchData = new SceneSwitch();
+            switchData = JsonConvert.DeserializeObject<SceneSwitch>(data);
 
-            PanelName name = (PanelName)Enum.Parse(typeof(PanelName), switchData.PanelName);
+            SceneName name = (SceneName)Enum.Parse(typeof(SceneName), switchData.SceneName);
             Debug.Log("切换场景 ===" + name.ToString());
-
             switch (name)
             {
-                case PanelName.WaitPanel:
-                    //if (UIManager.GetPanel<WaitPanel>(WindowTypeEnum.ForegroundScreen).IsOpen)
-                    //    return;
+                case SceneName.Sailing:
+                    WaitPanel.Instance.SetName(SceneName.Sailing, PanelName.SailingPanel);
+                    WaitPanel.Instance.SceneLoadAsync();
+                    break;
+                case SceneName.WaitScene:
                     PanelChange(PanelName.WaitPanel);
                     SceneManager.LoadScene(SceneName.WaitScene.ToString(), MTFrame.MTScene.LoadingModeType.UnityLocal);
                     Main.Instance.MainCamera.gameObject.SetActive(true);
                     break;
-
-                case PanelName.IntroductionPanel:
-                    //if (UIManager.GetPanel<IntroductionPanel>(WindowTypeEnum.ForegroundScreen).IsOpen)
-                    //    return;
-                    PanelChange(PanelName.IntroductionPanel);
-                    SceneManager.LoadScene(SceneName.WaitScene.ToString(), MTFrame.MTScene.LoadingModeType.UnityLocal);
-                    Main.Instance.MainCamera.gameObject.SetActive(true);
-                    break;
-
-                case PanelName.DisplayPanel:
-                    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == SceneName.DisplayScene.ToString())
-                        return;
+                case SceneName.DisplayScene:
                     WaitPanel.Instance.SetName(SceneName.DisplayScene, PanelName.DisplayPanel);
-                    PanelChange(PanelName.LoadingPanel);
+                    WaitPanel.Instance.SceneLoadAsync();
                     break;
-
-                case PanelName.DpPanel:
-                    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == SceneName.DPScene.ToString())
-                        return;
-                    WaitPanel.Instance.SetName(SceneName.DPScene, PanelName.DpPanel);
-                    PanelChange(PanelName.LoadingPanel);
-                    break;
-
-                case PanelName.WorkPanel:
-                    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == SceneName.WorkScene.ToString())
-                        return;
-                    WaitPanel.Instance.SetName(SceneName.WorkScene, PanelName.WorkPanel);
-                    PanelChange(PanelName.LoadingPanel);
-                    break;
-
-                case PanelName.SailingPanel:
-                    if (UnityEngine.SceneManagement.SceneManager.GetActiveScene().name == SceneName.Sailing.ToString())
-                        return;
-                    WaitPanel.Instance.SetName(SceneName.Sailing, PanelName.SailingPanel);
-                    PanelChange(PanelName.LoadingPanel);
-                    break;
-
                 default:
                     break;
             }
-
         }
     }
 
@@ -118,6 +85,7 @@ public class UdpSeverLink : MonoBehaviour
     private void OnDestroy()
     {
         localServerEngine.ShutDown();
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.SceneSwitch.ToString(), callback);
     }
 
     /// <summary>

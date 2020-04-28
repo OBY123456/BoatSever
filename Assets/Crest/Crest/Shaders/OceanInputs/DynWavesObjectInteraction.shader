@@ -7,7 +7,7 @@ Shader "Crest/Inputs/Dynamic Waves/Object Interaction"
 	Properties
 	{
 		_FactorParallel("FactorParallel", Range(0., 8.)) = 0.2
-		_FactorOrthogonal("FactorOrthogonal", Range(0., 4.)) = 0.2
+		_FactorOrthogonal("FactorOrthogonal", Range(0., 40.)) = 0.2
 		_Strength("Strength", Range(0., 1000.)) = 0.2
 		_Velocity("Velocity", Vector) = (0,0,0,0)
 	}

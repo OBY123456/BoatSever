@@ -21,11 +21,11 @@ public class GameHandle : HandleBase
             return;
         }
 
-        //页面切换数据
-        index = operation.GetParemater<string>(ParmaterCodes.PanelSwitchData);
+        //场景切换数据
+        index = operation.GetParemater<string>(ParmaterCodes.SceneSwitch);
         if (index != null)
         {
-            SentDataToState(index, ParmaterCodes.PanelSwitchData);
+            SentDataToState(index, ParmaterCodes.SceneSwitch);
             return;
         }
 
@@ -37,10 +37,18 @@ public class GameHandle : HandleBase
             return;
         }
 
-        index = operation.GetParemater<string>(ParmaterCodes.BoatRotateY);
+        index = operation.GetParemater<string>(ParmaterCodes.Display_PlayVideo);
         if (index != null)
         {
-            SentDataToState(index, ParmaterCodes.BoatRotateY);
+            UnityEngine.Debug.Log("444");
+            SentDataToState(index, ParmaterCodes.Display_PlayVideo);
+            return;
+        }
+
+        index = operation.GetParemater<string>(ParmaterCodes.Display_VideoControl);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.Display_VideoControl);
             return;
         }
 

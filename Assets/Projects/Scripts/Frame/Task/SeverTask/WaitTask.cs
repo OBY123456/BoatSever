@@ -12,12 +12,12 @@ public class WaitTask : BaseTask
     public override void Enter()
     {
         base.Enter();
-        UIManager.CreatePanel<WaitPanel>(WindowTypeEnum.ForegroundScreen);
+        UIManager.CreatePanel<WaitPanel>(WindowTypeEnum.Screen);
     }
 
     public override void Exit()
     {
         base.Exit();
-        UIManager.ChangePanelState<WaitPanel>(WindowTypeEnum.ForegroundScreen, UIPanelStateEnum.Hide);
+        UIManager.ChangePanelState<WaitPanel>(WindowTypeEnum.Screen, UIPanelStateEnum.Hide);
     }
 }

@@ -57,7 +57,13 @@ public class LoadingPanel : BasePanel
                 
             }
 
-            if (slider.value >= 0.98f && IsComplete)
+            if(IsComplete)
+            {
+                LoadingComplete();
+                Debug.Log("读条完成");
+                yield break;
+            }
+            else if (slider.value >= 0.98f && IsComplete)
             {
                 LoadingComplete();
                 Debug.Log("读条完成");
@@ -77,6 +83,5 @@ public class LoadingPanel : BasePanel
             Debug.Log("Complete==" + WaitPanel.Instance.panelName.ToString());
             Hide();
         });
-        Debug.Log("读条完成！");
     }
 }

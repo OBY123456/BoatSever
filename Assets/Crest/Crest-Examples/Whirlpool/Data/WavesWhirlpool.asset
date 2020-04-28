@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 33068fc021dadc04dab6e00e4ff45c00, type: 3}
   m_Name: WavesWhirlpool
   m_EditorClassIdentifier: 
-  _windSpeed: 4.7222223
+  _windSpeed: 3.3333335
   _fetch: 500000
   _waveDirectionVariance: 90
   _gravityScale: 5.2
@@ -31,8 +31,8 @@ MonoBehaviour:
   - 0.27448857
   - 0.53627354
   - 1.0282621
-  - 1.4403292
-  - -6
+  - 0.801325
+  - 1.5767637
   _powerDisabled: 0000000000000000000000000000
   _chopScales:
   - 1
@@ -64,5 +64,5 @@ MonoBehaviour:
   - 1
   - 1
   - 1
-  _chop: 1.5
+  _chop: 1.32
   _showAdvancedControls: 0

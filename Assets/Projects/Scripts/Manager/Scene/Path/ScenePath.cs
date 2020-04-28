@@ -8,10 +8,6 @@
     public const string WaitScene = "WaitScene";
 
     public const string DisplayScene = "DisplayScene";
-
-    public const string DPScene = "DPScene";
-
-    public const string WorkScene = "WorkScene";
 }
 
 public enum SceneName
@@ -19,6 +15,4 @@ public enum SceneName
     Sailing,
     WaitScene,
     DisplayScene,
-    DPScene,
-    WorkScene,
 }
