@@ -164,6 +164,9 @@ public class UdpState : BaseState
                     case ParmaterCodes.TargetPosition:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), eventParamete);
                         break;
+                    case ParmaterCodes.TrainModelData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), eventParamete);
+                        break;
                     default:
                         break;
                 }

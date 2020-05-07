@@ -27,6 +27,14 @@ public class DisplayPanel : BasePanel
     public float VideoCurrentTime;
     private float ForwordTime = 1.0f;
 
+    private string[] VideoPath = {
+        "Video/起重机.mp4",
+        "Video/J形导管.mp4",
+        "Video/S形导管.mp4",
+        "Video/螺旋桨.mp4",
+        "Video/发电机.mp4",
+    };
+
     public override void InitFind()
     {
         base.InitFind();
@@ -58,10 +66,8 @@ public class DisplayPanel : BasePanel
 
     private void Callback(EventParamete parameteData)
     {
-        Debug.Log("222");
         if(parameteData.EvendName == ParmaterCodes.Display_PlayVideo.ToString())
         {
-            Debug.Log("000");
             string index = parameteData.GetParameter<string>()[0];
             Display_PlayVideo display_PlayVideo = new Display_PlayVideo();
             display_PlayVideo = JsonConvert.DeserializeObject<Display_PlayVideo>(index);
@@ -69,28 +75,26 @@ public class DisplayPanel : BasePanel
             switch (name)
             {
                 case VideoName.起吊系统:
-                    ImageOpenAnimation(ImageGroup[0]);
+                    ImageOpenAnimation(ImageGroup[0], VideoPath[0]);
                     break;
                 case VideoName.J型铺管:
-                    ImageOpenAnimation(ImageGroup[1]);
+                    ImageOpenAnimation(ImageGroup[1], VideoPath[1]);
                     break;
                 case VideoName.S型铺管:
-                    ImageOpenAnimation(ImageGroup[2]);
+                    ImageOpenAnimation(ImageGroup[2], VideoPath[2]);
                     break;
                 case VideoName.推进器系统:
-                    ImageOpenAnimation(ImageGroup[3]);
+                    ImageOpenAnimation(ImageGroup[3], VideoPath[3]);
                     break;
                 case VideoName.动力系统:
-                    ImageOpenAnimation(ImageGroup[4]);
+                    ImageOpenAnimation(ImageGroup[4], VideoPath[4]);
                     break;
                 case VideoName.结束:
-                    
                     ImageHideAnimation();
                     break;
                 default:
                     break;
             }
-            Debug.Log("1111");
         }
 
         if (parameteData.EvendName == ParmaterCodes.Display_VideoControl.ToString())
@@ -157,8 +161,9 @@ public class DisplayPanel : BasePanel
     /// 图片动效
     /// </summary>
     /// <param name="image"></param>
-    private void ImageOpenAnimation(Image image)
+    private void ImageOpenAnimation(Image image,string VideoPath)
     {
+        BoatControl.Instance.Boat.SetActive(false);
         IsAnimation = true;
         RectTransform rect = image.gameObject.GetComponent<RectTransform>();
         CanvasGroup canvas = image.gameObject.GetComponent<CanvasGroup>();
@@ -187,22 +192,23 @@ public class DisplayPanel : BasePanel
         }
 
         canvas.alpha = 1;
-        canvas.DOFade(0.3f,0.15f* AnimationTime).OnComplete(()=> {
-            canvas.DOFade(1.0f, 0.25f * AnimationTime).OnComplete(() => {
-                canvas.DOFade(0.5f, 0.15f * AnimationTime).OnComplete(() => {
-                    canvas.DOFade(1.0f, 0.1f * AnimationTime).OnComplete(() => {
-                        canvas.DOFade(1, 0.35f * AnimationTime).OnComplete(() =>
-                        {
-                            canvas.DOFade(0, 0.3f);
-                        });
-                    });
-                });
-            });
-        });
+        //canvas.DOFade(0.3f,0.15f* AnimationTime).OnComplete(()=> {
+        //    canvas.DOFade(1.0f, 0.25f * AnimationTime).OnComplete(() => {
+        //        canvas.DOFade(0.5f, 0.15f * AnimationTime).OnComplete(() => {
+        //            canvas.DOFade(1.0f, 0.1f * AnimationTime).OnComplete(() => {
+        //                canvas.DOFade(1, 0.35f * AnimationTime).OnComplete(() =>
+        //                {
+        //                    canvas.DOFade(0, 0.3f);
+        //                });
+        //            });
+        //        });
+        //    });
+        //});
         rect.DOAnchorPos(Vector2.zero, AnimationTime);
         rect.DOSizeDelta(MediaRectTransform.sizeDelta, AnimationTime).OnComplete(()=> {
-            mediaPlayer.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, "AVProVideoSamples/BigBuckBunny_720p30.mp4");
+            mediaPlayer.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, VideoPath);
             MediaCanvasGroup.alpha = 1;
+            canvas.DOFade(0,0.5f);
             IsAnimation = false;
         });
 
@@ -213,6 +219,8 @@ public class DisplayPanel : BasePanel
         IsAnimation = true;
         mediaPlayer.Stop();
         MediaCanvasGroup.alpha = 0;
+
+        BoatControl.Instance.Boat.SetActive(true);
 
         if (mediaPlayer.Control.IsPlaying())
         {

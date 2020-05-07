@@ -64,7 +64,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 590d31000a2b97349b349327f1788407, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 152567d1c7f9d5c409b9b1a5ecd0a995, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -190,7 +190,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 590d31000a2b97349b349327f1788407, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 696af8e21024f214cb9dca00e1806fd4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 590d31000a2b97349b349327f1788407, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e07a4d6bb3f81854c80603d40d4555a7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -508,7 +508,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 590d31000a2b97349b349327f1788407, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e9ea1a0999d92d443a496eec5c5e589a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 590d31000a2b97349b349327f1788407, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e07a4d6bb3f81854c80603d40d4555a7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -706,7 +706,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_VideoLocation: 2
-  m_VideoPath: AVProVideoSamples/BigBuckBunny_720p30.mp4
+  m_VideoPath: "Video/\u8D77\u91CD\u673A.mp4"
   m_AutoOpen: 0
   m_AutoStart: 1
   m_Loop: 1

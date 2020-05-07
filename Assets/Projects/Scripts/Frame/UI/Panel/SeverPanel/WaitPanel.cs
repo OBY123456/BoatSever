@@ -5,7 +5,7 @@ using MTFrame;
 using UnityEngine.UI;
 using MTFrame.MTEvent;
 using System;
-using Newtonsoft.Json;
+using DG.Tweening;
 
 public class WaitPanel : BasePanel
 {
@@ -15,6 +15,9 @@ public class WaitPanel : BasePanel
     public CanvasGroup sliderCanvas;
 
     private bool IsComplete;
+
+    public Animator animator;
+    public AnimationClip[] clips;
 
     //切换场景时设置这两个，然后切换到LoadingPanel页面即可
     public SceneName sceneName;
@@ -31,12 +34,34 @@ public class WaitPanel : BasePanel
         base.InitFind();
         slider = FindTool.FindChildComponent<Slider>(transform, "Slider");
         sliderCanvas = FindTool.FindChildComponent<CanvasGroup>(transform, "Slider");
+        animator = FindTool.FindChildComponent<Animator>(transform, "StartAnima");
+        clips = animator.runtimeAnimatorController.animationClips;
+
+        //AnimationEvent animationEvent = new AnimationEvent();
+        //animationEvent.functionName = "HideAnima";
+        //animationEvent.time = clips[0].length;
+        //animationEvent.floatParameter = 1;
+        //clips[0].AddEvent(animationEvent);
+    }
+
+    public void HideAnima(float aa)
+    {
+        animator.gameObject.GetComponent<CanvasGroup>().alpha = 0;
     }
 
     public override void Open()
     {
         base.Open();
         Reset();
+        animator.SetTrigger("IsOpen");
+        //animator.gameObject.GetComponent<CanvasGroup>().DOFade(1, 0.5f);
+
+    }
+
+    public override void Hide()
+    {
+        base.Hide();
+        
     }
 
     /// <summary>
@@ -64,6 +89,7 @@ public class WaitPanel : BasePanel
         sliderCanvas.alpha = 0;
         //text.text = "0%";
         IsComplete = false;
+        animator.gameObject.GetComponent<CanvasGroup>().alpha = 1;
     }
 
     IEnumerator LoadingSlide()

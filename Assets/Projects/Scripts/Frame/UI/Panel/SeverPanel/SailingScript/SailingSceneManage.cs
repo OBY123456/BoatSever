@@ -51,7 +51,7 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.WeatherType.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
-
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
         //Time_Night();
         Time_Day();
     }
@@ -85,6 +85,8 @@ public class SailingSceneManage : MonoBehaviour
                 break;
             case ParmaterCodes.TargetPosition:
                 SetTargetPosition(msg);
+                break;
+            case ParmaterCodes.TrainModelData:
                 break;
             default:
                 break;
@@ -144,7 +146,7 @@ public class SailingSceneManage : MonoBehaviour
         OceanWaveSize waveSize = new OceanWaveSize();
         waveSize = JsonConvert.DeserializeObject<OceanWaveSize>(msg);
         Debug.Log("海浪大小===" + waveSize.value);
-        OceanManager.Instance.SetWaveSize(waveSize.value);
+        OceanManager.Instance.SetWaveSize(waveSize.value/9 * 1.33f);
     }
 
     private void SetOceanLightData(string msg)
@@ -161,11 +163,32 @@ public class SailingSceneManage : MonoBehaviour
         CameraSwitch cameraSwitch = (CameraSwitch)Enum.Parse(typeof(CameraSwitch), cameraState.state);
         switch (cameraSwitch)
         {
-            case CameraSwitch.Open:
+            case CameraSwitch.ThirdPerson:
+                CameraHide();
+                break;
+            case CameraSwitch.FirstPerson:
                 CameraOpen();
                 break;
-            case CameraSwitch.Close:
-                CameraHide();
+            default:
+                break;
+        }
+    }
+
+    private void TrainModelChange(string msg)
+    {
+        TrainModelData trainModelData = new TrainModelData();
+        trainModelData = JsonConvert.DeserializeObject<TrainModelData>(msg);
+        TrainModel model = (TrainModel)Enum.Parse(typeof(TrainModel), trainModelData.trainModel);
+        switch (model)
+        {
+            case TrainModel.Transitions:
+                Debug.Log("转场训练");
+                break;
+            case TrainModel.Laying:
+                Debug.Log("铺管训练");
+                break;
+            case TrainModel.Lifting:
+                Debug.Log("吊装训练");
                 break;
             default:
                 break;
@@ -254,5 +277,6 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.WeatherType.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
     }
 }

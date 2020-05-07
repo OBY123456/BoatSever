@@ -108,6 +108,13 @@ public class GameHandle : HandleBase
             SentDataToState(index, ParmaterCodes.TargetPosition);
             return;
         }
+
+        index = operation.GetParemater<string>(ParmaterCodes.TrainModelData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.TrainModelData);
+            return;
+        }
     }
 
     public override void OnUnconnectedRequestProcess(INetEngine netEngine, IPEndPoint endPoint, OperationResponse operation)
