@@ -40,7 +40,7 @@ public class GameHandle : HandleBase
         index = operation.GetParemater<string>(ParmaterCodes.Display_PlayVideo);
         if (index != null)
         {
-            UnityEngine.Debug.Log("444");
+
             SentDataToState(index, ParmaterCodes.Display_PlayVideo);
             return;
         }
@@ -113,6 +113,13 @@ public class GameHandle : HandleBase
         if (index != null)
         {
             SentDataToState(index, ParmaterCodes.TrainModelData);
+            return;
+        }
+
+        index = operation.GetParemater<string>(ParmaterCodes.PuGuanCameraData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.PuGuanCameraData);
             return;
         }
     }

@@ -204,7 +204,7 @@ namespace Crest
         private void OnDrawGizmosSelected()
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawCube(transform.TransformPoint(_centerOfMass), Vector3.one * 0.25f);
+            Gizmos.DrawCube(transform.TransformPoint(_centerOfMass), Vector3.one*0.25f );
 
             for (int i = 0; i < _forcePoints.Length; i++)
             {
@@ -212,8 +212,8 @@ namespace Crest
 
                 var transformedPoint = transform.TransformPoint(point._offsetPosition + new Vector3(0, _centerOfMass.y, 0));
 
-                Gizmos.color = Color.red;
-                Gizmos.DrawCube(transformedPoint, Vector3.one * 0.5f);
+                Gizmos.color = Color.green;
+                Gizmos.DrawCube(transformedPoint, Vector3.one);
             }
 
             var worldAABB = GetWorldAABB();

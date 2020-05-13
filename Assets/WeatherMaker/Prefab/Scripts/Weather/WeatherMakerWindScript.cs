@@ -217,7 +217,7 @@ namespace DigitalRuby.WeatherMaker
 
         private void LateUpdate()
         {
-            UpdateWind();
+            //UpdateWind();
         }
 
         private void OnEnable()

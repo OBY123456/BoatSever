@@ -78,4 +78,8 @@ public enum ParmaterCodes : byte
     /// 模拟航行页9
     /// </summary>
     TrainModelData,
+    /// <summary>
+    /// 模拟航行页10
+    /// </summary>
+    PuGuanCameraData,
 }

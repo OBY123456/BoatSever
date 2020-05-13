@@ -60,6 +60,8 @@ public class AutoDrive : MonoBehaviour
     /// </summary>
     private Vector2 Current_Map_Boat;
 
+    public BoatAnimationControl animationControl;
+
 
     // Start is called before the first frame update
     void Start()
@@ -68,7 +70,8 @@ public class AutoDrive : MonoBehaviour
         boatProbes = this.transform.GetComponent<BoatProbes>();
         Target = SailingSceneManage.Instance.Target;
         map_Boat = SailingSceneManage.Instance.minimap.map_Boat;
-        SailingSceneManage.Instance.SetWaveScale(0.3f);
+        SailingSceneManage.Instance.SetWaveScale(0.1f);
+        //animationControl.EngineDown();
     }
 
     // Update is called once per frame
@@ -204,7 +207,7 @@ public class AutoDrive : MonoBehaviour
         IsRotate = false;
         boatProbes._enginePower = 0;
         boatProbes._turnPower = 0;
-        SailingSceneManage.Instance.WaveChange(0.3f);
+        SailingSceneManage.Instance.WaveChange(0.1f);
         IsStart = false;
     }
 
@@ -213,7 +216,7 @@ public class AutoDrive : MonoBehaviour
         boatProbes._enginePower = SailingSpeed;
         InitialDistance = Vector3.Distance(Target.transform.position, Boat.transform.position);
         lerp = false;
-        SailingSceneManage.Instance.WaveChange(0.3f);
+        SailingSceneManage.Instance.WaveChange(0.1f);
         Current_Map_Boat = map_Boat.anchoredPosition;
         IsRotate = false;
         CurrentTime = 0;

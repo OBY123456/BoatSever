@@ -11,21 +11,18 @@ using RenderHeads.Media.AVProVideo;
 
 public class DisplayPanel : BasePanel
 {
-    public MediaPlayer mediaPlayer;
-    public Image[] ImageGroup;
-    private Image CurrentImage;
-    public RectTransform MediaRectTransform;
-    public CanvasGroup MediaCanvasGroup;
+    public MediaPlayer[] VideoGroup;
+    private MediaPlayer CurrentVideo;
+    private Vector2 MediaRect = new Vector2(1333.4f, 710f);
 
     private Vector2 InitialPosition;
     private Vector2 InitialSize = new Vector2(206, 164);
-    private float AnimationTime = 0.5f;
+    private float AnimationTime = 0.8f;
 
     private bool IsAnimation;
-
-    public float VideoLenth;
-    public float VideoCurrentTime;
     private float ForwordTime = 1.0f;
+
+    public Animation[] animations;
 
     private string[] VideoPath = {
         "Video/起重机.mp4",
@@ -38,10 +35,9 @@ public class DisplayPanel : BasePanel
     public override void InitFind()
     {
         base.InitFind();
-        mediaPlayer = FindTool.FindChildComponent<MediaPlayer>(transform, "VideoPlayer");
-        ImageGroup = FindTool.FindChildNode(transform, "ImageGroup").GetComponentsInChildren<Image>();
-        MediaRectTransform = mediaPlayer.gameObject.GetComponent<RectTransform>();
-        MediaCanvasGroup = mediaPlayer.gameObject.GetComponent<CanvasGroup>();
+        VideoGroup = FindTool.FindChildNode(transform, "VideoGroup").GetComponentsInChildren<MediaPlayer>();
+
+        animations = FindTool.FindChildNode(transform, "ImageGroup").GetComponentsInChildren<Animation>();
     }
 
     public override void InitEvent()
@@ -55,13 +51,6 @@ public class DisplayPanel : BasePanel
         Reset();
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.Display_PlayVideo.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.Display_VideoControl.ToString(), Callback);
-        EventManager.AddUpdateListener(UpdateEventEnumType.Update, "DisplayUpdate", DisplayUpdate);
-    }
-
-    private void DisplayUpdate(float timeProcess)
-    {
-        VideoLenth = (int)(mediaPlayer.Info.GetDurationMs() / 1000);
-        VideoCurrentTime = (int)(mediaPlayer.Control.GetCurrentTimeMs() / 1000);
     }
 
     private void Callback(EventParamete parameteData)
@@ -75,19 +64,19 @@ public class DisplayPanel : BasePanel
             switch (name)
             {
                 case VideoName.起吊系统:
-                    ImageOpenAnimation(ImageGroup[0], VideoPath[0]);
+                    ImageOpenAnimation(VideoGroup[0], VideoPath[0]);
                     break;
                 case VideoName.J型铺管:
-                    ImageOpenAnimation(ImageGroup[1], VideoPath[1]);
+                    ImageOpenAnimation(VideoGroup[1], VideoPath[1]);
                     break;
                 case VideoName.S型铺管:
-                    ImageOpenAnimation(ImageGroup[2], VideoPath[2]);
+                    ImageOpenAnimation(VideoGroup[2], VideoPath[2]);
                     break;
                 case VideoName.推进器系统:
-                    ImageOpenAnimation(ImageGroup[3], VideoPath[3]);
+                    ImageOpenAnimation(VideoGroup[3], VideoPath[3]);
                     break;
                 case VideoName.动力系统:
-                    ImageOpenAnimation(ImageGroup[4], VideoPath[4]);
+                    ImageOpenAnimation(VideoGroup[4], VideoPath[4]);
                     break;
                 case VideoName.结束:
                     ImageHideAnimation();
@@ -112,15 +101,15 @@ public class DisplayPanel : BasePanel
                     VideoSeek(-ForwordTime);
                     break;
                 case VideoControl.暂停:
-                    if(mediaPlayer.Control.IsPlaying() && MediaCanvasGroup.alpha ==1)
+                    if(CurrentVideo != null && CurrentVideo.Control.IsPlaying())
                     {
-                        mediaPlayer.Pause();
+                        CurrentVideo.Pause();
                     }
                     break;
                 case VideoControl.播放:
-                    if (!mediaPlayer.Control.IsPlaying() && MediaCanvasGroup.alpha == 1)
+                    if (CurrentVideo != null && !CurrentVideo.Control.IsPlaying())
                     {
-                        mediaPlayer.Play();
+                        CurrentVideo.Play();
                     }
                     break;
                 default:
@@ -132,83 +121,77 @@ public class DisplayPanel : BasePanel
 
     private void VideoSeek(float time)
     {
-        if(MediaCanvasGroup.alpha > 0)
+        if(CurrentVideo!=null)
         {
-            float temp = mediaPlayer.Control.GetCurrentTimeMs() + time * 1000;
-            if (temp > mediaPlayer.Info.GetDurationMs())
+            float temp = CurrentVideo.Control.GetCurrentTimeMs() + time * 1000;
+            if (temp > CurrentVideo.Info.GetDurationMs())
             {
-                temp = mediaPlayer.Info.GetDurationMs();
+                temp = CurrentVideo.Info.GetDurationMs();
             }
 
             if (temp < 0)
             {
                 temp = 0;
             }
-            mediaPlayer.Control.Seek(temp);
+            CurrentVideo.Control.Seek(temp);
         }
     }
 
     public override void Hide()
     {
         base.Hide();
+        TimeTool.Instance.Remove(TimeDownType.NoUnityTimeLineImpact, AnimationClose);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.Display_PlayVideo.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.Display_VideoControl.ToString(), Callback);
-        EventManager.RemoveUpdateListener(UpdateEventEnumType.Update, "DisplayUpdate", DisplayUpdate);
-        mediaPlayer.Stop();
+        if(CurrentVideo!=null)
+            ImageHideAnimation();
     }
 
     /// <summary>
     /// 图片动效
     /// </summary>
     /// <param name="image"></param>
-    private void ImageOpenAnimation(Image image,string VideoPath)
+    private void ImageOpenAnimation(MediaPlayer image,string VideoPath)
     {
+        if(CurrentVideo!=null)
+        {
+            if(CurrentVideo.name == image.name)
+            {
+                //Debug.Log(CurrentVideo.name);
+                return;
+            }
+        }
+
         BoatControl.Instance.Boat.SetActive(false);
         IsAnimation = true;
         RectTransform rect = image.gameObject.GetComponent<RectTransform>();
         CanvasGroup canvas = image.gameObject.GetComponent<CanvasGroup>();
+        canvas.alpha = 1;
 
-        if(mediaPlayer.Control.IsPlaying())
-        {
-            mediaPlayer.Stop();
-            MediaCanvasGroup.alpha = 0;
-        }
 
         //第一次播
-        if(CurrentImage == null)
+        if (CurrentVideo == null)
         {
-            CurrentImage = image;
+            CurrentVideo = image;
             InitialPosition = rect.anchoredPosition;
         }
         else
         {
             //不是第一次播，需要复原上一个
-            CurrentImage.gameObject.GetComponent<RectTransform>().anchoredPosition = InitialPosition;
-            CurrentImage.gameObject.GetComponent<RectTransform>().sizeDelta = InitialSize;
+            CurrentVideo.gameObject.GetComponent<RectTransform>().anchoredPosition = InitialPosition;
+            CurrentVideo.gameObject.GetComponent<RectTransform>().sizeDelta = InitialSize;
+            CurrentVideo.gameObject.GetComponent<CanvasGroup>().alpha = 0;
+            CurrentVideo.Stop();
 
-
-            CurrentImage = image;
+            CurrentVideo = image;
             InitialPosition = rect.anchoredPosition;
         }
 
-        canvas.alpha = 1;
-        //canvas.DOFade(0.3f,0.15f* AnimationTime).OnComplete(()=> {
-        //    canvas.DOFade(1.0f, 0.25f * AnimationTime).OnComplete(() => {
-        //        canvas.DOFade(0.5f, 0.15f * AnimationTime).OnComplete(() => {
-        //            canvas.DOFade(1.0f, 0.1f * AnimationTime).OnComplete(() => {
-        //                canvas.DOFade(1, 0.35f * AnimationTime).OnComplete(() =>
-        //                {
-        //                    canvas.DOFade(0, 0.3f);
-        //                });
-        //            });
-        //        });
-        //    });
-        //});
-        rect.DOAnchorPos(Vector2.zero, AnimationTime);
-        rect.DOSizeDelta(MediaRectTransform.sizeDelta, AnimationTime).OnComplete(()=> {
-            mediaPlayer.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, VideoPath);
-            MediaCanvasGroup.alpha = 1;
-            canvas.DOFade(0,0.5f);
+        image.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, VideoPath);
+
+        rect.DOAnchorPos(Vector2.zero, AnimationTime).SetEase(Ease.InExpo);
+        rect.DOSizeDelta(MediaRect, AnimationTime).SetEase(Ease.InExpo).OnComplete(()=> {
+            
             IsAnimation = false;
         });
 
@@ -217,49 +200,58 @@ public class DisplayPanel : BasePanel
     private void ImageHideAnimation()
     {
         IsAnimation = true;
-        mediaPlayer.Stop();
-        MediaCanvasGroup.alpha = 0;
 
         BoatControl.Instance.Boat.SetActive(true);
 
-        if (mediaPlayer.Control.IsPlaying())
-        {
-            mediaPlayer.Stop();
-            MediaCanvasGroup.alpha = 0;
-        }
-
-        if (CurrentImage == null)
+        if (CurrentVideo == null)
         {
             IsAnimation = false;
             return;
         }
         else
         {
-            RectTransform rect = CurrentImage.gameObject.GetComponent<RectTransform>();
-            CanvasGroup canvas = CurrentImage.gameObject.GetComponent<CanvasGroup>();
-            canvas.alpha = 1;
-            
+            CurrentVideo.Stop();
+
+            RectTransform rect = CurrentVideo.gameObject.GetComponent<RectTransform>();
+            CanvasGroup canvas = CurrentVideo.gameObject.GetComponent<CanvasGroup>();
+
+            canvas.DOFade(0, AnimationTime);
+
             rect.DOAnchorPos(InitialPosition, AnimationTime);
             rect.DOSizeDelta(InitialSize, AnimationTime).OnComplete(() => {
-                canvas.alpha = 0;
-                CurrentImage = null;
+
+                CurrentVideo = null;
                 InitialPosition = Vector2.zero;
                 IsAnimation = false;
             });
         }
     }
 
+    private void AnimationOpen()
+    {
+        foreach (Animation item in animations)
+        {
+            item.Play();
+        }
+    }
+
+    private void AnimationClose()
+    {
+        foreach (Animation item in animations)
+        {
+            item.Stop();
+            item.gameObject.GetComponent<Image>().color = Color.white;
+        }
+    }
+
     private void Reset()
     {
-        if(CurrentImage != null)
-        {
-            RectTransform rect = CurrentImage.gameObject.GetComponent<RectTransform>();
-            rect.anchoredPosition = InitialPosition;
-            rect.sizeDelta = InitialSize;
-        }
+        AnimationOpen();
+        TimeTool.Instance.Remove(TimeDownType.NoUnityTimeLineImpact, AnimationClose);
+        TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 5.0f, AnimationClose);
 
-        CurrentImage = null;
+        CurrentVideo = null;
         InitialPosition = Vector2.zero;
-        MediaCanvasGroup.alpha = 0;
+        
     }
 }

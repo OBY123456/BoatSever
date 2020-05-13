@@ -117,7 +117,7 @@ public class UdpState : BaseState
             if(GetVs.Count > 0)
             {
                 QueueData st = GetVs.Dequeue();
-                Debug.Log("状态类里接收到的数据：" + st.msg);
+                //Debug.Log("状态类里接收到的数据：" + st.msg);
                 EventParamete eventParamete = new EventParamete();
                 eventParamete.AddParameter(st.msg);
                 switch (st.parmaterCodes)
@@ -133,7 +133,6 @@ public class UdpState : BaseState
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotate.ToString(), eventParamete);
                         break;
                     case ParmaterCodes.Display_PlayVideo:
-                        Debug.Log("333");
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.Display_PlayVideo.ToString(), eventParamete);
                         break;
                     case ParmaterCodes.Display_VideoControl:
@@ -166,6 +165,9 @@ public class UdpState : BaseState
                         break;
                     case ParmaterCodes.TrainModelData:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.PuGuanCameraData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), eventParamete);
                         break;
                     default:
                         break;

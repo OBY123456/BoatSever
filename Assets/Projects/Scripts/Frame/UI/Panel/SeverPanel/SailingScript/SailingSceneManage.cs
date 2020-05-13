@@ -34,6 +34,8 @@ public class SailingSceneManage : MonoBehaviour
 
     public Material[] Skybox;
 
+    //铺管装置
+    public GameObject Boat_PuGuan;
 
     private void Awake()
     {
@@ -52,6 +54,7 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
         //Time_Night();
         Time_Day();
     }
@@ -87,6 +90,10 @@ public class SailingSceneManage : MonoBehaviour
                 SetTargetPosition(msg);
                 break;
             case ParmaterCodes.TrainModelData:
+                TrainModelChange(msg);
+                break;
+            case ParmaterCodes.PuGuanCameraData:
+                SetPuGuanCameraState(msg);
                 break;
             default:
                 break;
@@ -145,7 +152,7 @@ public class SailingSceneManage : MonoBehaviour
     {
         OceanWaveSize waveSize = new OceanWaveSize();
         waveSize = JsonConvert.DeserializeObject<OceanWaveSize>(msg);
-        Debug.Log("海浪大小===" + waveSize.value);
+        //Debug.Log("海浪大小===" + waveSize.value);
         OceanManager.Instance.SetWaveSize(waveSize.value/9 * 1.33f);
     }
 
@@ -182,13 +189,33 @@ public class SailingSceneManage : MonoBehaviour
         switch (model)
         {
             case TrainModel.Transitions:
-                Debug.Log("转场训练");
+                DataPanel.Instance.Tiletle.text = "转 场 训 练";
                 break;
             case TrainModel.Laying:
-                Debug.Log("铺管训练");
+                DataPanel.Instance.Tiletle.text = "铺 管 训 练";
                 break;
             case TrainModel.Lifting:
-                Debug.Log("吊装训练");
+                DataPanel.Instance.Tiletle.text = "吊 装 训 练";
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void SetPuGuanCameraState(string msg)
+    {
+        PuGuanCameraData data = new PuGuanCameraData();
+        data = JsonConvert.DeserializeObject<PuGuanCameraData>(msg);
+        PuGuanCameraState state = (PuGuanCameraState)Enum.Parse(typeof(PuGuanCameraState), data.state);
+        switch (state)
+        {
+            case PuGuanCameraState.Open:
+                Boat_PuGuan.SetActive(true);
+                UICanvas.Instance.ViewOpen();
+                break;
+            case PuGuanCameraState.Hide:
+                Boat_PuGuan.SetActive(false);
+                UICanvas.Instance.ViewHide();
                 break;
             default:
                 break;
@@ -278,5 +305,6 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
     }
 }

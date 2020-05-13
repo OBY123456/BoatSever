@@ -156,6 +156,20 @@ namespace MTFrame
     {
         public string trainModel;
     }
+
+    /// <summary>
+    /// 铺管视图状态
+    /// </summary>
+    public enum PuGuanCameraState
+    {
+        Open = 0,
+        Hide = 1,
+    }
+
+    public class PuGuanCameraData
+    {
+        public string state;
+    }
 }
 
 

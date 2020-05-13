@@ -8,6 +8,7 @@ public class WeatherManager : MonoBehaviour
     public static WeatherManager Instance;
 
     private WeatherMakerPrecipitationManagerScript weatherMaker;
+    private WeatherMakerWindScript windMaker;
 
     public WeatherMakerPrecipitationType WeatherType;
 
@@ -16,6 +17,12 @@ public class WeatherManager : MonoBehaviour
     /// </summary>
     [Range(0, 1)]
     public float Intensity = 0.5f;
+
+    [Range(0,1)]
+    public float Wind_Intensity = 0;
+
+    [Range(0,-360)]
+    public float Wind_Rotate = -103.6f;
 
     //[Range(0,86399)]
     //public float TimeValue;
@@ -32,6 +39,10 @@ public class WeatherManager : MonoBehaviour
     void Start()
     {
         weatherMaker = WeatherMakerPrecipitationManagerScript.Instance;
+        windMaker = WeatherMakerWindScript.Instance;
+        float duration = WeatherMakerPrecipitationManagerScript.Instance.PrecipitationChangeDuration;
+
+        windMaker.SetWindProfileAnimated(WeatherMakerScript.Instance.LoadResource<WeatherMakerWindProfileScript>("WeatherMakerWindProfile_MediumWind"), 0.0f, duration);
     }
 
     // Update is called once per frame
@@ -43,6 +54,8 @@ public class WeatherManager : MonoBehaviour
         //}
 
         //SetWeather(WeatherType, Intensity);
+        //SetWindIntensity(Wind_Intensity);
+        //SetWindRotate(Wind_Rotate);
     }
 
     public void SetWeather(WeatherMakerPrecipitationType type,float value)
@@ -68,6 +81,17 @@ public class WeatherManager : MonoBehaviour
     public void SetPrecipitationIntensity(float value)
     {
         weatherMaker.PrecipitationIntensity = value;
+    }
+
+    public void SetWindIntensity(float value)
+    {
+        windMaker.WindZone.windMain = value * 3.0f;
+        //windMaker.AudioSourceWind.Play(2.0f * value);
+    }
+
+    public void SetWindRotate(float value)
+    {
+        windMaker.gameObject.transform.localEulerAngles = Vector3.up * value;
     }
 
     //public void SetTime(float value)
