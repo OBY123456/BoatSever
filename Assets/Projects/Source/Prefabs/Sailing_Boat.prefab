@@ -205,7 +205,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 313806434577631040}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 140.4}
+  m_LocalPosition: {x: 0, y: 0, z: 139.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1145234440296086810}
@@ -236,7 +236,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 10000
-  field of view: 60
+  field of view: 45
   orthographic: 0
   orthographic size: 5
   m_Depth: 1
@@ -511,8 +511,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d3496991d71c3847b4b6cef88022120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SailingSpeed: 10
-  IsStart: 0
+  SailingSpeed: 30
+  IsAutoDrive: 0
+  IsArrive: 0
+  IsRight: 0
   animationControl: {fileID: 4636012000111365807}
 --- !u!1 &1148524107458209710
 GameObject:
@@ -1130,16 +1132,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6980085886641681396, guid: d3e619606a4058542ae09c77daecde5f,
-        type: 3}
-      propertyPath: force
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 44860646305176307, guid: d3e619606a4058542ae09c77daecde5f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 6980085886536684843, guid: d3e619606a4058542ae09c77daecde5f,
         type: 3}
       propertyPath: m_LocalRotation.x
@@ -1174,6 +1166,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
       value: -7.4940004
+      objectReference: {fileID: 0}
+    - target: {fileID: 44860646305176307, guid: d3e619606a4058542ae09c77daecde5f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6980085886536684841, guid: d3e619606a4058542ae09c77daecde5f,
         type: 3}

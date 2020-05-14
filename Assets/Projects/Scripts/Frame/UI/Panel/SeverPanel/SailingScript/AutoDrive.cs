@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
+using System;
 
 public class AutoDrive : MonoBehaviour
 {
@@ -36,64 +38,91 @@ public class AutoDrive : MonoBehaviour
     private BoatProbes boatProbes;
 
     /// <summary>
-    /// 是否在转向
+    /// 是否开启转向
     /// </summary>
     private bool IsTurnTo;
 
     /// <summary>
-    /// 是否开始航行
+    /// 是否开启定时检测转向
     /// </summary>
-    public bool IsStart;
+    private bool IsRotate;
+
+    public bool IsAutoDrive;
+
+    public bool IsArrive;
+
+    /// <summary>
+    /// 是否从右边进入钻井平台
+    /// </summary>
+    public bool IsRight;
 
     /// <summary>
     /// 小地图上的船
     /// </summary>
-    private RectTransform map_Boat;
+    //private RectTransform map_Boat;
 
     /// <summary>
     /// 船的当前位置
     /// </summary>
-    private Vector3 Current_Destination = Vector3.zero;
+    //private Vector3 Current_Destination = Vector3.zero;
 
     /// <summary>
     /// 小地图船的位置
     /// </summary>
-    private Vector2 Current_Map_Boat;
+    //private Vector2 Current_Map_Boat;
 
     public BoatAnimationControl animationControl;
-
 
     // Start is called before the first frame update
     void Start()
     {
         Boat = this.transform;
         boatProbes = this.transform.GetComponent<BoatProbes>();
-        Target = SailingSceneManage.Instance.Target;
-        map_Boat = SailingSceneManage.Instance.minimap.map_Boat;
+        //Target = SailingSceneManage.Instance.Target[1];
+        //map_Boat = SailingSceneManage.Instance.minimap.map_Boat;
         SailingSceneManage.Instance.SetWaveScale(0.1f);
         //animationControl.EngineDown();
+
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.DrawLine(Boat.position, Target.transform.position, Color.red);
-        Debug.DrawRay(Boat.position, Boat.forward * 100.0f, Color.blue);
+        if(Input.GetKeyDown(KeyCode.Q))
+        {
+            if(IsAutoDrive)
+            {
+                IsAutoDrive = false;
+            }
+            else
+            {
+                StartAutoDrive();
+            }
+        }
+
+        if(Input.GetKeyDown(KeyCode.W))
+        {
+            Reset_ZhuanChuang();
+        }
+
+        //Debug.DrawLine(Boat.position, Target.transform.position, Color.red);
+        //Debug.DrawRay(Boat.position, Boat.forward * 100.0f, Color.blue);
     }
 
     private void FixedUpdate()
     {
-        if(IsStart)
+        if(IsAutoDrive)
         {
             Boat_Turnto(Target.gameObject.transform.position);
         }
 
     }
 
-    private bool lerp, IsRotate;
+    private bool lerp ;
     private float IntervalTime = 5;
     private float CurrentTime = 0;
-    private float Distance = 10.0f;
+    //private float Distance = 10.0f;
 
     /// <summary>
     /// Turnto == 转向
@@ -108,22 +137,20 @@ public class AutoDrive : MonoBehaviour
         //Debug.Log("rot=== " + rot.eulerAngles.y+" boat eulerAngle.y "+Boat.eulerAngles.y);
 
         //每隔5秒检查一次角度
-        if(lerp && !IsTurnTo && boatProbes._enginePower!= 0)
+        if(lerp && IsRotate && boatProbes._enginePower!= 0)
         {
             CurrentTime += Time.deltaTime;
             if(CurrentTime > IntervalTime)
             {
-                IsRotate = true;
+                IsTurnTo = true;
                 CurrentTime = 0;
             }
         }
 
-        if (Mathf.Abs(rot.eulerAngles.y - Boat.eulerAngles.y) > 5.0f)
+        if(IsTurnTo)
         {
-            if (Destination_Change(vector)|| IsRotate)
+            if (Mathf.Abs(rot.eulerAngles.y - Boat.eulerAngles.y) > 5.0f)
             {
-                IsTurnTo = true;
-
                 //向右转
                 if (Vector3.Cross(Boat.forward, (vector - Boat.position).normalized).y > 0)
                 {
@@ -138,65 +165,63 @@ public class AutoDrive : MonoBehaviour
                     Debug.Log("Boat.forward, vector.normalized).y == 0");
                 }
             }
-        }
-        else
-        {
-            //IsTurnTo用来限制里面代码只执行一次
-            if (IsTurnTo)
+            else
             {
                 boatProbes._turnPower = 0;
                 IsTurnTo = false;
                 lerp = true;
-                IsRotate = false;
             }
         }
 
         if (lerp)
         {
-            SailingSceneManage.Instance.WaveChange();
+           
+            //if (Vector2.Distance(Current_Map_Boat, map_Boat.anchoredPosition) > Distance)
+            //{
+            //    Current_Map_Boat = map_Boat.anchoredPosition;
+            //    SailingSceneManage.Instance.minimap.Creat_RouteImage(map_Boat.anchoredPosition);
+            //}
 
-            if (Vector2.Distance(Current_Map_Boat, map_Boat.anchoredPosition) > Distance)
+            float dis = Vector3.Distance(Target.transform.position, Boat.position);
+
+            if (dis < 0.2 * InitialDistance && IsTurnTo == false)
             {
-                Current_Map_Boat = map_Boat.anchoredPosition;
-                SailingSceneManage.Instance.minimap.Creat_RouteImage(map_Boat.anchoredPosition);
-            }
-
-            float dis = Vector3.Distance(Target.transform.position, Boat.transform.position);
-
-            if (dis < 0.2* InitialDistance && IsRotate == false)
-            {
-                IsRotate = true;
+                IsTurnTo = true;
             }
         }
     }
 
-    /// <summary>
-    /// 判断目的地是否已经改变
-    /// </summary>
-    /// <param name="vector"></param>
-    /// <returns></returns>
-    private bool Destination_Change(Vector3 vector)
+    private void DestinationChange()
     {
-        if (Vector3.Angle(Current_Destination, (vector - Current_Destination).normalized) < 1.5f && Current_Destination != Vector3.zero)
-        {
-            return false;
-        }
-        //else if(Vector3.Angle(Current_Destination, (vector - Current_Destination).normalized) < 1.5f && vector != Current_Destination)
-        //{
-        //    Current_Destination = vector;
-        //    StartSailing();
-        //    return true;
-        //}
+        float dis1 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[1].transform.position);
+        float dis2 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[2].transform.position);
+        float dis3 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[0].transform.position);
 
-        if (vector != Current_Destination)
+        if(dis3 < dis1 && dis3 < dis2)
         {
-            Current_Destination = vector;
-            StartSailing();
-            return true;
+            Target = SailingSceneManage.Instance.Target[0];
+            return;
+        }
+
+        if (dis1 <= dis2)
+        {
+            Target = SailingSceneManage.Instance.Target[1];
+            IsRight = true;
         }
         else
         {
-            return false;
+            Target = SailingSceneManage.Instance.Target[2];
+        }
+    }
+
+    private void StartAutoDrive()
+    {
+        if(!IsArrive)
+        {
+            DestinationChange();
+            IsTurnTo = true;
+            IsAutoDrive = true;
+            StartSailing();
         }
     }
 
@@ -208,18 +233,77 @@ public class AutoDrive : MonoBehaviour
         boatProbes._enginePower = 0;
         boatProbes._turnPower = 0;
         SailingSceneManage.Instance.WaveChange(0.1f);
-        IsStart = false;
+        IsAutoDrive = false;
+        IsArrive = true;
+    }
+
+    /// <summary>
+    /// 到达设置的点后调整角度和位置
+    /// </summary>
+    /// <param name="target">目标点</param>
+    /// <param name="Rota">角度的正负值</param>
+    public void SetBoatTransform(Transform target,float i)
+    {
+        boatProbes._enginePower = 0;
+        boatProbes._turnPower = 0;
+        SailingSceneManage.Instance.SetWaveScale(0.1f);
+
+        float temp = Mathf.Abs( Boat.localEulerAngles.y - 360 - (-90));
+        //Debug.Log("temp==" + temp);
+        float time = temp / 8;
+
+        Boat.DORotate(new Vector3( Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time);
+        Boat.DOMove(new Vector3( target.position.x,Boat.position.y,target.position.z), time).OnComplete(()=> {
+            Target = SailingSceneManage.Instance.Target[0];
+            SailingSceneManage.Instance.SetWaveScale(0.3f);
+            IsTurnTo = true;
+            IsAutoDrive = true;
+            StartSailing();
+        });
+    }
+
+    public void MainCameraRotate()
+    {
+        if(IsRight)
+        {
+            float temp = SailingSceneManage.Instance.MainCameraFallow.offset.x;
+            DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.MainCameraFallow.offset.x, x => SailingSceneManage.Instance.MainCameraFallow.offset.x = x, 105.63f, 5.0f);
+        }
     }
 
     private void StartSailing()
     {
+
+        SailingSceneManage.Instance.WaveChange();
+
         boatProbes._enginePower = SailingSpeed;
-        InitialDistance = Vector3.Distance(Target.transform.position, Boat.transform.position);
+        InitialDistance = Vector3.Distance(Target.transform.position, Boat.position);
         lerp = false;
-        SailingSceneManage.Instance.WaveChange(0.1f);
-        Current_Map_Boat = map_Boat.anchoredPosition;
-        IsRotate = false;
+        
+        //Current_Map_Boat = map_Boat.anchoredPosition;
+        IsRotate = true;
         CurrentTime = 0;
-        SailingSceneManage.Instance.minimap.Creat_RouteImage(map_Boat.anchoredPosition);
+        //SailingSceneManage.Instance.minimap.Creat_RouteImage(map_Boat.anchoredPosition);
+    }
+
+    //重置转场训练
+    private void Reset_ZhuanChuang()
+    {
+        boatProbes._enginePower = 0;
+        boatProbes._turnPower = 0;
+        IsRotate = false;
+        lerp = false;
+        IsRight = false;
+        IsTurnTo = false;
+        IsAutoDrive = false;
+        IsArrive = false;
+        CurrentTime = 0;
+        SailingSceneManage.Instance.MainCameraFallow.offset.x = -105.63f;
+        Boat.position = new Vector3(0, 180, 0);
+        Boat.eulerAngles = new Vector3(0, -90, 0);
+        Target = null;
+        InitialDistance = 0;
+        SailingSceneManage.Instance.SetWaveScale(0.1f);
+        this.GetComponent<Rigidbody>().velocity = Vector3.zero;
     }
 }

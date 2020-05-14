@@ -24,15 +24,15 @@ public class Minimap : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        RouteImage = Resources.Load<Image>("Sailing/RouteImage");
-        Target = SailingSceneManage.Instance.Target;
+        //RouteImage = Resources.Load<Image>("Sailing/RouteImage");
+        //Target = SailingSceneManage.Instance.Target;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Set_MapBoat_Position();
-        Set_MapTarget_Position();
+        //Set_MapBoat_Position();
+        //Set_MapTarget_Position();
     }
 
     private void Set_MapBoat_Position()

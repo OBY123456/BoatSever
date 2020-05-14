@@ -16,10 +16,10 @@ public class SailingSceneManage : MonoBehaviour
 
     public Transform RawImageTransform;
 
-    public GameObject Target;
+    public GameObject[] Target;
     public GameObject PPV;
 
-    public Minimap minimap;
+    //public Minimap minimap;
 
     public BoatProbes boatProbes;
 
@@ -36,6 +36,8 @@ public class SailingSceneManage : MonoBehaviour
 
     //铺管装置
     public GameObject Boat_PuGuan;
+
+    public CameraFallow MainCameraFallow;
 
     private void Awake()
     {
@@ -224,11 +226,11 @@ public class SailingSceneManage : MonoBehaviour
 
     private void SetTargetPosition(string msg)
     {
-        TargetPosition targetPosition = new TargetPosition();
-        targetPosition = JsonConvert.DeserializeObject<TargetPosition>(msg);
-        Vector3 vector3 = new Vector3(targetPosition.x, 180.0f, targetPosition.z);
-        Target.transform.position = vector3;
-        autoDrive.IsStart = true;
+        //TargetPosition targetPosition = new TargetPosition();
+        //targetPosition = JsonConvert.DeserializeObject<TargetPosition>(msg);
+        //Vector3 vector3 = new Vector3(targetPosition.x, 180.0f, targetPosition.z);
+        //Target.transform.position = vector3;
+        //autoDrive.IsStart = true;
     }
 
     // Update is called once per frame
@@ -249,6 +251,11 @@ public class SailingSceneManage : MonoBehaviour
 
     public void SetWaveScale(float value)
     {
+        foreach (Transform item in WaveGroup)
+        {
+            item.DOKill();
+        }
+
         Vector3 vector3 = new Vector3(value, value, value);
 
         foreach (Transform item in WaveGroup)

@@ -14,12 +14,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/DisplayScene.unity
     guid: d61d77e920be7f24db1a2e5e04e5b6d1
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
-  - enabled: 0
-    path: 
-    guid: 00000000000000000000000000000000
   - enabled: 1
     path: Assets/Scenes/Sailing.unity
     guid: b3944f57e33790f43b1baee238b0ada0
