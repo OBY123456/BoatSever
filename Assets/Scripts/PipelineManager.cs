@@ -61,15 +61,15 @@ public class PipelineManager : MonoBehaviour
     // Update is called once per frame
     void Update ( )
     {
-        if (Input.GetKey(KeyCode.A))
-        {
-            if (activePipeline <= 5)
-                firstPipeline.GetComponent<Rigidbody>().AddForce(firstPipeline.transform.right * force * activePipeline , ForceMode.VelocityChange);
-            else
-                firstPipeline.GetComponent<Rigidbody>().velocity = firstPipeline.transform.right*force*6;
-        }
-        if (firstPipeline)
-            Debug.DrawRay(firstPipeline.transform.position , firstPipeline.transform.right *force, Color.red);
+        //if (Input.GetKey(KeyCode.A))
+        //{
+        //    if (activePipeline <= 5)
+        //        firstPipeline.GetComponent<Rigidbody>().AddForce(firstPipeline.transform.right * force * activePipeline , ForceMode.VelocityChange);
+        //    else
+        //        firstPipeline.GetComponent<Rigidbody>().velocity = firstPipeline.transform.right*force*6;
+        //}
+        //if (firstPipeline)
+        //    Debug.DrawRay(firstPipeline.transform.position , firstPipeline.transform.right *force, Color.red);
 
 
         if (Input.GetKeyDown(KeyCode.D))

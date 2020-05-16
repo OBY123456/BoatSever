@@ -15,7 +15,7 @@ public class AutoDrive : MonoBehaviour
     /// <summary>
     /// 转向速度
     /// </summary>
-    private float Turnto_speed = 0.5f;
+    private float Turnto_speed =1.0f;
 
     /// <summary>
     /// 航行速度
@@ -144,6 +144,7 @@ public class AutoDrive : MonoBehaviour
             {
                 IsTurnTo = true;
                 CurrentTime = 0;
+                Turnto_speed = 0.5f;
             }
         }
 
@@ -197,11 +198,11 @@ public class AutoDrive : MonoBehaviour
         float dis2 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[2].transform.position);
         float dis3 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[0].transform.position);
 
-        if(dis3 < dis1 && dis3 < dis2)
-        {
-            Target = SailingSceneManage.Instance.Target[0];
-            return;
-        }
+        //if(dis3 < dis1 && dis3 < dis2)
+        //{
+        //    Target = SailingSceneManage.Instance.Target[0];
+        //    return;
+        //}
 
         if (dis1 <= dis2)
         {
@@ -221,6 +222,7 @@ public class AutoDrive : MonoBehaviour
             DestinationChange();
             IsTurnTo = true;
             IsAutoDrive = true;
+            SailingSceneManage.Instance.WaveChange();
             StartSailing();
         }
     }
@@ -230,10 +232,11 @@ public class AutoDrive : MonoBehaviour
         CurrentTime = 0;
         lerp = false;
         IsRotate = false;
+        IsTurnTo = false;
         boatProbes._enginePower = 0;
         boatProbes._turnPower = 0;
         SailingSceneManage.Instance.WaveChange(0.1f);
-        IsAutoDrive = false;
+        //IsAutoDrive = false;
         IsArrive = true;
     }
 
@@ -244,29 +247,39 @@ public class AutoDrive : MonoBehaviour
     /// <param name="Rota">角度的正负值</param>
     public void SetBoatTransform(Transform target,float i)
     {
-        boatProbes._enginePower = 0;
-        boatProbes._turnPower = 0;
-        SailingSceneManage.Instance.SetWaveScale(0.1f);
 
         float temp = Mathf.Abs( Boat.localEulerAngles.y - 360 - (-90));
-        //Debug.Log("temp==" + temp);
         float time = temp / 8;
 
-        Boat.DORotate(new Vector3( Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time);
-        Boat.DOMove(new Vector3( target.position.x,Boat.position.y,target.position.z), time).OnComplete(()=> {
-            Target = SailingSceneManage.Instance.Target[0];
-            SailingSceneManage.Instance.SetWaveScale(0.3f);
-            IsTurnTo = true;
-            IsAutoDrive = true;
-            StartSailing();
-        });
+        if(time < 1)
+        {
+            TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
+            Debug.Log("time==" + time);
+            SailingSceneManage.Instance.WaveChange(0.3f);
+        }
+        else
+        {
+            boatProbes._enginePower = 0;
+            boatProbes._turnPower = 0;
+            SailingSceneManage.Instance.SetWaveScale(0.1f);
+
+            Boat.DORotate(new Vector3(Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time);
+            Boat.DOMove(new Vector3(target.position.x, Boat.position.y, target.position.z), time).OnComplete(() => {
+                
+                SailingSceneManage.Instance.SetWaveScale(0.3f);
+                IsTurnTo = true;
+                IsAutoDrive = true;
+                TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
+                StartSailing();
+            });
+        }
+        Target = SailingSceneManage.Instance.Target[0];
     }
 
     public void MainCameraRotate()
     {
         if(IsRight)
         {
-            float temp = SailingSceneManage.Instance.MainCameraFallow.offset.x;
             DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.MainCameraFallow.offset.x, x => SailingSceneManage.Instance.MainCameraFallow.offset.x = x, 105.63f, 5.0f);
         }
     }
@@ -274,9 +287,10 @@ public class AutoDrive : MonoBehaviour
     private void StartSailing()
     {
 
-        SailingSceneManage.Instance.WaveChange();
+        //SailingSceneManage.Instance.WaveChange();
 
         boatProbes._enginePower = SailingSpeed;
+        boatProbes._turnPower = 1.0f;
         InitialDistance = Vector3.Distance(Target.transform.position, Boat.position);
         lerp = false;
         
@@ -289,6 +303,7 @@ public class AutoDrive : MonoBehaviour
     //重置转场训练
     private void Reset_ZhuanChuang()
     {
+        TimeTool.Instance.Remove(TimeDownType.NoUnityTimeLineImpact, MainCameraRotate);
         boatProbes._enginePower = 0;
         boatProbes._turnPower = 0;
         IsRotate = false;
@@ -305,5 +320,43 @@ public class AutoDrive : MonoBehaviour
         InitialDistance = 0;
         SailingSceneManage.Instance.SetWaveScale(0.1f);
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
+        Turnto_speed = 1.0f;
+    }
+
+    //private bool IsEnter = false;
+    private void OnTriggerStay  (Collider other)
+    {
+        if(other.tag == "Obstacle" && IsAutoDrive /*&& !IsEnter*/)
+        {
+            //IsEnter = true;
+            Transform obs = other.transform;
+            //当障碍物在船的前方时
+            //Debug.Log("前方==" + Vector3.Dot(Boat.forward, (obs.position - Boat.position)));
+            if(Vector3.Dot(Boat.forward,(obs.position - Boat.position)) >= 0)
+            {
+                //Debug.Log("左右=="+Vector3.Cross(Boat.forward, (obs.position - Boat.position).normalized).y);
+                lerp = IsRotate = IsTurnTo = false;
+                CurrentTime = 0;
+                if (Vector3.Cross(Boat.forward, (obs.position - Boat.position).normalized).y >= 0)
+                {
+                    boatProbes._turnPower = -1;
+                }
+                else
+                {
+                    boatProbes._turnPower = 1;
+                }
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if(other.tag == "Obstacle" && IsAutoDrive)
+        {
+            IsRotate = IsTurnTo =  true;
+            lerp = false;
+           // IsEnter = false;
+            Turnto_speed = 1.0f;
+        }
     }
 }

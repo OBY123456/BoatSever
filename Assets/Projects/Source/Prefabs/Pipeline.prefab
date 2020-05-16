@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1257334186}
   - component: {fileID: 1257334187}
+  - component: {fileID: 642734576080704137}
   m_Layer: 0
   m_Name: PipelineHead
   m_TagString: PipelineHead
@@ -40,10 +41,23 @@ SphereCollider:
   m_GameObject: {fileID: 1257334185}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 0.3
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!65 &642734576080704137
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1257334185}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 2.337333, y: 0.5476636, z: 0.5537026}
+  m_Center: {x: 0.6686662, y: 0.004129857, z: -0.006543696}
 --- !u!1 &6935930062549051752
 GameObject:
   m_ObjectHideFlags: 0
