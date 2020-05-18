@@ -28,7 +28,7 @@ public class WeatherManager : MonoBehaviour
     //public float TimeValue;
 
     //public string TimeOfDayText = "00:00:00";
-
+    public GameObject[] WeatherGroup;
 
 
     private void Awake()
@@ -52,8 +52,8 @@ public class WeatherManager : MonoBehaviour
         //{
         //    SetTime(TimeValue);
         //}
-
-        //SetWeather(WeatherType, Intensity);
+        SetWeather(WeatherType, Intensity);
+        //SetPrecipitationIntensity(Intensity);
         //SetWindIntensity(Wind_Intensity);
         //SetWindRotate(Wind_Rotate);
     }
@@ -63,23 +63,66 @@ public class WeatherManager : MonoBehaviour
         switch (type)
         {
             case WeatherMakerPrecipitationType.None:
-                weatherMaker.Precipitation = WeatherMakerPrecipitationType.None;
+                SetSunyDay();
                 break;
             case WeatherMakerPrecipitationType.Rain:
-                weatherMaker.Precipitation = WeatherMakerPrecipitationType.Rain;
-                SetPrecipitationIntensity(Intensity);
+                SetRainDay(value);
                 break;
             case WeatherMakerPrecipitationType.Snow:
-                weatherMaker.Precipitation = WeatherMakerPrecipitationType.Snow;
-                SetPrecipitationIntensity(Intensity);
+                SetSnowDay(value);
                 break;
             default:
                 break;
         }
     }
 
+    private void SetSunyDay()
+    {
+        weatherMaker.Precipitation = WeatherMakerPrecipitationType.None;
+        if(!SailingSceneManage.Instance.IsNight)
+        {
+            SailingSceneManage.Instance.Skybox[0].SetFloat("_Exposure", 0.55f);
+            OceanManager.Instance.SetOceanLight(0.85f);
+        }
+
+        foreach (GameObject item in WeatherGroup)
+        {
+            item.SetActive(false);
+        }
+    }
+
+    private void SetRainDay(float value)
+    {
+        WeatherGroup[0].SetActive(true);
+        WeatherGroup[1].SetActive(false);
+        weatherMaker.Precipitation = WeatherMakerPrecipitationType.Rain;
+        SetPrecipitationIntensity(value);
+
+        if(!SailingSceneManage.Instance.IsNight)
+        {
+            SailingSceneManage.Instance.Skybox[0].SetFloat("_Exposure", 0.4f);
+            OceanManager.Instance.SetOceanLight(0.58f);
+        }
+    }
+
+    private void SetSnowDay(float value)
+    {
+        WeatherGroup[0].SetActive(false);
+        WeatherGroup[1].SetActive(true);
+        weatherMaker.Precipitation = WeatherMakerPrecipitationType.Snow;
+        SetPrecipitationIntensity(value);
+
+        if (!SailingSceneManage.Instance.IsNight)
+        {
+            SailingSceneManage.Instance.Skybox[0].SetFloat("_Exposure", 0.4f);
+            OceanManager.Instance.SetOceanLight(0.58f);
+        }
+    }
+
     public void SetPrecipitationIntensity(float value)
     {
+        
+        
         weatherMaker.PrecipitationIntensity = value;
     }
 
@@ -92,6 +135,13 @@ public class WeatherManager : MonoBehaviour
     public void SetWindRotate(float value)
     {
         windMaker.gameObject.transform.localEulerAngles = Vector3.up * value;
+    }
+
+    public void ResetWeather()
+    {
+        SetWeather(WeatherMakerPrecipitationType.None, 0);
+        SetWindIntensity(Wind_Intensity);
+        SetWindRotate(Wind_Rotate);
     }
 
     //public void SetTime(float value)

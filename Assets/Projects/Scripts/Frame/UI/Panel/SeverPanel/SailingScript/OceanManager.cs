@@ -10,7 +10,7 @@ public class OceanManager : MonoBehaviour
     public ShapeGerstnerBatched gerstnerBatched;
     public OceanRenderer oceanRenderer;
 
-    [Range(0,1.33f)]
+    [Range(0,1.7f)]
     public float WaveSize = 0.2f;
 
     [Range(0, 1)]
@@ -21,10 +21,15 @@ public class OceanManager : MonoBehaviour
         Instance = this;
     }
 
+    private void Start()
+    {
+       // ResetOcean();
+    }
+
     // Update is called once per frame
     void Update()
     {
-        //SetWaveSize(WaveSize);
+        SetWaveSize(WaveSize);
         //SetOceanLight(OceanLight);
     }
 
@@ -35,6 +40,9 @@ public class OceanManager : MonoBehaviour
     public void SetWaveSize(float value)
     {
         gerstnerBatched._spectrum._multiplier = value;
+        SailingSceneManage.Instance.boatProbes._forceMultiplier = 14 - value / 1.7f * 11;
+        SailingSceneManage.Instance.boatProbes._minSpatialLength = 100 - value / 1.7f * 60;
+        gerstnerBatched._spectrum._powerLog[13] = 1.5f + value / 1.7f * 1.5f;
     }
 
     /// <summary>
@@ -45,5 +53,11 @@ public class OceanManager : MonoBehaviour
     {
         oceanRenderer.OceanMaterial.SetFloat("_Specular", value);
         //oceanRenderer.OceanMaterial.SetFloat("_CausticsTextureAverage", 0.37f - (0.37f - 0.07f) * value);
+    }
+
+    public void ResetOcean()
+    {
+        SetWaveSize(WaveSize);
+        SetOceanLight(OceanLight);
     }
 }

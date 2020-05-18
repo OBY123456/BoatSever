@@ -39,6 +39,9 @@ public class SailingSceneManage : MonoBehaviour
 
     public CameraFallow MainCameraFallow;
 
+    //是否是晚上
+    public bool IsNight;
+
     private void Awake()
     {
         Instance = this;
@@ -155,7 +158,7 @@ public class SailingSceneManage : MonoBehaviour
         OceanWaveSize waveSize = new OceanWaveSize();
         waveSize = JsonConvert.DeserializeObject<OceanWaveSize>(msg);
         //Debug.Log("海浪大小===" + waveSize.value);
-        OceanManager.Instance.SetWaveSize(waveSize.value/9 * 1.33f);
+        OceanManager.Instance.SetWaveSize(waveSize.value/9 * 1.7f);
     }
 
     private void SetOceanLightData(string msg)
@@ -236,7 +239,17 @@ public class SailingSceneManage : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if(Input.GetKeyDown(KeyCode.O))
+        {
+            if(IsNight)
+            {
+                Time_Day();
+            }
+            else
+            {
+                Time_Night();
+            }
+        }
     }
 
     public void CameraOpen()
@@ -283,22 +296,37 @@ public class SailingSceneManage : MonoBehaviour
         }
     }
 
-    private void Time_Day()
+    public void Time_Day()
     {
         PPV.SetActive(true);
         SceneLight.intensity = 1;
-        WeatherLight.enabled = true;
+        //WeatherLight.enabled = true;
         RenderSettings.skybox = Skybox[0];
-        OceanManager.Instance.SetOceanLight(0.85f);
+
+        if(WeatherManager.Instance.WeatherType == WeatherMakerPrecipitationType.None)
+        {
+            OceanManager.Instance.SetOceanLight(0.85f);
+            Skybox[0].SetFloat("_Exposure", 0.55f);
+        }
+        else
+        {
+            Skybox[0].SetFloat("_Exposure", 0.4f);
+            OceanManager.Instance.SetOceanLight(0.58f);
+        }
+    
+        autoDrive.animationControl.Set_Day_Smoke();
+        IsNight = false;
     }
 
     private void Time_Night()
     {
         PPV.SetActive(false);
         SceneLight.intensity = 0.01f;
-        WeatherLight.enabled = false;
+        //WeatherLight.enabled = false;
         RenderSettings.skybox = Skybox[1];
-        OceanManager.Instance.SetOceanLight(0);
+        OceanManager.Instance.SetOceanLight(0.29f);
+        autoDrive.animationControl.Set_Night_Smoke();
+        IsNight = true;
     }
 
     private void OnDestroy()

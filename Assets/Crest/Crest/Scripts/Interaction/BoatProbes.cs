@@ -22,9 +22,9 @@ namespace Crest
         [Tooltip("Vertical offset for where engine force should be applied."), SerializeField]
         float _forceHeightOffset = 0f;
         [SerializeField]
-        float _forceMultiplier = 10f;
+        public float _forceMultiplier = 10f;
         [Tooltip("Width dimension of boat. The larger this value, the more filtered/smooth the wave response will be."), SerializeField]
-        float _minSpatialLength = 12f;
+        public float _minSpatialLength = 12f;
         [SerializeField, Range(0, 1)]
         float _turningHeel = 0.35f;
 

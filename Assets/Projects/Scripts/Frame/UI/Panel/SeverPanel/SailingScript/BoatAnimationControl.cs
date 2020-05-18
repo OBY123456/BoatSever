@@ -14,6 +14,10 @@ public class BoatAnimationControl : MonoBehaviour
     //螺旋桨
     public GameObject Engine_Propeller;
 
+    public ParticleSystem SmokeParticle;
+
+    public Material[] SmokeMaterials;
+
     [Range(0,5f)]
     public float RotateSpeed_Propeller = 0;
 
@@ -59,5 +63,15 @@ public class BoatAnimationControl : MonoBehaviour
     private void PropellerRotate()
     {
         Engine_Propeller.transform.Rotate(Vector3.right * RotateSpeed_Propeller);
+    }
+
+    public void Set_Day_Smoke()
+    {
+        SmokeParticle.GetComponent<Renderer>().material = SmokeMaterials[0];
+    }
+
+    public void Set_Night_Smoke()
+    {
+        SmokeParticle.GetComponent<Renderer>().material = SmokeMaterials[1];
     }
 }

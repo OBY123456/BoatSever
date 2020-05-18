@@ -133,7 +133,7 @@ Material:
     - _SmoothnessFar: 0.35
     - _SmoothnessFarDistance: 2000
     - _SmoothnessPower: 0
-    - _Specular: 0.85
+    - _Specular: 0.29
     - _StartLevel: 0.157
     - _SubSurfaceBase: 0.41
     - _SubSurfaceDepthMax: 9.4
@@ -157,7 +157,7 @@ Material:
     - _WaveFoamBubblesStrength: 0.637
     - _WaveFoamCoverage: 0.38
     - _WaveFoamFeather: 0.4
-    - _WaveFoamLightScale: 1.353
+    - _WaveFoamLightScale: 0.98
     - _WaveFoamNormalStrength: 3.5
     - _WaveFoamNormalsY: 0.253
     - _WaveFoamSpecularBoost: 0.15

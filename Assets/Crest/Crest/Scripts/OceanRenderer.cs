@@ -42,7 +42,6 @@ namespace Crest
         float _gravityMultiplier = 1f;
         public float Gravity { get { return _gravityMultiplier * Physics.gravity.magnitude; } }
 
-
         [Header("Detail Params")]
 
         [Range(2, 16)]
@@ -332,7 +331,7 @@ namespace Crest
 
         void LateUpdatePosition()
         {
-            Vector3 pos = _viewpoint.position;
+            Vector3 pos = _viewpoint.position ;
 
             // maintain y coordinate - sea level
             pos.y = transform.position.y;

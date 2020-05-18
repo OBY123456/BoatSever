@@ -321,6 +321,9 @@ public class AutoDrive : MonoBehaviour
         SailingSceneManage.Instance.SetWaveScale(0.1f);
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Turnto_speed = 1.0f;
+        OceanManager.Instance.ResetOcean();
+        WeatherManager.Instance.ResetWeather();
+        SailingSceneManage.Instance.Time_Day();
     }
 
     //private bool IsEnter = false;
