@@ -83,6 +83,11 @@ public class WeatherManager : MonoBehaviour
         {
             SailingSceneManage.Instance.Skybox[0].SetFloat("_Exposure", 0.55f);
             OceanManager.Instance.SetOceanLight(0.85f);
+            SailingSceneManage.Instance.SetUnityFog(FogType.Day_Sunny);
+        }
+        else
+        {
+            SailingSceneManage.Instance.SetUnityFog(FogType.Night_Sunny);
         }
 
         foreach (GameObject item in WeatherGroup)
@@ -102,6 +107,11 @@ public class WeatherManager : MonoBehaviour
         {
             SailingSceneManage.Instance.Skybox[0].SetFloat("_Exposure", 0.4f);
             OceanManager.Instance.SetOceanLight(0.58f);
+            SailingSceneManage.Instance.SetUnityFog(FogType.Day_Cloudy);
+        }
+        else
+        {
+            SailingSceneManage.Instance.SetUnityFog(FogType.Night_Cloudy);
         }
     }
 
@@ -116,6 +126,11 @@ public class WeatherManager : MonoBehaviour
         {
             SailingSceneManage.Instance.Skybox[0].SetFloat("_Exposure", 0.4f);
             OceanManager.Instance.SetOceanLight(0.58f);
+            SailingSceneManage.Instance.SetUnityFog(FogType.Day_Cloudy);
+        }
+        else
+        {
+            SailingSceneManage.Instance.SetUnityFog(FogType.Night_Cloudy);
         }
     }
 

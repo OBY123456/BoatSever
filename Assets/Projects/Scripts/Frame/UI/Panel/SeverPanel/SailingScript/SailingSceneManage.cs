@@ -10,6 +10,14 @@ using Newtonsoft.Json;
 using MTFrame;
 using UnityEngine.UI;
 
+public enum FogType
+{
+    Day_Sunny,
+    Day_Cloudy,
+    Night_Sunny,
+    Night_Cloudy,
+}
+
 public class SailingSceneManage : MonoBehaviour
 {
     public static SailingSceneManage Instance;
@@ -30,6 +38,13 @@ public class SailingSceneManage : MonoBehaviour
     private float Transition_Time = 4.0f;
 
     public Light SceneLight;
+
+    public GameObject[] ZuanJingPingTaiLight;
+
+    private float SceneLightIntensity_day = 1f;
+    private float SceneLightIntensity_Rain = 0.3f;
+    private float SceneLightIntensity_Night = 0.01f;
+
     public Light WeatherLight;
 
     public Material[] Skybox;
@@ -250,6 +265,13 @@ public class SailingSceneManage : MonoBehaviour
                 Time_Night();
             }
         }
+
+        if(IsNight)
+        {
+            var euler = ZuanJingPingTaiLight[1].transform.rotation.eulerAngles;
+            euler += new Vector3(0,25,0) * Time.deltaTime;
+            ZuanJingPingTaiLight[1].transform.rotation = Quaternion.Euler(euler);
+        }
     }
 
     public void CameraOpen()
@@ -299,34 +321,63 @@ public class SailingSceneManage : MonoBehaviour
     public void Time_Day()
     {
         PPV.SetActive(true);
-        SceneLight.intensity = 1;
+        SceneLight.gameObject.transform.localEulerAngles = new Vector3(155.74f, -555.2f, 0);
+        OceanManager.Instance.SetDayOceanMaterial();
         //WeatherLight.enabled = true;
         RenderSettings.skybox = Skybox[0];
 
         if(WeatherManager.Instance.WeatherType == WeatherMakerPrecipitationType.None)
         {
-            OceanManager.Instance.SetOceanLight(0.85f);
-            Skybox[0].SetFloat("_Exposure", 0.55f);
+            SetUnityFog(FogType.Day_Sunny);
         }
         else
         {
-            Skybox[0].SetFloat("_Exposure", 0.4f);
-            OceanManager.Instance.SetOceanLight(0.58f);
+            SetUnityFog(FogType.Day_Cloudy);
         }
-    
-        autoDrive.animationControl.Set_Day_Smoke();
+        ZuanJingPingTaiLight_Hide();
+        autoDrive.BoatLightGroup_Open();
+        //autoDrive.animationControl.Set_Day_Smoke();
         IsNight = false;
     }
 
     private void Time_Night()
     {
         PPV.SetActive(false);
-        SceneLight.intensity = 0.01f;
+        SceneLight.intensity = SceneLightIntensity_Night;
+        SceneLight.gameObject.transform.localEulerAngles = new Vector3(155.74f, -392.37f, 0);
         //WeatherLight.enabled = false;
-        RenderSettings.skybox = Skybox[1];
-        OceanManager.Instance.SetOceanLight(0.29f);
-        autoDrive.animationControl.Set_Night_Smoke();
+        if (WeatherManager.Instance.WeatherType == WeatherMakerPrecipitationType.None)
+        {
+            SetUnityFog(FogType.Night_Sunny);
+        }
+        else
+        {
+            SetUnityFog(FogType.Night_Cloudy);
+        }
+
+        
+
+        //OceanManager.Instance.SetOceanLight(0.12f);
+        //autoDrive.animationControl.Set_Night_Smoke();
+        ZuanJingPingTaiLight_Open();
+        autoDrive.BoatLightGroup_Hide();
         IsNight = true;
+    }
+
+    private void ZuanJingPingTaiLight_Hide()
+    {
+        foreach (GameObject item in ZuanJingPingTaiLight)
+        {
+            item.SetActive(false);
+        }
+    }
+
+    private void ZuanJingPingTaiLight_Open()
+    {
+        foreach (GameObject item in ZuanJingPingTaiLight)
+        {
+            item.SetActive(true);
+        }
     }
 
     private void OnDestroy()
@@ -341,5 +392,60 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
+    }
+
+    public void SetUnityFog(FogType fogType)
+    {
+        switch (fogType)
+        {
+            case FogType.Day_Sunny:
+                //远方雾效果
+                //RenderSettings.fogDensity = 0.0004f;
+                RenderSettings.fogColor = new Color(143 / 255f, 166 / 255f, 187 / 255f, 255 / 255f);
+                //海洋亮度
+                OceanManager.Instance.SetOceanLight(0.85f);
+                //天空盒亮度
+                Skybox[0].SetFloat("_Exposure", 0.55f);
+                //场景光
+                SceneLight.intensity = SceneLightIntensity_day;
+                //船体光
+                foreach (GameObject item in autoDrive.BoatLightGroup)
+                {
+                    item.GetComponent<Light>().intensity = 10000;
+                }
+                break;
+            case FogType.Day_Cloudy:
+                //RenderSettings.fogDensity = 0.0004f;
+                RenderSettings.fogColor = new Color(106 / 255f, 124 / 255f, 140 / 255f, 255 / 255f);
+                Skybox[0].SetFloat("_Exposure", 0.4f);
+                OceanManager.Instance.SetOceanLight(0.58f);
+                SceneLight.intensity = SceneLightIntensity_Rain;
+                foreach (GameObject item in autoDrive.BoatLightGroup)
+                {
+                    item.GetComponent<Light>().intensity = 1000;
+                }
+                break;
+            case FogType.Night_Sunny:
+                //RenderSettings.fogDensity = 0.0004f;
+                RenderSettings.fogColor = new Color(6 / 255f, 13 / 255f, 20 / 255f, 255 / 255f);
+                RenderSettings.skybox = Skybox[1];
+                OceanManager.Instance.SetNightOceanMaterial();
+                //Skybox[1].SetFloat("_Exposure", 1.0f);
+                //Skybox[1].SetInt("_Rotation", 63);
+                //OceanManager.Instance.SetOceanLight(0.58f);
+                //SceneLight.intensity = SceneLightIntensity_Rain;
+                //foreach (GameObject item in autoDrive.BoatLightGroup)
+                //{
+                //    item.GetComponent<Light>().intensity = 1000;
+                //}
+                break;
+            case FogType.Night_Cloudy:
+                RenderSettings.fogColor = new Color(7 / 255f, 16 / 255f, 29 / 255f, 255 / 255f);
+                RenderSettings.skybox = Skybox[2];
+                OceanManager.Instance.SetNightRainOceanMaterial();
+                break;
+            default:
+                break;
+        }
     }
 }

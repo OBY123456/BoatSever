@@ -8,6 +8,7 @@ public class CameraFallow : MonoBehaviour
     public Transform player;
     public Vector3 offset;
     private Vector3 offset2;
+    public Vector3 RotateOffset;
 
     public float Sensity = 5.0f;
 
@@ -21,6 +22,6 @@ public class CameraFallow : MonoBehaviour
     {
         Vector3 vector3 = player.position + player.TransformDirection(offset);
         transform.position = Vector3.Lerp(transform.position, new Vector3(vector3.x, transform.position.y, vector3.z), Time.deltaTime * Sensity);
-        transform.LookAt(player.position);
+        transform.LookAt(player.position+ RotateOffset);
     }
 }

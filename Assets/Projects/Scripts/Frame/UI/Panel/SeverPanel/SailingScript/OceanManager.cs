@@ -16,6 +16,8 @@ public class OceanManager : MonoBehaviour
     [Range(0, 1)]
     public float OceanLight = 0.5f;
 
+    public Material[] OceanMaterial;
+
     private void Awake()
     {
         Instance = this;
@@ -40,9 +42,9 @@ public class OceanManager : MonoBehaviour
     public void SetWaveSize(float value)
     {
         gerstnerBatched._spectrum._multiplier = value;
-        SailingSceneManage.Instance.boatProbes._forceMultiplier = 14 - value / 1.7f * 11;
+        SailingSceneManage.Instance.boatProbes._forceMultiplier = 30 - value / 1.7f * 25;
         SailingSceneManage.Instance.boatProbes._minSpatialLength = 100 - value / 1.7f * 60;
-        gerstnerBatched._spectrum._powerLog[13] = 1.5f + value / 1.7f * 1.5f;
+        gerstnerBatched._spectrum._powerLog[13] = 1.5f + value / 1.7f * 1.0f;
     }
 
     /// <summary>
@@ -59,5 +61,20 @@ public class OceanManager : MonoBehaviour
     {
         SetWaveSize(WaveSize);
         SetOceanLight(OceanLight);
+    }
+
+    public void SetDayOceanMaterial()
+    {
+        oceanRenderer._material = OceanMaterial[0];
+    }
+
+    public void SetNightOceanMaterial()
+    {
+        oceanRenderer._material = OceanMaterial[1];
+    }
+
+    public void SetNightRainOceanMaterial()
+    {
+        oceanRenderer._material = OceanMaterial[2];
     }
 }

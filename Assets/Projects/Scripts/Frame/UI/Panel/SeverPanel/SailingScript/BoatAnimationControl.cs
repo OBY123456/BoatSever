@@ -35,43 +35,45 @@ public class BoatAnimationControl : MonoBehaviour
     {
         //EngineRotate(RotateSpeed_Engine);
 
-        if (RotateSpeed_Propeller == 0)
-        {
-            return;
-        }
-        else
-        {
-            PropellerRotate();
-        }
+        //if (RotateSpeed_Propeller == 0)
+        //{
+        //    return;
+        //}
+        //else
+        //{
+        //    PropellerRotate();
+        //}
     }
 
-    public void EngineUp()
-    {
-        Engine_Liftinglever.transform.DOLocalMoveZ(0f, 3.0f);
-    }
+    //public void EngineUp()
+    //{
+    //    Engine_Liftinglever.transform.DOLocalMoveZ(0f, 3.0f);
+    //}
 
-    public void EngineDown()
-    {
-        Engine_Liftinglever.transform.DOLocalMoveZ(-50.2f, 3.0f);
-    }
+    //public void EngineDown()
+    //{
+    //    Engine_Liftinglever.transform.DOLocalMoveZ(-50.2f, 3.0f);
+    //}
 
-    public void EngineRotate(float value)
-    {
-        Engine_Shaft.transform.DOLocalRotate(value*Vector3.forward, 3.0f);
-    }
+    //public void EngineRotate(float value)
+    //{
+    //    Engine_Shaft.transform.DOLocalRotate(value*Vector3.forward, 3.0f);
+    //}
 
-    private void PropellerRotate()
-    {
-        Engine_Propeller.transform.Rotate(Vector3.right * RotateSpeed_Propeller);
-    }
+    //private void PropellerRotate()
+    //{
+    //    Engine_Propeller.transform.Rotate(Vector3.right * RotateSpeed_Propeller);
+    //}
 
     public void Set_Day_Smoke()
     {
-        SmokeParticle.GetComponent<Renderer>().material = SmokeMaterials[0];
+        // SmokeParticle.GetComponent<Renderer>().material = SmokeMaterials[0];
+        SmokeParticle.GetComponent<Renderer>().material.SetColor("_TintColor", new Color(191 / 255f, 191 / 255f, 191 / 255f, 10 / 255f));
     }
 
     public void Set_Night_Smoke()
     {
-        SmokeParticle.GetComponent<Renderer>().material = SmokeMaterials[1];
+        //SmokeParticle.GetComponent<Renderer>().material = SmokeMaterials[1];
+        SmokeParticle.GetComponent<Renderer>().material.SetColor("_TintColor", new Color(50 / 255f, 50 / 255f, 50 / 255f, 10 / 255f));
     }
 }

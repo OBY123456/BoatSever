@@ -73,6 +73,8 @@ public class AutoDrive : MonoBehaviour
 
     public BoatAnimationControl animationControl;
 
+    public GameObject[] BoatLightGroup;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -80,7 +82,7 @@ public class AutoDrive : MonoBehaviour
         boatProbes = this.transform.GetComponent<BoatProbes>();
         //Target = SailingSceneManage.Instance.Target[1];
         //map_Boat = SailingSceneManage.Instance.minimap.map_Boat;
-        SailingSceneManage.Instance.SetWaveScale(0.1f);
+        SailingSceneManage.Instance.SetWaveScale(0.01f);
         //animationControl.EngineDown();
 
         
@@ -261,7 +263,7 @@ public class AutoDrive : MonoBehaviour
         {
             boatProbes._enginePower = 0;
             boatProbes._turnPower = 0;
-            SailingSceneManage.Instance.SetWaveScale(0.1f);
+            SailingSceneManage.Instance.SetWaveScale(0.01f);
 
             Boat.DORotate(new Vector3(Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time);
             Boat.DOMove(new Vector3(target.position.x, Boat.position.y, target.position.z), time).OnComplete(() => {
@@ -318,12 +320,12 @@ public class AutoDrive : MonoBehaviour
         Boat.eulerAngles = new Vector3(0, -90, 0);
         Target = null;
         InitialDistance = 0;
-        SailingSceneManage.Instance.SetWaveScale(0.1f);
+        SailingSceneManage.Instance.SetWaveScale(0.01f);
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Turnto_speed = 1.0f;
-        OceanManager.Instance.ResetOcean();
-        WeatherManager.Instance.ResetWeather();
-        SailingSceneManage.Instance.Time_Day();
+        //OceanManager.Instance.ResetOcean();
+        //WeatherManager.Instance.ResetWeather();
+        //SailingSceneManage.Instance.Time_Day();
     }
 
     //private bool IsEnter = false;
@@ -360,6 +362,22 @@ public class AutoDrive : MonoBehaviour
             lerp = false;
            // IsEnter = false;
             Turnto_speed = 1.0f;
+        }
+    }
+
+    public void BoatLightGroup_Open()
+    {
+        foreach (GameObject item in BoatLightGroup)
+        {
+            item.SetActive(true);
+        }
+    }
+
+    public void BoatLightGroup_Hide()
+    {
+        foreach (GameObject item in BoatLightGroup)
+        {
+            item.SetActive(false);
         }
     }
 }
