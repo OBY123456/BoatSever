@@ -108,6 +108,8 @@ public class AutoDrive : MonoBehaviour
             Reset_ZhuanChuang();
         }
 
+
+
         //Debug.DrawLine(Boat.position, Target.transform.position, Color.red);
         //Debug.DrawRay(Boat.position, Boat.forward * 100.0f, Color.blue);
     }
@@ -119,6 +121,10 @@ public class AutoDrive : MonoBehaviour
             Boat_Turnto(Target.gameObject.transform.position);
         }
 
+        if (!IsComplete)
+        {
+            BoatStraighten(target1);
+        }
     }
 
     private bool lerp ;
@@ -242,15 +248,17 @@ public class AutoDrive : MonoBehaviour
         IsArrive = true;
     }
 
+    bool IsComplete = true;
+    bool IsRotateComplete = false;
+    Transform target1;
     /// <summary>
     /// 到达设置的点后调整角度和位置
     /// </summary>
     /// <param name="target">目标点</param>
-    /// <param name="Rota">角度的正负值</param>
+    /// <param name="i">角度的正负值</param>
     public void SetBoatTransform(Transform target,float i)
     {
-
-        float temp = Mathf.Abs( Boat.localEulerAngles.y - 360 - (-90));
+        float temp = Mathf.Abs(Boat.localEulerAngles.y - 360 - (-90));
         float time = temp / 8;
 
         if(time < 1)
@@ -264,25 +272,70 @@ public class AutoDrive : MonoBehaviour
             boatProbes._enginePower = 0;
             boatProbes._turnPower = 0;
             SailingSceneManage.Instance.SetWaveScale(0.01f);
+            target1 = target;
+            IsComplete = false;
+            Boat.DORotate(new Vector3(Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time).SetEase(Ease.Linear)
+                .OnComplete(()=> {
+                    
+                IsRotateComplete = true;
+            });
+            
+            
+        }
+        Target = SailingSceneManage.Instance.Target[0];
+    }
 
-            Boat.DORotate(new Vector3(Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time);
-            Boat.DOMove(new Vector3(target.position.x, Boat.position.y, target.position.z), time).OnComplete(() => {
-                
+
+    private void BoatStraighten(Transform target)
+    {
+        Rigidbody _rb = GetComponent<Rigidbody>();
+        float distance = Vector3.Distance(target.position, Boat.position);
+        //Debug.Log("Distance==" + distance);
+        if (distance > 5)
+        {
+            Vector3 vector3 = (target.position - Boat.position).normalized;
+            _rb.AddForceAtPosition(vector3 * 15.0f, _rb.position, ForceMode.Acceleration);          
+        }
+        else
+        {
+            _rb.velocity = Vector3.zero;
+            if (IsRotateComplete)
+            {
+                IsComplete = true;
                 SailingSceneManage.Instance.SetWaveScale(0.3f);
                 IsTurnTo = true;
                 IsAutoDrive = true;
                 TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
                 StartSailing();
-            });
+                Debug.Log("Complete!");
+            }
         }
-        Target = SailingSceneManage.Instance.Target[0];
     }
+
+    //private void BoatStraighten(Transform target,float time,float i)
+    //{
+    //    Boat.DORotate(new Vector3(Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time);
+    //    Boat.DOMove(new Vector3(target.position.x, Boat.position.y, target.position.z), time).OnComplete(() => {
+    //        if (IsComplete == false)
+    //        {
+    //            IsComplete = true;
+    //            SailingSceneManage.Instance.SetWaveScale(0.3f);
+    //            IsTurnTo = true;
+    //            IsAutoDrive = true;
+    //            TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
+    //            StartSailing();
+    //            //Boat.DOKill();
+    //            Debug.Log("Complete!");
+    //        }
+    //    });
+    //}
 
     public void MainCameraRotate()
     {
         if(IsRight)
         {
-            DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.MainCameraFallow.offset.x, x => SailingSceneManage.Instance.MainCameraFallow.offset.x = x, 105.63f, 5.0f);
+            DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.MainCameraFallow.offset.x, 
+                x => SailingSceneManage.Instance.MainCameraFallow.offset.x = x, 105.63f, 5.0f);
         }
     }
 
@@ -323,10 +376,13 @@ public class AutoDrive : MonoBehaviour
         SailingSceneManage.Instance.SetWaveScale(0.01f);
         this.GetComponent<Rigidbody>().velocity = Vector3.zero;
         Turnto_speed = 1.0f;
-        //OceanManager.Instance.ResetOcean();
-        //WeatherManager.Instance.ResetWeather();
-        //SailingSceneManage.Instance.Time_Day();
-    }
+        IsComplete = true;
+        IsRotateComplete = false;
+        Boat.DOKill();
+    //OceanManager.Instance.ResetOcean();
+    //WeatherManager.Instance.ResetWeather();
+    //SailingSceneManage.Instance.Time_Day();
+}
 
     //private bool IsEnter = false;
     private void OnTriggerStay  (Collider other)

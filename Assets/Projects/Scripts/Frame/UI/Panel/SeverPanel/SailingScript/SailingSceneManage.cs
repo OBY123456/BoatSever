@@ -45,7 +45,7 @@ public class SailingSceneManage : MonoBehaviour
     private float SceneLightIntensity_Rain = 0.3f;
     private float SceneLightIntensity_Night = 0.01f;
 
-    public Light WeatherLight;
+    public GameObject DayLightGroup;
 
     public Material[] Skybox;
 
@@ -323,9 +323,10 @@ public class SailingSceneManage : MonoBehaviour
         PPV.SetActive(true);
         SceneLight.gameObject.transform.localEulerAngles = new Vector3(155.74f, -555.2f, 0);
         OceanManager.Instance.SetDayOceanMaterial();
+        WeatherManager.Instance.SetDayColor();
         //WeatherLight.enabled = true;
         RenderSettings.skybox = Skybox[0];
-
+        DayLightGroup.SetActive(true);
         if(WeatherManager.Instance.WeatherType == WeatherMakerPrecipitationType.None)
         {
             SetUnityFog(FogType.Day_Sunny);
@@ -345,6 +346,8 @@ public class SailingSceneManage : MonoBehaviour
         PPV.SetActive(false);
         SceneLight.intensity = SceneLightIntensity_Night;
         SceneLight.gameObject.transform.localEulerAngles = new Vector3(155.74f, -392.37f, 0);
+        WeatherManager.Instance.SetNightColor();
+        DayLightGroup.SetActive(false);
         //WeatherLight.enabled = false;
         if (WeatherManager.Instance.WeatherType == WeatherMakerPrecipitationType.None)
         {

@@ -10,6 +10,8 @@ public class WeatherManager : MonoBehaviour
     private WeatherMakerPrecipitationManagerScript weatherMaker;
     private WeatherMakerWindScript windMaker;
 
+    public WeatherMakerCelestialObjectScript weatherMakerCelestial;
+
     public WeatherMakerPrecipitationType WeatherType;
 
     /// <summary>
@@ -43,6 +45,7 @@ public class WeatherManager : MonoBehaviour
         float duration = WeatherMakerPrecipitationManagerScript.Instance.PrecipitationChangeDuration;
 
         windMaker.SetWindProfileAnimated(WeatherMakerScript.Instance.LoadResource<WeatherMakerWindProfileScript>("WeatherMakerWindProfile_MediumWind"), 0.0f, duration);
+        weatherMakerCelestial.IsSun = false;
     }
 
     // Update is called once per frame
@@ -135,9 +138,7 @@ public class WeatherManager : MonoBehaviour
     }
 
     public void SetPrecipitationIntensity(float value)
-    {
-        
-        
+    {    
         weatherMaker.PrecipitationIntensity = value;
     }
 
@@ -194,4 +195,16 @@ public class WeatherManager : MonoBehaviour
     //        //TimeOfDayCategoryText.text = WeatherMakerDayNightCycleManagerScript.Instance.TimeOfDayCategory.ToString();
     //    }
     //}
+
+    public void SetDayColor()
+    {
+        WeatherGroup[0].transform.GetChild(0).GetComponent<ParticleSystem>().GetComponent<Renderer>().material.SetColor("_TintColor", new Color(96/255f,88/255f,88/255f,1));
+        WeatherGroup[1].transform.GetChild(0).GetComponent<ParticleSystem>().GetComponent<Renderer>().material.SetColor("_TintColor", new Color(105 / 255f, 107 / 255f, 120 / 255f, 225/255f));
+    }
+
+    public void SetNightColor()
+    {
+        WeatherGroup[0].transform.GetChild(0).GetComponent<ParticleSystem>().GetComponent<Renderer>().material.SetColor("_TintColor", new Color(43/255f,40/255f,40/255f,220/255f));
+        WeatherGroup[1].transform.GetChild(0).GetComponent<ParticleSystem>().GetComponent<Renderer>().material.SetColor("_TintColor", new Color(70/255f,71/255f,82/255f,41/255f));
+    }
 }

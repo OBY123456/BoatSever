@@ -10,6 +10,9 @@ public class BoatControl : MonoBehaviour
     public static BoatControl Instance;
     public GameObject Boat;
 
+    [Range(0, 360)]
+    public float RotateY = 0;
+
     private void Awake()
     {
         Instance = this;
@@ -24,7 +27,7 @@ public class BoatControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+       // SetTargetRotate(RotateY);
     }
 
     private void Callback(EventParamete parameteData)
@@ -32,10 +35,15 @@ public class BoatControl : MonoBehaviour
         if (parameteData.EvendName == ParmaterCodes.BoatRotate.ToString())
         {
             BoatRotate rotate = JsonConvert.DeserializeObject<BoatRotate>(parameteData.GetParameter<string>()[0]);
-            Vector3 temp = new Vector3(rotate.X, rotate.Y, rotate.Z);
+            //Vector3 temp = new Vector3(rotate.X, rotate.Y, rotate.Z);
             //Boat.transform.localEulerAngles = Vector3.Lerp(Boat.transform.localEulerAngles, temp, 0.5f);
-            Boat.transform.localEulerAngles = temp;
+            SetTargetRotate(rotate.Y);
         }
+    }
+
+    public void SetTargetRotate(float value)
+    {
+        Boat.transform.localEulerAngles = Vector3.up * value;
     }
 
     private void OnDestroy()
