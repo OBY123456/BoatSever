@@ -8,7 +8,7 @@ public class UICanvas : BasePanel
 {
 
     public static UICanvas Instance;
-    public RectTransform View1,View2;
+    //public RectTransform View1,View2;
 
     protected override void Awake()
     {
@@ -25,20 +25,20 @@ public class UICanvas : BasePanel
     public override void InitFind()
     {
         base.InitFind();
-        View1 = FindTool.FindChildComponent<RectTransform>(transform, "ViewGroup/View1");
-        View2 = FindTool.FindChildComponent<RectTransform>(transform, "ViewGroup/View2");
+        //View1 = FindTool.FindChildComponent<RectTransform>(transform, "ViewGroup/View1");
+        //View2 = FindTool.FindChildComponent<RectTransform>(transform, "ViewGroup/View2");
 
     }
 
-    public void ViewOpen()
-    {
-        View1.DOSizeDelta(new Vector2(492, 270), 0.5f);
-        View2.DOSizeDelta(new Vector2(492,270), 0.5f);
-    }
+    //public void ViewOpen()
+    //{
+    //    View1.DOSizeDelta(new Vector2(492, 270), 0.5f);
+    //    View2.DOSizeDelta(new Vector2(492,270), 0.5f);
+    //}
 
-    public void ViewHide()
-    {
-        View1.DOSizeDelta(new Vector2(492, 0), 0.5f);
-        View2.DOSizeDelta(new Vector2(492, 0), 0.5f);
-    }
+    //public void ViewHide()
+    //{
+    //    View1.DOSizeDelta(new Vector2(492, 0), 0.5f);
+    //    View2.DOSizeDelta(new Vector2(492, 0), 0.5f);
+    //}
 }

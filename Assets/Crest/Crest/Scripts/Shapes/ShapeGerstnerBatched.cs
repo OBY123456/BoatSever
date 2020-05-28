@@ -321,7 +321,7 @@ namespace Crest
                         // It used to be this, but I'm pushing all the stuff that doesn't depend on position into the phase.
                         //half4 angle = k * (C * _CrestTime + x) + _Phases[vi];
                         float gravityScale = _spectrum._gravityScales[(firstComponent + i) / _componentsPerOctave];
-                        float gravity = OceanRenderer.Instance.Gravity * _spectrum._gravityScale;
+                        float gravity = OceanRenderer.Instance.GravityOffect * OceanRenderer.Instance.Gravity * _spectrum._gravityScale;
                         float C = Mathf.Sqrt(wl * gravity * gravityScale * one_over_2pi);
                         float k = twopi / wl;
                         // Repeat every 2pi to keep angle bounded - helps precision on 16bit platforms

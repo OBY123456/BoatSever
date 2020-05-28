@@ -45,6 +45,7 @@ public class OceanManager : MonoBehaviour
         SailingSceneManage.Instance.boatProbes._forceMultiplier = 30 - value / 1.7f * 25;
         SailingSceneManage.Instance.boatProbes._minSpatialLength = 100 - value / 1.7f * 60;
         gerstnerBatched._spectrum._powerLog[13] = 1.5f + value / 1.7f * 1.0f;
+        oceanRenderer.GravityOffect = 1.0f + value / 1.7f * 0.5f;
     }
 
     /// <summary>

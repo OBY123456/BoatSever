@@ -42,8 +42,11 @@ public class SailingSceneManage : MonoBehaviour
     public GameObject[] ZuanJingPingTaiLight;
 
     private float SceneLightIntensity_day = 1f;
-    private float SceneLightIntensity_Rain = 0.3f;
+    private float SceneLightIntensity_Rain = 0.4f;
     private float SceneLightIntensity_Night = 0.01f;
+
+    private Color LightColor_Sunyday = new Color(219/255f,208/255f,181/255f,1);
+    private Color LightColor_RainDay = new Color(153/255f,200/255f,226/255f,1);
 
     public GameObject DayLightGroup;
 
@@ -74,7 +77,7 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
-        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
+        //EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
         //Time_Night();
         Time_Day();
     }
@@ -112,8 +115,8 @@ public class SailingSceneManage : MonoBehaviour
             case ParmaterCodes.TrainModelData:
                 TrainModelChange(msg);
                 break;
-            case ParmaterCodes.PuGuanCameraData:
-                SetPuGuanCameraState(msg);
+            //case ParmaterCodes.PuGuanCameraData:
+            //    SetPuGuanCameraState(msg);
                 break;
             default:
                 break;
@@ -222,25 +225,25 @@ public class SailingSceneManage : MonoBehaviour
         }
     }
 
-    private void SetPuGuanCameraState(string msg)
-    {
-        PuGuanCameraData data = new PuGuanCameraData();
-        data = JsonConvert.DeserializeObject<PuGuanCameraData>(msg);
-        PuGuanCameraState state = (PuGuanCameraState)Enum.Parse(typeof(PuGuanCameraState), data.state);
-        switch (state)
-        {
-            case PuGuanCameraState.Open:
-                Boat_PuGuan.SetActive(true);
-                UICanvas.Instance.ViewOpen();
-                break;
-            case PuGuanCameraState.Hide:
-                Boat_PuGuan.SetActive(false);
-                UICanvas.Instance.ViewHide();
-                break;
-            default:
-                break;
-        }
-    }
+    //private void SetPuGuanCameraState(string msg)
+    //{
+    //    PuGuanCameraData data = new PuGuanCameraData();
+    //    data = JsonConvert.DeserializeObject<PuGuanCameraData>(msg);
+    //    PuGuanCameraState state = (PuGuanCameraState)Enum.Parse(typeof(PuGuanCameraState), data.state);
+    //    switch (state)
+    //    {
+    //        case PuGuanCameraState.Open:
+    //            Boat_PuGuan.SetActive(true);
+    //            UICanvas.Instance.ViewOpen();
+    //            break;
+    //        case PuGuanCameraState.Hide:
+    //            Boat_PuGuan.SetActive(false);
+    //            UICanvas.Instance.ViewHide();
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
 
     private void SetTargetPosition(string msg)
     {
@@ -304,7 +307,7 @@ public class SailingSceneManage : MonoBehaviour
     /// </summary>
     /// <param name="waveScale"></param>
     /// <param name="value"></param>
-    public void WaveChange(float value = 1.0f)
+    public void WaveChange(float value = 2.0f)
     {
         Vector3 vector3 = new Vector3(value, value, value);
         foreach (Transform item in WaveGroup)
@@ -394,7 +397,7 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
-        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
+        //EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
     }
 
     public void SetUnityFog(FogType fogType)
@@ -411,6 +414,7 @@ public class SailingSceneManage : MonoBehaviour
                 Skybox[0].SetFloat("_Exposure", 0.55f);
                 //场景光
                 SceneLight.intensity = SceneLightIntensity_day;
+                SceneLight.color = LightColor_Sunyday;
                 //船体光
                 foreach (GameObject item in autoDrive.BoatLightGroup)
                 {
@@ -423,6 +427,7 @@ public class SailingSceneManage : MonoBehaviour
                 Skybox[0].SetFloat("_Exposure", 0.4f);
                 OceanManager.Instance.SetOceanLight(0.58f);
                 SceneLight.intensity = SceneLightIntensity_Rain;
+                SceneLight.color = LightColor_RainDay;
                 foreach (GameObject item in autoDrive.BoatLightGroup)
                 {
                     item.GetComponent<Light>().intensity = 1000;
@@ -433,6 +438,7 @@ public class SailingSceneManage : MonoBehaviour
                 RenderSettings.fogColor = new Color(6 / 255f, 13 / 255f, 20 / 255f, 255 / 255f);
                 RenderSettings.skybox = Skybox[1];
                 OceanManager.Instance.SetNightOceanMaterial();
+                SceneLight.color = Color.white;
                 //Skybox[1].SetFloat("_Exposure", 1.0f);
                 //Skybox[1].SetInt("_Rotation", 63);
                 //OceanManager.Instance.SetOceanLight(0.58f);
@@ -446,6 +452,7 @@ public class SailingSceneManage : MonoBehaviour
                 RenderSettings.fogColor = new Color(7 / 255f, 16 / 255f, 29 / 255f, 255 / 255f);
                 RenderSettings.skybox = Skybox[2];
                 OceanManager.Instance.SetNightRainOceanMaterial();
+                SceneLight.color = Color.white;
                 break;
             default:
                 break;

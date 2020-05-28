@@ -41,6 +41,8 @@ namespace Crest
         [SerializeField, Delayed, Tooltip("Multiplier for physics gravity."), Range(0f, 10f)]
         float _gravityMultiplier = 1f;
         public float Gravity { get { return _gravityMultiplier * Physics.gravity.magnitude; } }
+        [Range(1,10)]
+        public float GravityOffect = 1.0f;
 
         [Header("Detail Params")]
 

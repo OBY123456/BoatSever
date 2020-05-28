@@ -152,7 +152,7 @@ public class AutoDrive : MonoBehaviour
             {
                 IsTurnTo = true;
                 CurrentTime = 0;
-                Turnto_speed = 0.5f;
+                Turnto_speed = 0.1f;
             }
         }
 
@@ -243,7 +243,7 @@ public class AutoDrive : MonoBehaviour
         IsTurnTo = false;
         boatProbes._enginePower = 0;
         boatProbes._turnPower = 0;
-        SailingSceneManage.Instance.WaveChange(0.1f);
+        SailingSceneManage.Instance.WaveChange(0.01f);
         //IsAutoDrive = false;
         IsArrive = true;
     }
@@ -265,22 +265,23 @@ public class AutoDrive : MonoBehaviour
         {
             TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
             Debug.Log("time==" + time);
-            SailingSceneManage.Instance.WaveChange(0.3f);
+            SailingSceneManage.Instance.WaveChange(0.8f);
         }
         else
         {
             boatProbes._enginePower = 0;
             boatProbes._turnPower = 0;
-            SailingSceneManage.Instance.SetWaveScale(0.01f);
+            //SailingSceneManage.Instance.SetWaveScale(0.01f);
             target1 = target;
             IsComplete = false;
             Boat.DORotate(new Vector3(Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time).SetEase(Ease.Linear)
-                .OnComplete(()=> {
-                    
-                IsRotateComplete = true;
-            });
-            
-            
+                .OnComplete(() =>
+                {
+
+                    IsRotateComplete = true;
+                });
+
+
         }
         Target = SailingSceneManage.Instance.Target[0];
     }
@@ -302,11 +303,12 @@ public class AutoDrive : MonoBehaviour
             if (IsRotateComplete)
             {
                 IsComplete = true;
-                SailingSceneManage.Instance.SetWaveScale(0.3f);
+                SailingSceneManage.Instance.WaveChange(0.8f);
                 IsTurnTo = true;
                 IsAutoDrive = true;
                 TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
                 StartSailing();
+                Boat.DOKill();
                 Debug.Log("Complete!");
             }
         }
@@ -384,12 +386,10 @@ public class AutoDrive : MonoBehaviour
     //SailingSceneManage.Instance.Time_Day();
 }
 
-    //private bool IsEnter = false;
     private void OnTriggerStay  (Collider other)
     {
         if(other.tag == "Obstacle" && IsAutoDrive /*&& !IsEnter*/)
         {
-            //IsEnter = true;
             Transform obs = other.transform;
             //当障碍物在船的前方时
             //Debug.Log("前方==" + Vector3.Dot(Boat.forward, (obs.position - Boat.position)));
@@ -416,7 +416,6 @@ public class AutoDrive : MonoBehaviour
         {
             IsRotate = IsTurnTo =  true;
             lerp = false;
-           // IsEnter = false;
             Turnto_speed = 1.0f;
         }
     }

@@ -12,12 +12,12 @@ public class DisplayTask : BaseTask
     public override void Enter()
     {
         base.Enter();
-        UIManager.CreatePanel<DisplayPanel>(WindowTypeEnum.ForegroundScreen);
+        //UIManager.CreatePanel<DisplayPanel>(WindowTypeEnum.ForegroundScreen);
     }
 
     public override void Exit()
     {
         base.Exit();
-        UIManager.ChangePanelState<DisplayPanel>(WindowTypeEnum.ForegroundScreen, UIPanelStateEnum.Hide);
+        //UIManager.ChangePanelState<DisplayPanel>(WindowTypeEnum.ForegroundScreen, UIPanelStateEnum.Hide);
     }
 }
