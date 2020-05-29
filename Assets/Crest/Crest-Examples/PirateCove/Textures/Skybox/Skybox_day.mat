@@ -48,7 +48,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _Tex:
-        m_Texture: {fileID: 8900000, guid: 9a26829559b7aaf40b2c1a9a9578c08e, type: 3}
+        m_Texture: {fileID: 8900000, guid: 7e913ca26426b724ab8e088331f63258, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -67,7 +67,7 @@ Material:
     - _OcclusionStrength: 1
     - _QueueOffset: 0
     - _ReceiveShadows: 1
-    - _Rotation: 202
+    - _Rotation: 44
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
@@ -80,7 +80,7 @@ Material:
     - _Color: {r: 0.5, g: 0.5, b: 0.5, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.19999996, g: 0.19999996, b: 0.19999996, a: 1}
-    - _Tint: {r: 0.990566, g: 0.990566, b: 0.990566, a: 0.49019608}
+    - _Tint: {r: 1, g: 1, b: 1, a: 0.4}
 --- !u!114 &7477049189921483231
 MonoBehaviour:
   m_ObjectHideFlags: 11

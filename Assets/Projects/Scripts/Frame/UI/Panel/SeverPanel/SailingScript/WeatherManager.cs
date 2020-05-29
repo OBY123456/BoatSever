@@ -84,7 +84,6 @@ public class WeatherManager : MonoBehaviour
         weatherMaker.Precipitation = WeatherMakerPrecipitationType.None;
         if(!SailingSceneManage.Instance.IsNight)
         {
-            SailingSceneManage.Instance.Skybox[0].SetFloat("_Exposure", 0.55f);
             OceanManager.Instance.SetOceanLight(0.85f);
             SailingSceneManage.Instance.SetUnityFog(FogType.Day_Sunny);
         }
@@ -204,7 +203,7 @@ public class WeatherManager : MonoBehaviour
 
     public void SetNightColor()
     {
-        WeatherGroup[0].transform.GetChild(0).GetComponent<ParticleSystem>().GetComponent<Renderer>().material.SetColor("_TintColor", new Color(43/255f,40/255f,40/255f,220/255f));
+        WeatherGroup[0].transform.GetChild(0).GetComponent<ParticleSystem>().GetComponent<Renderer>().material.SetColor("_TintColor", new Color(79/255f,71/255f,71/255f,220/255f));
         WeatherGroup[1].transform.GetChild(0).GetComponent<ParticleSystem>().GetComponent<Renderer>().material.SetColor("_TintColor", new Color(70/255f,71/255f,82/255f,41/255f));
     }
 }

@@ -10,7 +10,7 @@ public class OceanManager : MonoBehaviour
     public ShapeGerstnerBatched gerstnerBatched;
     public OceanRenderer oceanRenderer;
 
-    [Range(0,1.7f)]
+    [Range(0.2f,1.7f)]
     public float WaveSize = 0.2f;
 
     [Range(0, 1)]
@@ -25,7 +25,7 @@ public class OceanManager : MonoBehaviour
 
     private void Start()
     {
-       // ResetOcean();
+        ResetOcean();
     }
 
     // Update is called once per frame
@@ -42,10 +42,10 @@ public class OceanManager : MonoBehaviour
     public void SetWaveSize(float value)
     {
         gerstnerBatched._spectrum._multiplier = value;
-        SailingSceneManage.Instance.boatProbes._forceMultiplier = 30 - value / 1.7f * 25;
-        SailingSceneManage.Instance.boatProbes._minSpatialLength = 100 - value / 1.7f * 60;
-        gerstnerBatched._spectrum._powerLog[13] = 1.5f + value / 1.7f * 1.0f;
-        oceanRenderer.GravityOffect = 1.0f + value / 1.7f * 0.5f;
+        //SailingSceneManage.Instance.boatProbes._forceMultiplier = 30 - (value - 0.2f) / 1.5f * 25;
+        //SailingSceneManage.Instance.boatProbes._minSpatialLength = 100 - (value - 0.2f) / 1.5f * 60;
+        gerstnerBatched._spectrum._powerLog[13] = 1.5f + (value - 0.2f) / 1.5f * 2.0f;
+        oceanRenderer.GravityOffect = 1.0f + (value - 0.2f) / 1.5f * 0.1f;
     }
 
     /// <summary>

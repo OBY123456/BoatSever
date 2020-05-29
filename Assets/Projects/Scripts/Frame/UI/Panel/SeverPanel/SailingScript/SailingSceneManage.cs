@@ -22,7 +22,7 @@ public class SailingSceneManage : MonoBehaviour
 {
     public static SailingSceneManage Instance;
 
-    public Transform RawImageTransform;
+    public Transform FirstPersonTransform;
 
     public GameObject[] Target;
     public GameObject PPV;
@@ -45,7 +45,7 @@ public class SailingSceneManage : MonoBehaviour
     private float SceneLightIntensity_Rain = 0.4f;
     private float SceneLightIntensity_Night = 0.01f;
 
-    private Color LightColor_Sunyday = new Color(219/255f,208/255f,181/255f,1);
+    private Color LightColor_Sunyday = new Color(229/255f,226/255f,219/255f,1);
     private Color LightColor_RainDay = new Color(153/255f,200/255f,226/255f,1);
 
     public GameObject DayLightGroup;
@@ -117,7 +117,7 @@ public class SailingSceneManage : MonoBehaviour
                 break;
             //case ParmaterCodes.PuGuanCameraData:
             //    SetPuGuanCameraState(msg);
-                break;
+                //break;
             default:
                 break;
         }
@@ -279,12 +279,12 @@ public class SailingSceneManage : MonoBehaviour
 
     public void CameraOpen()
     {
-        RawImageTransform.gameObject.SetActive(true);
+        FirstPersonTransform.gameObject.SetActive(true);
     }
 
     public void CameraHide()
     {
-        RawImageTransform.gameObject.SetActive(false);
+        FirstPersonTransform.gameObject.SetActive(false);
     }
 
     public void SetWaveScale(float value)
@@ -406,8 +406,8 @@ public class SailingSceneManage : MonoBehaviour
         {
             case FogType.Day_Sunny:
                 //远方雾效果
-                //RenderSettings.fogDensity = 0.0004f;
-                RenderSettings.fogColor = new Color(143 / 255f, 166 / 255f, 187 / 255f, 255 / 255f);
+                //RenderSettings.fogDensity = 0.00004f;
+                RenderSettings.fogColor = new Color(88 / 255f, 122 / 255f, 162 / 255f, 255 / 255f);
                 //海洋亮度
                 OceanManager.Instance.SetOceanLight(0.85f);
                 //天空盒亮度
@@ -422,7 +422,7 @@ public class SailingSceneManage : MonoBehaviour
                 }
                 break;
             case FogType.Day_Cloudy:
-                //RenderSettings.fogDensity = 0.0004f;
+                //RenderSettings.fogDensity = 0.00004f;
                 RenderSettings.fogColor = new Color(106 / 255f, 124 / 255f, 140 / 255f, 255 / 255f);
                 Skybox[0].SetFloat("_Exposure", 0.4f);
                 OceanManager.Instance.SetOceanLight(0.58f);
@@ -449,7 +449,7 @@ public class SailingSceneManage : MonoBehaviour
                 //}
                 break;
             case FogType.Night_Cloudy:
-                RenderSettings.fogColor = new Color(7 / 255f, 16 / 255f, 29 / 255f, 255 / 255f);
+                //RenderSettings.fogColor = new Color(7 / 255f, 16 / 255f, 29 / 255f, 255 / 255f);
                 RenderSettings.skybox = Skybox[2];
                 OceanManager.Instance.SetNightRainOceanMaterial();
                 SceneLight.color = Color.white;
