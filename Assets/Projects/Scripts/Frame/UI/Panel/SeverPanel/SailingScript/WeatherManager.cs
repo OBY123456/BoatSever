@@ -7,8 +7,8 @@ public class WeatherManager : MonoBehaviour
 {
     public static WeatherManager Instance;
 
-    private WeatherMakerPrecipitationManagerScript weatherMaker;
-    private WeatherMakerWindScript windMaker;
+    //public WeatherMakerPrecipitationManagerScript weatherMaker;
+    //private WeatherMakerWindScript windMaker;
 
     public WeatherMakerCelestialObjectScript weatherMakerCelestial;
 
@@ -40,12 +40,13 @@ public class WeatherManager : MonoBehaviour
 
     void Start()
     {
-        weatherMaker = WeatherMakerPrecipitationManagerScript.Instance;
-        windMaker = WeatherMakerWindScript.Instance;
+        //weatherMaker = WeatherMakerPrecipitationManagerScript.Instance;
+        //windMaker = WeatherMakerWindScript.Instance;
         float duration = WeatherMakerPrecipitationManagerScript.Instance.PrecipitationChangeDuration;
 
-        windMaker.SetWindProfileAnimated(WeatherMakerScript.Instance.LoadResource<WeatherMakerWindProfileScript>("WeatherMakerWindProfile_MediumWind"), 0.0f, duration);
+        WeatherMakerWindScript.Instance.SetWindProfileAnimated(WeatherMakerScript.Instance.LoadResource<WeatherMakerWindProfileScript>("WeatherMakerWindProfile_MediumWind"), 0.0f, duration);
         weatherMakerCelestial.IsSun = false;
+        SetWeather(WeatherType, Intensity);
     }
 
     // Update is called once per frame
@@ -55,10 +56,12 @@ public class WeatherManager : MonoBehaviour
         //{
         //    SetTime(TimeValue);
         //}
-        SetWeather(WeatherType, Intensity);
+#if UNITY_EDITOR
+        //SetWeather(WeatherType, Intensity);
         //SetPrecipitationIntensity(Intensity);
         //SetWindIntensity(Wind_Intensity);
         //SetWindRotate(Wind_Rotate);
+#endif
     }
 
     public void SetWeather(WeatherMakerPrecipitationType type,float value)
@@ -81,7 +84,7 @@ public class WeatherManager : MonoBehaviour
 
     private void SetSunyDay()
     {
-        weatherMaker.Precipitation = WeatherMakerPrecipitationType.None;
+        WeatherMakerPrecipitationManagerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
         if(!SailingSceneManage.Instance.IsNight)
         {
             OceanManager.Instance.SetOceanLight(0.85f);
@@ -102,7 +105,7 @@ public class WeatherManager : MonoBehaviour
     {
         WeatherGroup[0].SetActive(true);
         WeatherGroup[1].SetActive(false);
-        weatherMaker.Precipitation = WeatherMakerPrecipitationType.Rain;
+        WeatherMakerPrecipitationManagerScript.Instance.Precipitation = WeatherMakerPrecipitationType.Rain;
         SetPrecipitationIntensity(value);
 
         if(!SailingSceneManage.Instance.IsNight)
@@ -121,7 +124,7 @@ public class WeatherManager : MonoBehaviour
     {
         WeatherGroup[0].SetActive(false);
         WeatherGroup[1].SetActive(true);
-        weatherMaker.Precipitation = WeatherMakerPrecipitationType.Snow;
+        WeatherMakerPrecipitationManagerScript.Instance.Precipitation = WeatherMakerPrecipitationType.Snow;
         SetPrecipitationIntensity(value);
 
         if (!SailingSceneManage.Instance.IsNight)
@@ -137,19 +140,19 @@ public class WeatherManager : MonoBehaviour
     }
 
     public void SetPrecipitationIntensity(float value)
-    {    
-        weatherMaker.PrecipitationIntensity = value;
+    {
+        WeatherMakerPrecipitationManagerScript.Instance.PrecipitationIntensity = value;
     }
 
     public void SetWindIntensity(float value)
     {
-        windMaker.WindZone.windMain = value * 3.0f;
+        WeatherMakerWindScript.Instance.WindZone.windMain = value * 3.0f;
         //windMaker.AudioSourceWind.Play(2.0f * value);
     }
 
     public void SetWindRotate(float value)
     {
-        windMaker.gameObject.transform.localEulerAngles = Vector3.up * value;
+        WeatherMakerWindScript.Instance.gameObject.transform.localEulerAngles = Vector3.up * value;
     }
 
     public void ResetWeather()

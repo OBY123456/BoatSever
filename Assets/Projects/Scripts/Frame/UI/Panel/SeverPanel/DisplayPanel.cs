@@ -13,10 +13,10 @@ public class DisplayPanel : BasePanel
 {
     public MediaPlayer[] VideoGroup;
     private MediaPlayer CurrentVideo;
-    private Vector2 MediaRect = new Vector2(1333.4f, 710f);
-
+    //private Vector2 MediaRect = new Vector2(1333.4f, 710f);
+    private Vector2 MediaRect = new Vector2(2676f, 1585f);
     private Vector2 InitialPosition;
-    private Vector2 InitialSize = new Vector2(206, 164);
+    private Vector2 InitialSize = new Vector2(424f, 338.6666f);
     private float AnimationTime = 0.8f;
 
     private bool IsAnimation;
@@ -32,6 +32,14 @@ public class DisplayPanel : BasePanel
         "Video/发电机.mp4",
     };
 
+    protected override void Start()
+    {
+        base.Start();
+        Reset();
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.Display_PlayVideo.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.Display_VideoControl.ToString(), Callback);
+    }
+
     public override void InitFind()
     {
         base.InitFind();
@@ -43,14 +51,6 @@ public class DisplayPanel : BasePanel
     public override void InitEvent()
     {
         base.InitEvent();
-    }
-
-    public override void Open()
-    {
-        base.Open();
-        Reset();
-        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.Display_PlayVideo.ToString(), Callback);
-        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.Display_VideoControl.ToString(), Callback);
     }
 
     private void Callback(EventParamete parameteData)
@@ -137,13 +137,13 @@ public class DisplayPanel : BasePanel
         }
     }
 
-    public override void Hide()
+    protected override void OnDestroy()
     {
-        base.Hide();
+        base.OnDestroy();
         TimeTool.Instance.Remove(TimeDownType.NoUnityTimeLineImpact, AnimationClose);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.Display_PlayVideo.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.Display_VideoControl.ToString(), Callback);
-        if(CurrentVideo!=null)
+        if (CurrentVideo != null)
             ImageHideAnimation();
     }
 
@@ -162,7 +162,7 @@ public class DisplayPanel : BasePanel
             }
         }
 
-        BoatControl.Instance.Boat.SetActive(false);
+        //BoatControl.Instance.Boat.SetActive(false);
         IsAnimation = true;
         RectTransform rect = image.gameObject.GetComponent<RectTransform>();
         CanvasGroup canvas = image.gameObject.GetComponent<CanvasGroup>();
@@ -201,7 +201,7 @@ public class DisplayPanel : BasePanel
     {
         IsAnimation = true;
 
-        BoatControl.Instance.Boat.SetActive(true);
+        //BoatControl.Instance.Boat.SetActive(true);
 
         if (CurrentVideo == null)
         {

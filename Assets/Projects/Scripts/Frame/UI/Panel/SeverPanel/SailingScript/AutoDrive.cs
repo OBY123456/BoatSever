@@ -75,6 +75,8 @@ public class AutoDrive : MonoBehaviour
 
     public GameObject[] BoatLightGroup;
 
+    public bool IsReset;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -83,17 +85,16 @@ public class AutoDrive : MonoBehaviour
         //Target = SailingSceneManage.Instance.Target[1];
         //map_Boat = SailingSceneManage.Instance.minimap.map_Boat;
         SailingSceneManage.Instance.SetWaveScale(0.01f);
-        //animationControl.EngineDown();
-
-        
+        //animationControl.EngineDown();     
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Q))
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.Q))
         {
-            if(IsAutoDrive)
+            if (IsAutoDrive)
             {
                 IsAutoDrive = false;
             }
@@ -103,13 +104,11 @@ public class AutoDrive : MonoBehaviour
             }
         }
 
-        if(Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(KeyCode.W))
         {
             Reset_ZhuanChuang();
         }
-
-
-
+#endif
         //Debug.DrawLine(Boat.position, Target.transform.position, Color.red);
         //Debug.DrawRay(Boat.position, Boat.forward * 100.0f, Color.blue);
     }
@@ -223,7 +222,7 @@ public class AutoDrive : MonoBehaviour
         }
     }
 
-    private void StartAutoDrive()
+    public void StartAutoDrive()
     {
         if(!IsArrive)
         {
@@ -232,6 +231,8 @@ public class AutoDrive : MonoBehaviour
             IsAutoDrive = true;
             SailingSceneManage.Instance.WaveChange();
             StartSailing();
+            IsReset = false;
+            BoatAnimationControl.Instance.IsRotate = true;
         }
     }
 
@@ -246,6 +247,8 @@ public class AutoDrive : MonoBehaviour
         SailingSceneManage.Instance.WaveChange(0.01f);
         //IsAutoDrive = false;
         IsArrive = true;
+        IsAutoDrive = false;
+        BoatAnimationControl.Instance.IsRotate = false;
     }
 
     bool IsComplete = true;
@@ -336,8 +339,18 @@ public class AutoDrive : MonoBehaviour
     {
         if(IsRight)
         {
-            DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.MainCameraFallow.offset.x, 
-                x => SailingSceneManage.Instance.MainCameraFallow.offset.x = x, 105.63f, 5.0f);
+            if(SailingSceneManage.Instance.ThirdPersonCamera[0])
+            {
+                DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.ThirdPersonCamera[0].transform.GetComponent<CameraFallow>().offset.x,
+                                x => SailingSceneManage.Instance.ThirdPersonCamera[0].transform.GetComponent<CameraFallow>().offset.x = x, 105.63f, 5.0f);
+            }
+
+
+            if (SailingSceneManage.Instance.ThirdPersonCamera[1])
+            {
+                DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.ThirdPersonCamera[1].transform.GetComponent<CameraFallow>().offset.x,
+                                x => SailingSceneManage.Instance.ThirdPersonCamera[1].transform.GetComponent<CameraFallow>().offset.x = x, 105.63f, 5.0f);
+            }                
         }
     }
 
@@ -358,7 +371,7 @@ public class AutoDrive : MonoBehaviour
     }
 
     //重置转场训练
-    private void Reset_ZhuanChuang()
+    public void Reset_ZhuanChuang()
     {
         TimeTool.Instance.Remove(TimeDownType.NoUnityTimeLineImpact, MainCameraRotate);
         boatProbes._enginePower = 0;
@@ -370,7 +383,10 @@ public class AutoDrive : MonoBehaviour
         IsAutoDrive = false;
         IsArrive = false;
         CurrentTime = 0;
-        SailingSceneManage.Instance.MainCameraFallow.offset.x = -105.63f;
+        foreach (Camera item in SailingSceneManage.Instance.ThirdPersonCamera)
+        {
+            item.transform.GetComponent<CameraFallow>().offset.x = -105.63f;
+        }
         Boat.position = new Vector3(0, 180, 0);
         Boat.eulerAngles = new Vector3(0, -90, 0);
         Target = null;
@@ -381,10 +397,12 @@ public class AutoDrive : MonoBehaviour
         IsComplete = true;
         IsRotateComplete = false;
         Boat.DOKill();
-    //OceanManager.Instance.ResetOcean();
-    //WeatherManager.Instance.ResetWeather();
-    //SailingSceneManage.Instance.Time_Day();
-}
+        BoatAnimationControl.Instance.IsRotate = false;
+        IsReset = true;
+        //OceanManager.Instance.ResetOcean();
+        //WeatherManager.Instance.ResetWeather();
+        //SailingSceneManage.Instance.Time_Day();
+    }
 
     private void OnTriggerStay  (Collider other)
     {

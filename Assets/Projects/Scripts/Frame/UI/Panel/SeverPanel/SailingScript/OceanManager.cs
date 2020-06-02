@@ -31,8 +31,9 @@ public class OceanManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        SetWaveSize(WaveSize);
-        //SetOceanLight(OceanLight);
+#if UNITY_EDITOR
+        //SetWaveSize(WaveSize);
+#endif
     }
 
     /// <summary>
@@ -42,7 +43,7 @@ public class OceanManager : MonoBehaviour
     public void SetWaveSize(float value)
     {
         gerstnerBatched._spectrum._multiplier = value;
-        //SailingSceneManage.Instance.boatProbes._forceMultiplier = 30 - (value - 0.2f) / 1.5f * 25;
+        SailingSceneManage.Instance.boatProbes._forceMultiplier = 40 + (value - 0.2f) / 1.5f * 60;
         //SailingSceneManage.Instance.boatProbes._minSpatialLength = 100 - (value - 0.2f) / 1.5f * 60;
         gerstnerBatched._spectrum._powerLog[13] = 1.5f + (value - 0.2f) / 1.5f * 2.0f;
         oceanRenderer.GravityOffect = 1.0f + (value - 0.2f) / 1.5f * 0.1f;

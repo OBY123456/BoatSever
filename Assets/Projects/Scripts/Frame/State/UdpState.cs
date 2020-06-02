@@ -169,6 +169,9 @@ public class UdpState : BaseState
                     //case ParmaterCodes.PuGuanCameraData:
                     //    EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), eventParamete);
                     //    break;
+                    case ParmaterCodes.AutoDriveData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), eventParamete);
+                        break;
                     default:
                         break;
                 }

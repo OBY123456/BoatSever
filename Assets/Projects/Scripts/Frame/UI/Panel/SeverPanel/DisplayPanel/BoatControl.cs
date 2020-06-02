@@ -7,16 +7,16 @@ using UnityEngine;
 
 public class BoatControl : MonoBehaviour
 {
-    public static BoatControl Instance;
+    //public static BoatControl Instance;
     public GameObject Boat;
 
     [Range(0, 360)]
     public float RotateY = 0;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    //private void Awake()
+    //{
+    //    Instance = this;
+    //}
 
     // Start is called before the first frame update
     void Start()

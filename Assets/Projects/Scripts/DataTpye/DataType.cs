@@ -170,6 +170,16 @@ namespace MTFrame
     //{
     //    public string state;
     //}
+    public enum AutoDriveEnum
+    {
+        Start,
+        Wait,
+    }
+
+    public class AutoDriveData
+    {
+        public string state;
+    }
 }
 
 

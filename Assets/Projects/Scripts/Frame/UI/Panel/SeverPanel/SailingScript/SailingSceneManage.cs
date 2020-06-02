@@ -22,7 +22,8 @@ public class SailingSceneManage : MonoBehaviour
 {
     public static SailingSceneManage Instance;
 
-    public Transform FirstPersonTransform;
+    public Transform[] FirstPersonTransform;
+    public Camera[] ThirdPersonCamera;
 
     public GameObject[] Target;
     public GameObject PPV;
@@ -55,7 +56,8 @@ public class SailingSceneManage : MonoBehaviour
     //铺管装置
     public GameObject Boat_PuGuan;
 
-    public CameraFallow MainCameraFallow;
+    //public CameraFallow[] MainCameraFallow;
+    public RectTransform Display6Rect;
 
     //是否是晚上
     public bool IsNight;
@@ -74,9 +76,10 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.OceanWaveSize.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.WeatherIntensity.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.WeatherType.ToString(), Callback);
-        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
+        //EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), Callback);
         //EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
         //Time_Night();
         Time_Day();
@@ -109,15 +112,39 @@ public class SailingSceneManage : MonoBehaviour
             case ParmaterCodes.CameraState:
                 SetCameraState(msg);
                 break;
-            case ParmaterCodes.TargetPosition:
-                SetTargetPosition(msg);
-                break;
+            //case ParmaterCodes.TargetPosition:
+            //    SetTargetPosition(msg);
+            //    break;
             case ParmaterCodes.TrainModelData:
                 TrainModelChange(msg);
                 break;
             //case ParmaterCodes.PuGuanCameraData:
             //    SetPuGuanCameraState(msg);
-                //break;
+            //break;
+            case ParmaterCodes.AutoDriveData:
+                StartDrive(msg);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void StartDrive(string msg)
+    {
+        AutoDriveData autoDriveData = new AutoDriveData();
+        autoDriveData = JsonConvert.DeserializeObject<AutoDriveData>(msg);
+        AutoDriveEnum driveEnum = (AutoDriveEnum)Enum.Parse(typeof(AutoDriveEnum), autoDriveData.state);
+        switch (driveEnum)
+        {
+            case AutoDriveEnum.Start:
+                if(autoDrive.IsReset)
+                {
+                    autoDrive.StartAutoDrive();
+                }
+                break;
+            case AutoDriveEnum.Wait:
+                autoDrive.Reset_ZhuanChuang();
+                break;
             default:
                 break;
         }
@@ -245,21 +272,22 @@ public class SailingSceneManage : MonoBehaviour
     //    }
     //}
 
-    private void SetTargetPosition(string msg)
-    {
+    //private void SetTargetPosition(string msg)
+    //{
         //TargetPosition targetPosition = new TargetPosition();
         //targetPosition = JsonConvert.DeserializeObject<TargetPosition>(msg);
         //Vector3 vector3 = new Vector3(targetPosition.x, 180.0f, targetPosition.z);
         //Target.transform.position = vector3;
         //autoDrive.IsStart = true;
-    }
+    //}
 
     // Update is called once per frame
     void Update()
     {
-        if(Input.GetKeyDown(KeyCode.O))
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.O))
         {
-            if(IsNight)
+            if (IsNight)
             {
                 Time_Day();
             }
@@ -268,8 +296,9 @@ public class SailingSceneManage : MonoBehaviour
                 Time_Night();
             }
         }
+#endif
 
-        if(IsNight)
+        if (IsNight)
         {
             var euler = ZuanJingPingTaiLight[1].transform.rotation.eulerAngles;
             euler += new Vector3(0,25,0) * Time.deltaTime;
@@ -279,12 +308,22 @@ public class SailingSceneManage : MonoBehaviour
 
     public void CameraOpen()
     {
-        FirstPersonTransform.gameObject.SetActive(true);
+        Display6Rect.gameObject.SetActive(false);
+        foreach (Transform item in FirstPersonTransform)
+        {
+            item.gameObject.SetActive(true);
+        }
+        //FirstPersonTransform.gameObject.SetActive(true);
     }
 
     public void CameraHide()
     {
-        FirstPersonTransform.gameObject.SetActive(false);
+        Display6Rect.gameObject.SetActive(true);
+        foreach (Transform item in FirstPersonTransform)
+        {
+            item.gameObject.SetActive(false);
+        }
+        //FirstPersonTransform.gameObject.SetActive(false);
     }
 
     public void SetWaveScale(float value)
@@ -330,7 +369,7 @@ public class SailingSceneManage : MonoBehaviour
         //WeatherLight.enabled = true;
         RenderSettings.skybox = Skybox[0];
         DayLightGroup.SetActive(true);
-        if(WeatherManager.Instance.WeatherType == WeatherMakerPrecipitationType.None)
+        if(WeatherMakerPrecipitationManagerScript.Instance.Precipitation == WeatherMakerPrecipitationType.None)
         {
             SetUnityFog(FogType.Day_Sunny);
         }
@@ -352,7 +391,7 @@ public class SailingSceneManage : MonoBehaviour
         WeatherManager.Instance.SetNightColor();
         DayLightGroup.SetActive(false);
         //WeatherLight.enabled = false;
-        if (WeatherManager.Instance.WeatherType == WeatherMakerPrecipitationType.None)
+        if (WeatherMakerPrecipitationManagerScript.Instance.Precipitation == WeatherMakerPrecipitationType.None)
         {
             SetUnityFog(FogType.Night_Sunny);
         }
@@ -394,10 +433,11 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.OceanWaveSize.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.WeatherIntensity.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.WeatherType.ToString(), Callback);
-        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
+        //EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
         //EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), Callback);
     }
 
     public void SetUnityFog(FogType fogType)
@@ -449,7 +489,7 @@ public class SailingSceneManage : MonoBehaviour
                 //}
                 break;
             case FogType.Night_Cloudy:
-                //RenderSettings.fogColor = new Color(7 / 255f, 16 / 255f, 29 / 255f, 255 / 255f);
+                RenderSettings.fogColor = new Color(6 / 255f, 13 / 255f, 20 / 255f, 255 / 255f);
                 RenderSettings.skybox = Skybox[2];
                 OceanManager.Instance.SetNightRainOceanMaterial();
                 SceneLight.color = Color.white;

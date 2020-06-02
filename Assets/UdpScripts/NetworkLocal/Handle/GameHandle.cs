@@ -122,6 +122,13 @@ public class GameHandle : HandleBase
         //    SentDataToState(index, ParmaterCodes.PuGuanCameraData);
         //    return;
         //}
+
+        index = operation.GetParemater<string>(ParmaterCodes.AutoDriveData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.AutoDriveData);
+            return;
+        }
     }
 
     public override void OnUnconnectedRequestProcess(INetEngine netEngine, IPEndPoint endPoint, OperationResponse operation)

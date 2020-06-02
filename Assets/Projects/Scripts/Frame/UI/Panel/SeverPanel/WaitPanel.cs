@@ -18,6 +18,8 @@ public class WaitPanel : BasePanel
 
     public Animator animator;
 
+    private WaitPanel2 panel2;
+
     //切换场景时设置这两个，然后SceneLoadAsync即可
     public SceneName sceneName;
     public PanelName panelName;
@@ -26,6 +28,12 @@ public class WaitPanel : BasePanel
     {
         base.Awake();
         Instance = this;
+    }
+
+    protected override void Start()
+    {
+        base.Start();
+        panel2 = UIManager.GetPanel<WaitPanel2>(WindowTypeEnum.World);
     }
 
     public override void InitFind()
@@ -75,7 +83,7 @@ public class WaitPanel : BasePanel
         Main.Instance.MainCamera.gameObject.SetActive(true);
         sliderCanvas.alpha = 1;
         SceneManager.LoadSceneAsync(sceneName.ToString(), MTFrame.MTScene.LoadingModeType.UnityLocal,
-    () => { StartCoroutine(LoadingSlide()); GC.Collect(); }, null, () => { IsComplete = true; });
+    () => { StartCoroutine(LoadingSlide()); GC.Collect();StartCoroutine(panel2.LoadingSlide()); }, null, () => { IsComplete = true; panel2.IsComplete = true; });
     }
 
     private void Reset()
@@ -103,13 +111,11 @@ public class WaitPanel : BasePanel
             if (IsComplete)
             {
                 LoadingComplete();
-                Debug.Log("读条完成");
                 yield break;
             }
             else if (slider.value >= 0.98f && IsComplete)
             {
                 LoadingComplete();
-                Debug.Log("读条完成");
                 yield break;
             }
         }
