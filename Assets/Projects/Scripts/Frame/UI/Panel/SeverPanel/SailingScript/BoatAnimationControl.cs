@@ -5,15 +5,15 @@ using DG.Tweening;
 
 public class BoatAnimationControl : MonoBehaviour
 {
-    public static BoatAnimationControl Instance;
+    //public static BoatAnimationControl Instance;
     //升降杆
     //public GameObject Engine_Liftinglever;
 
     //旋转轴
-    public GameObject[] Engine_Shaft;
+    public Transform[] Engine_Shaft;
 
     //螺旋桨
-    public GameObject[] Engine_Propeller;
+    public Transform[] Engine_Propeller;
 
     //public ParticleSystem SmokeParticle;
 
@@ -25,16 +25,16 @@ public class BoatAnimationControl : MonoBehaviour
     [Range(0,360)]
     public float RotateSpeed_Engine = 0;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
+    //private void Awake()
+    //{
+    //    Instance = this;
+    //}
 
     // Start is called before the first frame update
-    void Start()
-    {
+    //void Start()
+    //{
         
-    }
+    //}
 
     // Update is called once per frame
     void Update()
@@ -57,16 +57,29 @@ public class BoatAnimationControl : MonoBehaviour
 
     private void PropellerRotate()
     {
-        Engine_Propeller[0].transform.Rotate(Vector3.right * RotateSpeed_Propeller);
-        Engine_Propeller[1].transform.Rotate(Vector3.right * RotateSpeed_Propeller);
-        Engine_Propeller[2].transform.Rotate(Vector3.right * RotateSpeed_Propeller);
-        Engine_Propeller[3].transform.Rotate(Vector3.right * RotateSpeed_Propeller);
-        Engine_Propeller[4].transform.Rotate(Vector3.right * RotateSpeed_Propeller);
-        Engine_Propeller[5].transform.Rotate(Vector3.right * RotateSpeed_Propeller);
-        Engine_Propeller[6].transform.Rotate(Vector3.right * RotateSpeed_Propeller);
-        Engine_Propeller[7].transform.Rotate(Vector3.right * RotateSpeed_Propeller);
+        Engine_Propeller[0].Rotate(Vector3.right * RotateSpeed_Propeller);
+        Engine_Propeller[1].Rotate(Vector3.right * RotateSpeed_Propeller);
+        Engine_Propeller[2].Rotate(Vector3.right * RotateSpeed_Propeller);
+        Engine_Propeller[3].Rotate(Vector3.right * RotateSpeed_Propeller);
+        Engine_Propeller[4].Rotate(Vector3.right * RotateSpeed_Propeller);
+        Engine_Propeller[5].Rotate(Vector3.right * RotateSpeed_Propeller);
+        Engine_Propeller[6].Rotate(Vector3.right * RotateSpeed_Propeller);
+        Engine_Propeller[7].Rotate(Vector3.right * RotateSpeed_Propeller);
     }
 
+    /// <summary>
+    /// 控制螺旋桨方向函数
+    /// </summary>
+    /// <param name="value">目标角度</param>
+    /// <param name="time">所需时间</param>
+    public void ShaftRotate(float value,float time)
+    {
+        
+        Vector3 vector = Vector3.forward * value;
+        //Debug.Log("vector==" + vector);
+        Engine_Shaft[0].DOLocalRotate(vector, time).SetEase(Ease.Linear);
+        Engine_Shaft[1].DOLocalRotate(vector, time).SetEase(Ease.Linear);
+    }
 
     //public void EngineUp()
     //{

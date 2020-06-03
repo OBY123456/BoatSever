@@ -28,11 +28,14 @@ public class ModelBindTextures : MonoBehaviour
         if(replaceMaterial.Length<=0)
         {
             Debug.LogError("请添加要替换掉的材质");
+            return;
         }
 
         for(int i=0 ;i<=curMeshRenderList.Count-1 ;i++)
         {
             Material[] mats = curMeshRenderList[i].sharedMaterials;//有的Gameobject可能会有多个Mats
+            Material[] newMats;
+            List<Material> newMatLists =new List<Material>(curMeshRenderList.Capacity); 
             Material newMat = null;
             bool check = false;
             for (int j = 0 ; j <= mats.Length - 1 ; j++)
@@ -41,19 +44,26 @@ public class ModelBindTextures : MonoBehaviour
                 string compareName = mats[j].name;
                GetMaterial(compareName,out newMat,out check);
                 
-                if (check != null)
+                if (check)
                 {
                     //mats[j] = newMat;
-                    mats[j].CopyPropertiesFromMaterial(newMat);
-
+                    //mats[j].CopyPropertiesFromMaterial(newMat);
+                    newMatLists.Add(newMat);
                     Debug.Log("Replace Successfull");
                 }
                 else
                 {
-                   //Debug.Log("Replace Error");
+                   Debug.Log("没有找到名为“"+ compareName+"”的材质");
                 }
             }
-           
+
+            if(newMatLists.Count == mats.Length)
+            {
+                newMats = newMatLists.ToArray();
+                mats = newMats;
+                curMeshRenderList[i].materials = mats;
+            }
+            
         }
     }
 

@@ -56,19 +56,19 @@ public class AutoDrive : MonoBehaviour
     /// </summary>
     public bool IsRight;
 
-    /// <summary>
-    /// 小地图上的船
-    /// </summary>
+    ///// <summary>
+    ///// 小地图上的船
+    ///// </summary>
     //private RectTransform map_Boat;
 
-    /// <summary>
-    /// 船的当前位置
-    /// </summary>
+    ///// <summary>
+    ///// 船的当前位置
+    ///// </summary>
     //private Vector3 Current_Destination = Vector3.zero;
 
-    /// <summary>
-    /// 小地图船的位置
-    /// </summary>
+    ///// <summary>
+    ///// 小地图船的位置
+    ///// </summary>
     //private Vector2 Current_Map_Boat;
 
     public BoatAnimationControl animationControl;
@@ -163,10 +163,25 @@ public class AutoDrive : MonoBehaviour
                 if (Vector3.Cross(Boat.forward, (vector - Boat.position).normalized).y > 0)
                 {
                     boatProbes._turnPower = Turnto_speed;
+                    if(!IsRotate)
+                    {
+                        //animationControl.ShaftRotate
+                        //animationControl.Engine_Shaft[0].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[0].localEulerAngles, Vector3.back * 45, 3.0f);
+                        //animationControl.Engine_Shaft[1].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[1].localEulerAngles, Vector3.back * 45, 3.0f);
+                        animationControl.ShaftRotate(-45f, 3.0f);
+                        //Debug.Log("111");
+                    }
                 }
                 else if (Vector3.Cross(Boat.forward, (vector - Boat.position).normalized).y < 0)//向左转
                 {
                     boatProbes._turnPower = -Turnto_speed;
+                    if(!IsRotate)
+                    {
+                        animationControl.ShaftRotate(45f, 3.0f);
+                        //animationControl.Engine_Shaft[0].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[0].localEulerAngles, Vector3.forward * 45, Time.deltaTime);
+                        //animationControl.Engine_Shaft[1].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[1].localEulerAngles, Vector3.forward * 45, Time.deltaTime);
+                        //Debug.Log("111");
+                    }
                 }
                 else
                 {
@@ -178,12 +193,17 @@ public class AutoDrive : MonoBehaviour
                 boatProbes._turnPower = 0;
                 IsTurnTo = false;
                 lerp = true;
+                IsRotate = true;
+                animationControl.ShaftRotate(0, 3.0f);
             }
         }
 
         if (lerp)
         {
-           
+
+            //animationControl.Engine_Shaft[0].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[0].localEulerAngles, Vector3.zero, 3.0f );
+            //animationControl.Engine_Shaft[1].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[1].localEulerAngles, Vector3.zero, 3.0f);
+            
             //if (Vector2.Distance(Current_Map_Boat, map_Boat.anchoredPosition) > Distance)
             //{
             //    Current_Map_Boat = map_Boat.anchoredPosition;
@@ -232,7 +252,7 @@ public class AutoDrive : MonoBehaviour
             SailingSceneManage.Instance.WaveChange();
             StartSailing();
             IsReset = false;
-            BoatAnimationControl.Instance.IsRotate = true;
+            animationControl.IsRotate = true;
         }
     }
 
@@ -248,7 +268,7 @@ public class AutoDrive : MonoBehaviour
         //IsAutoDrive = false;
         IsArrive = true;
         IsAutoDrive = false;
-        BoatAnimationControl.Instance.IsRotate = false;
+        animationControl.IsRotate = false;
     }
 
     bool IsComplete = true;
@@ -277,10 +297,11 @@ public class AutoDrive : MonoBehaviour
             //SailingSceneManage.Instance.SetWaveScale(0.01f);
             target1 = target;
             IsComplete = false;
+            animationControl.ShaftRotate(-45f, time);
             Boat.DORotate(new Vector3(Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time).SetEase(Ease.Linear)
                 .OnComplete(() =>
                 {
-
+                    animationControl.ShaftRotate(0, 3.0f);
                     IsRotateComplete = true;
                 });
 
@@ -312,28 +333,10 @@ public class AutoDrive : MonoBehaviour
                 TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
                 StartSailing();
                 Boat.DOKill();
-                Debug.Log("Complete!");
+                //Debug.Log("Complete!");
             }
         }
     }
-
-    //private void BoatStraighten(Transform target,float time,float i)
-    //{
-    //    Boat.DORotate(new Vector3(Boat.localEulerAngles.x, i * 90.0f, Boat.localEulerAngles.z), time);
-    //    Boat.DOMove(new Vector3(target.position.x, Boat.position.y, target.position.z), time).OnComplete(() => {
-    //        if (IsComplete == false)
-    //        {
-    //            IsComplete = true;
-    //            SailingSceneManage.Instance.SetWaveScale(0.3f);
-    //            IsTurnTo = true;
-    //            IsAutoDrive = true;
-    //            TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
-    //            StartSailing();
-    //            //Boat.DOKill();
-    //            Debug.Log("Complete!");
-    //        }
-    //    });
-    //}
 
     public void MainCameraRotate()
     {
@@ -365,7 +368,7 @@ public class AutoDrive : MonoBehaviour
         lerp = false;
         
         //Current_Map_Boat = map_Boat.anchoredPosition;
-        IsRotate = true;
+        //IsRotate = true;
         CurrentTime = 0;
         //SailingSceneManage.Instance.minimap.Creat_RouteImage(map_Boat.anchoredPosition);
     }
@@ -397,7 +400,12 @@ public class AutoDrive : MonoBehaviour
         IsComplete = true;
         IsRotateComplete = false;
         Boat.DOKill();
-        BoatAnimationControl.Instance.IsRotate = false;
+        animationControl.IsRotate = false;
+        foreach (Transform item in animationControl.Engine_Shaft)
+        {
+            item.DOKill();
+            item.localEulerAngles = Vector3.zero;
+        }
         IsReset = true;
         //OceanManager.Instance.ResetOcean();
         //WeatherManager.Instance.ResetWeather();
@@ -419,10 +427,18 @@ public class AutoDrive : MonoBehaviour
                 if (Vector3.Cross(Boat.forward, (obs.position - Boat.position).normalized).y >= 0)
                 {
                     boatProbes._turnPower = -1;
+                    //animationControl.Engine_Shaft[0].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[0].localEulerAngles, Vector3.forward * 45, 3.0f );
+                    //animationControl.Engine_Shaft[1].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[1].localEulerAngles, Vector3.forward * 45, 3.0f);
+                    //Debug.Log("111");
+                    animationControl.ShaftRotate(45f, 3.0f);
                 }
                 else
                 {
                     boatProbes._turnPower = 1;
+                    //animationControl.Engine_Shaft[0].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[0].localEulerAngles, Vector3.back * 45, Time.deltaTime);
+                    //animationControl.Engine_Shaft[1].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[1].localEulerAngles, Vector3.back * 45, Time.deltaTime);
+                    animationControl.ShaftRotate(-45f, 3.0f);
+                    //Debug.Log("111");
                 }
             }
         }
@@ -432,7 +448,7 @@ public class AutoDrive : MonoBehaviour
     {
         if(other.tag == "Obstacle" && IsAutoDrive)
         {
-            IsRotate = IsTurnTo =  true;
+            IsTurnTo =  true;
             lerp = false;
             Turnto_speed = 1.0f;
         }
