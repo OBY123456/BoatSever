@@ -40,8 +40,6 @@ public class WeatherManager : MonoBehaviour
 
     void Start()
     {
-        //weatherMaker = WeatherMakerPrecipitationManagerScript.Instance;
-        //windMaker = WeatherMakerWindScript.Instance;
         float duration = WeatherMakerPrecipitationManagerScript.Instance.PrecipitationChangeDuration;
 
         WeatherMakerWindScript.Instance.SetWindProfileAnimated(WeatherMakerScript.Instance.LoadResource<WeatherMakerWindProfileScript>("WeatherMakerWindProfile_MediumWind"), 0.0f, duration);
@@ -57,7 +55,20 @@ public class WeatherManager : MonoBehaviour
         //    SetTime(TimeValue);
         //}
 #if UNITY_EDITOR
-        //SetWeather(WeatherType, Intensity);
+        if(Input.GetKeyDown(KeyCode.Z))
+        {
+            SetWeather(WeatherMakerPrecipitationType.None, Intensity);
+        }
+
+        if (Input.GetKeyDown(KeyCode.X))
+        {
+            SetWeather(WeatherMakerPrecipitationType.Rain, Intensity);
+        }
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            SetWeather(WeatherMakerPrecipitationType.Snow, Intensity);
+        }
         //SetPrecipitationIntensity(Intensity);
         //SetWindIntensity(Wind_Intensity);
         //SetWindRotate(Wind_Rotate);

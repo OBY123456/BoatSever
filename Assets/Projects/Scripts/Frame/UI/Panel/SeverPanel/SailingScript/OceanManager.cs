@@ -32,7 +32,7 @@ public class OceanManager : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        //SetWaveSize(WaveSize);
+        SetWaveSize(WaveSize);
 #endif
     }
 
@@ -47,6 +47,8 @@ public class OceanManager : MonoBehaviour
         //SailingSceneManage.Instance.boatProbes._minSpatialLength = 100 - (value - 0.2f) / 1.5f * 60;
         gerstnerBatched._spectrum._powerLog[13] = 1.5f + (value - 0.2f) / 1.5f * 2.0f;
         oceanRenderer.GravityOffect = 1.0f + (value - 0.2f) / 1.5f * 0.1f;
+        SailingSceneManage.Instance.dataManager.display6FPPanels[0].WindSpeedText.text = ((value - 0.2f) / 1.5f * 100).ToString("#0.0");
+        WeatherManager.Instance.SetWindIntensity((value - 0.2f) / 1.5f);
     }
 
     /// <summary>

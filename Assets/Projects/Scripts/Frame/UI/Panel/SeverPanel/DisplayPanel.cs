@@ -112,6 +112,9 @@ public class DisplayPanel : BasePanel
                         CurrentVideo.Play();
                     }
                     break;
+                case VideoControl.重播:
+                    CurrentVideo.Rewind(false);
+                    break;
                 default:
                     break;
             }
@@ -126,7 +129,7 @@ public class DisplayPanel : BasePanel
             float temp = CurrentVideo.Control.GetCurrentTimeMs() + time * 1000;
             if (temp > CurrentVideo.Info.GetDurationMs())
             {
-                temp = CurrentVideo.Info.GetDurationMs();
+                temp = 0;
             }
 
             if (temp < 0)
@@ -187,7 +190,7 @@ public class DisplayPanel : BasePanel
             InitialPosition = rect.anchoredPosition;
         }
 
-        image.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, VideoPath);
+        image.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, "Video/测试视频.mp4");
 
         rect.DOAnchorPos(Vector2.zero, AnimationTime).SetEase(Ease.InExpo);
         rect.DOSizeDelta(MediaRect, AnimationTime).SetEase(Ease.InExpo).OnComplete(()=> {

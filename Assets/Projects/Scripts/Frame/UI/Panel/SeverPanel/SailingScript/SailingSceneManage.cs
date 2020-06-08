@@ -31,6 +31,7 @@ public class SailingSceneManage : MonoBehaviour
     //public Minimap minimap;
 
     public BoatProbes boatProbes;
+    public DataManager dataManager;
 
     public Transform[] WaveGroup;
 
@@ -479,14 +480,6 @@ public class SailingSceneManage : MonoBehaviour
                 RenderSettings.skybox = Skybox[1];
                 OceanManager.Instance.SetNightOceanMaterial();
                 SceneLight.color = Color.white;
-                //Skybox[1].SetFloat("_Exposure", 1.0f);
-                //Skybox[1].SetInt("_Rotation", 63);
-                //OceanManager.Instance.SetOceanLight(0.58f);
-                //SceneLight.intensity = SceneLightIntensity_Rain;
-                //foreach (GameObject item in autoDrive.BoatLightGroup)
-                //{
-                //    item.GetComponent<Light>().intensity = 1000;
-                //}
                 break;
             case FogType.Night_Cloudy:
                 RenderSettings.fogColor = new Color(6 / 255f, 13 / 255f, 20 / 255f, 255 / 255f);
