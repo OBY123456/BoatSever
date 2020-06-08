@@ -36,7 +36,7 @@ public class UdpSeverLink : MonoBehaviour
         RoomManager.Instance.LocalRoom = new Room(UserManager.Instance.LocalUser, 4);
         RoomManager.Instance.LocalRoom.RoomInfo.RoomName = "房间001";
 
-        localServerEngine = new GameLocalServerEngineListener(9999, "Test4");
+        localServerEngine = new GameLocalServerEngineListener(7878, "Test3");
         localServerEngine.Creat();
 
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.SceneSwitch.ToString(), callback);
