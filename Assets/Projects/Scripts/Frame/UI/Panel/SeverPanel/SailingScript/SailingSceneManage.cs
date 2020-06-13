@@ -22,7 +22,7 @@ public class SailingSceneManage : MonoBehaviour
 {
     public static SailingSceneManage Instance;
 
-    public Transform[] FirstPersonTransform;
+    public Camera[] CameraGroup;
     public Camera[] ThirdPersonCamera;
 
     public GameObject[] Target;
@@ -59,6 +59,8 @@ public class SailingSceneManage : MonoBehaviour
 
     //public CameraFallow[] MainCameraFallow;
     public RectTransform Display6Rect;
+
+    public Transform ParticleMask;
 
     //是否是晚上
     public bool IsNight;
@@ -222,10 +224,13 @@ public class SailingSceneManage : MonoBehaviour
         switch (cameraSwitch)
         {
             case CameraSwitch.ThirdPerson:
-                CameraHide();
+                ThirdPersonOpen();
                 break;
             case CameraSwitch.FirstPerson:
-                CameraOpen();
+                FirstPersonOpen();
+                break;
+            case CameraSwitch.RearView:
+                RearViewCameraOpen();
                 break;
             default:
                 break;
@@ -240,13 +245,13 @@ public class SailingSceneManage : MonoBehaviour
         switch (model)
         {
             case TrainModel.Transitions:
-                DataPanel.Instance.Tiletle.text = "转 场 训 练";
+                //DataPanel.Instance.Tiletle.text = "转 场 训 练";
                 break;
             case TrainModel.Laying:
-                DataPanel.Instance.Tiletle.text = "铺 管 训 练";
+                //DataPanel.Instance.Tiletle.text = "铺 管 训 练";
                 break;
             case TrainModel.Lifting:
-                DataPanel.Instance.Tiletle.text = "吊 装 训 练";
+                //DataPanel.Instance.Tiletle.text = "吊 装 训 练";
                 break;
             default:
                 break;
@@ -307,24 +312,36 @@ public class SailingSceneManage : MonoBehaviour
         }
     }
 
-    public void CameraOpen()
+    public void ThirdPersonOpen()
     {
         Display6Rect.gameObject.SetActive(false);
-        foreach (Transform item in FirstPersonTransform)
+        foreach (Camera item in CameraGroup)
         {
-            item.gameObject.SetActive(true);
+            item.gameObject.SetActive(false);
         }
         //FirstPersonTransform.gameObject.SetActive(true);
     }
 
-    public void CameraHide()
+    public void FirstPersonOpen()
     {
         Display6Rect.gameObject.SetActive(true);
-        foreach (Transform item in FirstPersonTransform)
+        foreach (Camera item in CameraGroup)
         {
             item.gameObject.SetActive(false);
         }
+        ParticleMask.gameObject.SetActive(true);
+        CameraGroup[0].gameObject.SetActive(true);
         //FirstPersonTransform.gameObject.SetActive(false);
+    }
+
+    private void RearViewCameraOpen()
+    {
+        foreach (Camera item in CameraGroup)
+        {
+            item.gameObject.SetActive(false);
+        }
+        ParticleMask.gameObject.SetActive(false);
+        CameraGroup[1].gameObject.SetActive(true);
     }
 
     public void SetWaveScale(float value)
@@ -461,6 +478,7 @@ public class SailingSceneManage : MonoBehaviour
                 {
                     item.GetComponent<Light>().intensity = 10000;
                 }
+                DayLightGroup.SetActive(true);
                 break;
             case FogType.Day_Cloudy:
                 //RenderSettings.fogDensity = 0.00004f;
@@ -469,6 +487,7 @@ public class SailingSceneManage : MonoBehaviour
                 OceanManager.Instance.SetOceanLight(0.58f);
                 SceneLight.intensity = SceneLightIntensity_Rain;
                 SceneLight.color = LightColor_RainDay;
+                DayLightGroup.SetActive(false);
                 foreach (GameObject item in autoDrive.BoatLightGroup)
                 {
                     item.GetComponent<Light>().intensity = 1000;

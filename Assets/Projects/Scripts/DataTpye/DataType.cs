@@ -123,6 +123,7 @@ namespace MTFrame
     {
         FirstPerson,
         ThirdPerson,
+        RearView,
     }
 
     /// <summary>
