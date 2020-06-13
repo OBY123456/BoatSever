@@ -60,6 +60,8 @@ public class SailingSceneManage : MonoBehaviour
     //public CameraFallow[] MainCameraFallow;
     public RectTransform Display6Rect;
 
+    public Transform ParticleMask;
+
     //是否是晚上
     public bool IsNight;
 
@@ -317,6 +319,7 @@ public class SailingSceneManage : MonoBehaviour
         {
             item.gameObject.SetActive(false);
         }
+        ParticleMask.gameObject.SetActive(true);
         CameraGroup[0].gameObject.SetActive(true);
         //FirstPersonTransform.gameObject.SetActive(true);
     }
@@ -328,6 +331,7 @@ public class SailingSceneManage : MonoBehaviour
         {
             item.gameObject.SetActive(false);
         }
+        ParticleMask.gameObject.SetActive(false);
         CameraGroup[1].gameObject.SetActive(true);
         //FirstPersonTransform.gameObject.SetActive(false);
     }
@@ -474,6 +478,7 @@ public class SailingSceneManage : MonoBehaviour
                 {
                     item.GetComponent<Light>().intensity = 10000;
                 }
+                DayLightGroup.SetActive(true);
                 break;
             case FogType.Day_Cloudy:
                 //RenderSettings.fogDensity = 0.00004f;
@@ -486,6 +491,7 @@ public class SailingSceneManage : MonoBehaviour
                 {
                     item.GetComponent<Light>().intensity = 1000;
                 }
+                DayLightGroup.SetActive(false);
                 break;
             case FogType.Night_Sunny:
                 //RenderSettings.fogDensity = 0.0004f;

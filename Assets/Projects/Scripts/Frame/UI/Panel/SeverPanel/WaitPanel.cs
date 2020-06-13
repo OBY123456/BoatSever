@@ -83,7 +83,7 @@ public class WaitPanel : BasePanel
         Main.Instance.MainCamera.gameObject.SetActive(true);
         sliderCanvas.alpha = 1;
         SceneManager.LoadSceneAsync(sceneName.ToString(), MTFrame.MTScene.LoadingModeType.UnityLocal,
-    () => { StartCoroutine(LoadingSlide()); GC.Collect();StartCoroutine(panel2.LoadingSlide()); }, null, () => { IsComplete = true; panel2.IsComplete = true; });
+    () => { StartCoroutine(LoadingSlide()); GC.Collect();/*StartCoroutine(panel2.LoadingSlide()); */}, null, () => { IsComplete = true; /*panel2.IsComplete = true;*/ });
     }
 
     private void Reset()
