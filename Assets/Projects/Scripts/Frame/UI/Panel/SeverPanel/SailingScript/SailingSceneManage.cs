@@ -22,7 +22,7 @@ public class SailingSceneManage : MonoBehaviour
 {
     public static SailingSceneManage Instance;
 
-    public Transform[] FirstPersonTransform;
+    public Camera[] CameraGroup;
     public Camera[] ThirdPersonCamera;
 
     public GameObject[] Target;
@@ -222,10 +222,13 @@ public class SailingSceneManage : MonoBehaviour
         switch (cameraSwitch)
         {
             case CameraSwitch.ThirdPerson:
-                CameraHide();
+                ThirdPersonOpen();
                 break;
             case CameraSwitch.FirstPerson:
-                CameraOpen();
+                FirstCameraOpen();
+                break;
+            case CameraSwitch.RearView:
+                RearViewCameraOpen();
                 break;
             default:
                 break;
@@ -240,13 +243,13 @@ public class SailingSceneManage : MonoBehaviour
         switch (model)
         {
             case TrainModel.Transitions:
-                DataPanel.Instance.Tiletle.text = "转 场 训 练";
+                //DataPanel.Instance.Tiletle.text = "转 场 训 练";
                 break;
             case TrainModel.Laying:
-                DataPanel.Instance.Tiletle.text = "铺 管 训 练";
+                //DataPanel.Instance.Tiletle.text = "铺 管 训 练";
                 break;
             case TrainModel.Lifting:
-                DataPanel.Instance.Tiletle.text = "吊 装 训 练";
+                //DataPanel.Instance.Tiletle.text = "吊 装 训 练";
                 break;
             default:
                 break;
@@ -307,24 +310,34 @@ public class SailingSceneManage : MonoBehaviour
         }
     }
 
-    public void CameraOpen()
+    public void FirstCameraOpen()
     {
-        Display6Rect.gameObject.SetActive(false);
-        foreach (Transform item in FirstPersonTransform)
-        {
-            item.gameObject.SetActive(true);
-        }
-        //FirstPersonTransform.gameObject.SetActive(true);
-    }
-
-    public void CameraHide()
-    {
-        Display6Rect.gameObject.SetActive(true);
-        foreach (Transform item in FirstPersonTransform)
+        //Display6Rect.gameObject.SetActive(false);
+        foreach (Camera item in CameraGroup)
         {
             item.gameObject.SetActive(false);
         }
+        CameraGroup[0].gameObject.SetActive(true);
+        //FirstPersonTransform.gameObject.SetActive(true);
+    }
+
+    public void RearViewCameraOpen()
+    {
+        //Display6Rect.gameObject.SetActive(true);
+        foreach (Camera item in CameraGroup)
+        {
+            item.gameObject.SetActive(false);
+        }
+        CameraGroup[1].gameObject.SetActive(true);
         //FirstPersonTransform.gameObject.SetActive(false);
+    }
+
+    private void ThirdPersonOpen()
+    {
+        foreach (Camera item in CameraGroup)
+        {
+            item.gameObject.SetActive(false);
+        }
     }
 
     public void SetWaveScale(float value)

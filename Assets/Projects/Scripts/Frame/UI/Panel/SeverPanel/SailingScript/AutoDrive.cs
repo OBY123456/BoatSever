@@ -349,11 +349,11 @@ public class AutoDrive : MonoBehaviour
             }
 
 
-            if (SailingSceneManage.Instance.ThirdPersonCamera[1])
-            {
-                DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.ThirdPersonCamera[1].transform.GetComponent<CameraFallow>().offset.x,
-                                x => SailingSceneManage.Instance.ThirdPersonCamera[1].transform.GetComponent<CameraFallow>().offset.x = x, 105.63f, 5.0f);
-            }                
+            //if (SailingSceneManage.Instance.ThirdPersonCamera[1])
+            //{
+            //    DG.Tweening.DOTween.To(() => SailingSceneManage.Instance.ThirdPersonCamera[1].transform.GetComponent<CameraFallow>().offset.x,
+            //                    x => SailingSceneManage.Instance.ThirdPersonCamera[1].transform.GetComponent<CameraFallow>().offset.x = x, 105.63f, 5.0f);
+            //}                
         }
     }
 
