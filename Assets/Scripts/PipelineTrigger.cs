@@ -27,7 +27,7 @@ public class PipelineTrigger : MonoBehaviour
             }
             else
             {
-                Debug.Log(enter.gameObject.transform.parent);
+                //Debug.Log(enter.gameObject.transform.parent);
                 enter.transform.parent.GetComponent<Pipeline>().SetIdleState(true);
                 PipelineManager.instance.SetDefaultPipeline(enter.transform.parent.gameObject);
             }

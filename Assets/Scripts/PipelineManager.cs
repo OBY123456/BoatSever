@@ -102,7 +102,7 @@ public class PipelineManager : MonoBehaviour
 
         if (isPlay)
         {
-            Debug.Log("当前动画未播放完毕或者已经处于播放状态");
+            //Debug.Log("当前动画未播放完毕或者已经处于播放状态");
             //StartCoroutine(PlayCoroutline());
             return;
         }
@@ -211,6 +211,6 @@ public class PipelineManager : MonoBehaviour
         isPlay = false;
         force /= 4.0f;
         isStop = false;
-        Debug.Log("管道初始化完毕");
+        //Debug.Log("管道初始化完毕");
     }
 }
