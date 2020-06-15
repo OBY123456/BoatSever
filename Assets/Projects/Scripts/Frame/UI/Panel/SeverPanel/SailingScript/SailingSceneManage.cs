@@ -336,6 +336,7 @@ public class SailingSceneManage : MonoBehaviour
 
     private void RearViewCameraOpen()
     {
+        Display6Rect.gameObject.SetActive(false);
         foreach (Camera item in CameraGroup)
         {
             item.gameObject.SetActive(false);
