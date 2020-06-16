@@ -116,12 +116,12 @@ public class GameHandle : HandleBase
             return;
         }
 
-        //index = operation.GetParemater<string>(ParmaterCodes.PuGuanCameraData);
-        //if (index != null)
-        //{
-        //    SentDataToState(index, ParmaterCodes.PuGuanCameraData);
-        //    return;
-        //}
+        index = operation.GetParemater<string>(ParmaterCodes.PuGuanCameraData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.PuGuanCameraData);
+            return;
+        }
 
         index = operation.GetParemater<string>(ParmaterCodes.AutoDriveData);
         if (index != null)

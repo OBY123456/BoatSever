@@ -27,9 +27,9 @@ public class UdpSeverLink : MonoBehaviour
     void Start()
     {
         //打印debug信息，如果不需要可以注释掉
-        //Log.Init(new UnityDebug(), true);
-        //Log.LogIsDebug[Log.LogType.Normal] = true;
-        //Log.WriteLine("开始");
+        Log.Init(new UnityDebug(), true);
+        Log.LogIsDebug[Log.LogType.Normal] = true;
+        Log.WriteLine("开始");
 
         UserManager.Instance.LocalUser = new User() { ID = "001", nickname = "xxx" };
         //设置房间信息

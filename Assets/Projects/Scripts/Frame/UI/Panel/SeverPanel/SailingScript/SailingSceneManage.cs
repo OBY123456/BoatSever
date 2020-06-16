@@ -83,7 +83,7 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), Callback);
-        //EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
         //Time_Night();
         Time_Day();
     }
@@ -121,9 +121,9 @@ public class SailingSceneManage : MonoBehaviour
             case ParmaterCodes.TrainModelData:
                 TrainModelChange(msg);
                 break;
-            //case ParmaterCodes.PuGuanCameraData:
-            //    SetPuGuanCameraState(msg);
-            //break;
+            case ParmaterCodes.PuGuanCameraData:
+                SetPuGuanCameraState(msg);
+                break;
             case ParmaterCodes.AutoDriveData:
                 StartDrive(msg);
                 break;
@@ -258,33 +258,33 @@ public class SailingSceneManage : MonoBehaviour
         }
     }
 
-    //private void SetPuGuanCameraState(string msg)
-    //{
-    //    PuGuanCameraData data = new PuGuanCameraData();
-    //    data = JsonConvert.DeserializeObject<PuGuanCameraData>(msg);
-    //    PuGuanCameraState state = (PuGuanCameraState)Enum.Parse(typeof(PuGuanCameraState), data.state);
-    //    switch (state)
-    //    {
-    //        case PuGuanCameraState.Open:
-    //            Boat_PuGuan.SetActive(true);
-    //            UICanvas.Instance.ViewOpen();
-    //            break;
-    //        case PuGuanCameraState.Hide:
-    //            Boat_PuGuan.SetActive(false);
-    //            UICanvas.Instance.ViewHide();
-    //            break;
-    //        default:
-    //            break;
-    //    }
-    //}
+    private void SetPuGuanCameraState(string msg)
+    {
+        PuGuanCameraData data = new PuGuanCameraData();
+        data = JsonConvert.DeserializeObject<PuGuanCameraData>(msg);
+        PuGuanCameraState state = (PuGuanCameraState)Enum.Parse(typeof(PuGuanCameraState), data.state);
+        switch (state)
+        {
+            case PuGuanCameraState.Open:
+                Display6Rect.gameObject.SetActive(true);
+                //Boat_PuGuan.SetActive(true);
+                break;
+            case PuGuanCameraState.Hide:
+                Display6Rect.gameObject.SetActive(false);
+                // Boat_PuGuan.SetActive(false);
+                break;
+            default:
+                break;
+        }
+    }
 
     //private void SetTargetPosition(string msg)
     //{
-        //TargetPosition targetPosition = new TargetPosition();
-        //targetPosition = JsonConvert.DeserializeObject<TargetPosition>(msg);
-        //Vector3 vector3 = new Vector3(targetPosition.x, 180.0f, targetPosition.z);
-        //Target.transform.position = vector3;
-        //autoDrive.IsStart = true;
+    //TargetPosition targetPosition = new TargetPosition();
+    //targetPosition = JsonConvert.DeserializeObject<TargetPosition>(msg);
+    //Vector3 vector3 = new Vector3(targetPosition.x, 180.0f, targetPosition.z);
+    //Target.transform.position = vector3;
+    //autoDrive.IsStart = true;
     //}
 
     // Update is called once per frame
@@ -314,7 +314,6 @@ public class SailingSceneManage : MonoBehaviour
 
     public void ThirdPersonOpen()
     {
-        Display6Rect.gameObject.SetActive(false);
         foreach (Camera item in CameraGroup)
         {
             item.gameObject.SetActive(false);
@@ -324,7 +323,6 @@ public class SailingSceneManage : MonoBehaviour
 
     public void FirstPersonOpen()
     {
-        Display6Rect.gameObject.SetActive(true);
         foreach (Camera item in CameraGroup)
         {
             item.gameObject.SetActive(false);
@@ -336,7 +334,7 @@ public class SailingSceneManage : MonoBehaviour
 
     private void RearViewCameraOpen()
     {
-        Display6Rect.gameObject.SetActive(false);
+        //Display6Rect.gameObject.SetActive(false);
         foreach (Camera item in CameraGroup)
         {
             item.gameObject.SetActive(false);
@@ -455,7 +453,7 @@ public class SailingSceneManage : MonoBehaviour
         //EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TargetPosition.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.CameraState.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
-        //EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), Callback);
     }
 
