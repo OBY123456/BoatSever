@@ -329,6 +329,7 @@ public class SailingSceneManage : MonoBehaviour
         }
         ParticleMask.gameObject.SetActive(true);
         CameraGroup[0].gameObject.SetActive(true);
+        CameraGroup[2].gameObject.SetActive(true);
         //FirstPersonTransform.gameObject.SetActive(false);
     }
 
@@ -341,6 +342,7 @@ public class SailingSceneManage : MonoBehaviour
         }
         ParticleMask.gameObject.SetActive(false);
         CameraGroup[1].gameObject.SetActive(true);
+        CameraGroup[3].gameObject.SetActive(true);
     }
 
     public void SetWaveScale(float value)
