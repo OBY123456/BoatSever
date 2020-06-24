@@ -62,6 +62,8 @@ public class SailingSceneManage : MonoBehaviour
 
     public Transform ParticleMask;
 
+    public WeatherMakerFallingParticleScript3D weatherMakerFallingParticleScript3D;
+
     //是否是晚上
     public bool IsNight;
 
@@ -84,6 +86,12 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.DriveTurnData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.DriveSpeed.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanSwitchData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TurnTableData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CraneHandData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), Callback);
         //Time_Night();
         Time_Day();
     }
@@ -127,6 +135,24 @@ public class SailingSceneManage : MonoBehaviour
             case ParmaterCodes.AutoDriveData:
                 StartDrive(msg);
                 break;
+            case ParmaterCodes.DriveTurnData:
+                SetDriveTurn(msg);
+                break;
+            case ParmaterCodes.DriveSpeed:
+                SetDriveSpeed(msg);
+                break;
+            case ParmaterCodes.PuGuanSwitchData:
+                SetPuGuanSwitch(msg);
+                break;
+            case ParmaterCodes.TurnTableData:
+               
+                break;
+            case ParmaterCodes.CraneHandData:
+                
+                break;
+            case ParmaterCodes.HookData:
+                
+                break;
             default:
                 break;
         }
@@ -136,17 +162,80 @@ public class SailingSceneManage : MonoBehaviour
     {
         AutoDriveData autoDriveData = new AutoDriveData();
         autoDriveData = JsonConvert.DeserializeObject<AutoDriveData>(msg);
-        AutoDriveEnum driveEnum = (AutoDriveEnum)Enum.Parse(typeof(AutoDriveEnum), autoDriveData.state);
+        AutoDriveSwitch driveEnum = (AutoDriveSwitch)Enum.Parse(typeof(AutoDriveSwitch), autoDriveData.state);
         switch (driveEnum)
         {
-            case AutoDriveEnum.Start:
+            case AutoDriveSwitch.Open:
                 if(autoDrive.IsReset)
                 {
                     autoDrive.StartAutoDrive();
                 }
                 break;
-            case AutoDriveEnum.Wait:
+            case AutoDriveSwitch.Reset:
                 autoDrive.Reset_ZhuanChuang();
+                PipelineManager.instance.Stop();
+                break;
+            case AutoDriveSwitch.Close:
+                autoDrive.CloseAutoDrive();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /// <summary>
+    /// 手动模式
+    /// </summary>
+    /// <param name="msg"></param>
+    private void SetDriveTurn(string msg)
+    {
+        Debug.Log(msg);
+        DriveTurnData turnData = new DriveTurnData();
+        turnData = JsonConvert.DeserializeObject<DriveTurnData>(msg);
+        DriveTurn state = (DriveTurn)Enum.Parse(typeof(DriveTurn), turnData.state);
+        switch (state)
+        {
+            case DriveTurn.TurnLeft:
+                boatProbes._turnPower = -0.5f;
+                autoDrive.animationControl.ShaftRotate(45f, 3.0f);
+                break;
+            case DriveTurn.TurnRight:
+                boatProbes._turnPower = 0.5f;
+                autoDrive.animationControl.ShaftRotate(-45f, 3.0f);
+                break;
+            case DriveTurn.TurnBack:
+                boatProbes._turnPower = 0;
+                boatProbes._enginePower = -boatProbes._enginePower;
+                break;
+            case DriveTurn.Complete:
+                boatProbes._turnPower = 0;
+                boatProbes._enginePower = Mathf.Abs(boatProbes._enginePower);
+                autoDrive.animationControl.ShaftRotate(0, 3.0f);
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void SetDriveSpeed(string msg)
+    {
+        DriveSpeed driveSpeed = new DriveSpeed();
+        driveSpeed = JsonConvert.DeserializeObject<DriveSpeed>(msg);
+        boatProbes._enginePower = driveSpeed.value;
+    }
+
+    private void SetPuGuanSwitch(string msg)
+    {
+        PuGuanSwitchData data = new PuGuanSwitchData();
+        data = JsonConvert.DeserializeObject<PuGuanSwitchData>(msg);
+        PuGuanSwitch type = (PuGuanSwitch)Enum.Parse(typeof(PuGuanSwitch), data.state);
+        switch (type)
+        {
+            case PuGuanSwitch.Open:
+                PipelineManager.instance.Play();
+                break;
+            case PuGuanSwitch.Close:
+                PipelineManager.instance.Stop();
                 break;
             default:
                 break;
@@ -246,16 +335,32 @@ public class SailingSceneManage : MonoBehaviour
         {
             case TrainModel.Transitions:
                 //DataPanel.Instance.Tiletle.text = "转 场 训 练";
+                //关闭吊装相机
+                //隐藏吊装平台
                 break;
             case TrainModel.Laying:
                 //DataPanel.Instance.Tiletle.text = "铺 管 训 练";
+                //关闭吊装相机
+                //隐藏吊装平台
                 break;
             case TrainModel.Lifting:
+                LiftingModelReset();
                 //DataPanel.Instance.Tiletle.text = "吊 装 训 练";
                 break;
             default:
                 break;
         }
+    }
+
+    private void LiftingModelReset()
+    {
+        WeatherMakerPrecipitationManagerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
+        Time_Day();
+        OceanManager.Instance.SetWaveSize(0.3f);
+        autoDrive.Reset_ZhuanChuang();
+        PipelineManager.instance.Stop();
+        //打开吊装相机
+        //显示吊装平台
     }
 
     private void SetPuGuanCameraState(string msg)
@@ -318,6 +423,7 @@ public class SailingSceneManage : MonoBehaviour
         {
             item.gameObject.SetActive(false);
         }
+        weatherMakerFallingParticleScript3D.Height = 10;
         //FirstPersonTransform.gameObject.SetActive(true);
     }
 
@@ -330,6 +436,7 @@ public class SailingSceneManage : MonoBehaviour
         ParticleMask.gameObject.SetActive(true);
         CameraGroup[0].gameObject.SetActive(true);
         CameraGroup[2].gameObject.SetActive(true);
+        weatherMakerFallingParticleScript3D.Height = 20;
         //FirstPersonTransform.gameObject.SetActive(false);
     }
 
@@ -343,6 +450,7 @@ public class SailingSceneManage : MonoBehaviour
         ParticleMask.gameObject.SetActive(false);
         CameraGroup[1].gameObject.SetActive(true);
         CameraGroup[3].gameObject.SetActive(true);
+        weatherMakerFallingParticleScript3D.Height = 20;
     }
 
     public void SetWaveScale(float value)
@@ -457,6 +565,12 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TrainModelData.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanCameraData.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.DriveTurnData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.DriveSpeed.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.PuGuanSwitchData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TurnTableData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.CraneHandData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), Callback);
     }
 
     public void SetUnityFog(FogType fogType)

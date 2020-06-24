@@ -169,8 +169,8 @@ public class WeatherManager : MonoBehaviour
     public void ResetWeather()
     {
         SetWeather(WeatherMakerPrecipitationType.None, 0);
-        SetWindIntensity(Wind_Intensity);
-        SetWindRotate(Wind_Rotate);
+        //SetWindIntensity(Wind_Intensity);
+        //SetWindRotate(Wind_Rotate);
     }
 
     //public void SetTime(float value)

@@ -223,7 +223,7 @@ public class AutoDrive : MonoBehaviour
     {
         float dis1 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[1].transform.position);
         float dis2 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[2].transform.position);
-        float dis3 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[0].transform.position);
+        //float dis3 = Vector3.Distance(Boat.position, SailingSceneManage.Instance.Target[0].transform.position);
 
         //if(dis3 < dis1 && dis3 < dis2)
         //{
@@ -242,6 +242,9 @@ public class AutoDrive : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 开始自动驾驶
+    /// </summary>
     public void StartAutoDrive()
     {
         if(!IsArrive)
@@ -256,6 +259,35 @@ public class AutoDrive : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 关闭自动驾驶，开始手动驾驶
+    /// </summary>
+    public void CloseAutoDrive()
+    {
+        IsTurnTo = false;
+        IsAutoDrive = false;
+        SailingSceneManage.Instance.SetWaveScale(0.01f);
+        IsReset = true;
+        animationControl.IsRotate = false;
+        animationControl.ResetShaft();
+        boatProbes._enginePower = 0;
+        boatProbes._turnPower = 0;
+        GetComponent<Rigidbody>().velocity = Vector3.zero;
+        Boat.DOKill();
+        TimeTool.Instance.Remove(TimeDownType.NoUnityTimeLineImpact, MainCameraRotate);
+        IsComplete = true;
+        IsRotateComplete = false;
+        CurrentTime = 0;
+        lerp = false;
+
+        IsRotate = false;
+
+        IsRight = false;
+
+        MainCameraReset();
+        InitialDistance = 0;
+    }
+
     public void ArriveTarget()
     {
         CurrentTime = 0;
@@ -268,7 +300,8 @@ public class AutoDrive : MonoBehaviour
         //IsAutoDrive = false;
         IsArrive = true;
         IsAutoDrive = false;
-        animationControl.IsRotate = false;
+
+
     }
 
     bool IsComplete = true;
@@ -357,6 +390,14 @@ public class AutoDrive : MonoBehaviour
         }
     }
 
+    private void MainCameraReset()
+    {
+        foreach (Camera item in SailingSceneManage.Instance.ThirdPersonCamera)
+        {
+            item.transform.GetComponent<CameraFallow>().offset.x = -105.63f;
+        }
+    }
+
     private void StartSailing()
     {
 
@@ -386,10 +427,7 @@ public class AutoDrive : MonoBehaviour
         IsAutoDrive = false;
         IsArrive = false;
         CurrentTime = 0;
-        foreach (Camera item in SailingSceneManage.Instance.ThirdPersonCamera)
-        {
-            item.transform.GetComponent<CameraFallow>().offset.x = -105.63f;
-        }
+        MainCameraReset();
         Boat.position = new Vector3(0, 180, 0);
         Boat.eulerAngles = new Vector3(0, -90, 0);
         Target = null;
@@ -401,11 +439,7 @@ public class AutoDrive : MonoBehaviour
         IsRotateComplete = false;
         Boat.DOKill();
         animationControl.IsRotate = false;
-        foreach (Transform item in animationControl.Engine_Shaft)
-        {
-            item.DOKill();
-            item.localEulerAngles = Vector3.zero;
-        }
+        animationControl.ResetShaft();
         IsReset = true;
         //OceanManager.Instance.ResetOcean();
         //WeatherManager.Instance.ResetWeather();
@@ -427,18 +461,13 @@ public class AutoDrive : MonoBehaviour
                 if (Vector3.Cross(Boat.forward, (obs.position - Boat.position).normalized).y >= 0)
                 {
                     boatProbes._turnPower = -1;
-                    //animationControl.Engine_Shaft[0].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[0].localEulerAngles, Vector3.forward * 45, 3.0f );
-                    //animationControl.Engine_Shaft[1].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[1].localEulerAngles, Vector3.forward * 45, 3.0f);
-                    //Debug.Log("111");
                     animationControl.ShaftRotate(45f, 3.0f);
                 }
                 else
                 {
                     boatProbes._turnPower = 1;
-                    //animationControl.Engine_Shaft[0].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[0].localEulerAngles, Vector3.back * 45, Time.deltaTime);
-                    //animationControl.Engine_Shaft[1].localEulerAngles = Vector3.Lerp(animationControl.Engine_Shaft[1].localEulerAngles, Vector3.back * 45, Time.deltaTime);
                     animationControl.ShaftRotate(-45f, 3.0f);
-                    //Debug.Log("111");
+
                 }
             }
         }

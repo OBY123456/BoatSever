@@ -172,6 +172,25 @@ public class UdpState : BaseState
                     case ParmaterCodes.AutoDriveData:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), eventParamete);
                         break;
+                    case ParmaterCodes.DriveTurnData:
+                        Debug.Log("DriveTurnData");
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.DriveTurnData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.DriveSpeed:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.DriveSpeed.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.PuGuanSwitchData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.PuGuanSwitchData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.TurnTableData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.TurnTableData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.CraneHandData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.CraneHandData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.HookData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), eventParamete);
+                        break;
                     default:
                         break;
                 }

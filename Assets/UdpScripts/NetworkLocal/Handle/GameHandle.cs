@@ -129,6 +129,48 @@ public class GameHandle : HandleBase
             SentDataToState(index, ParmaterCodes.AutoDriveData);
             return;
         }
+
+        index = operation.GetParemater<string>(ParmaterCodes.DriveTurnData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.DriveTurnData);
+            return;
+        }
+
+        index = operation.GetParemater<string>(ParmaterCodes.DriveSpeed);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.DriveSpeed);
+            return;
+        }
+
+        index = operation.GetParemater<string>(ParmaterCodes.PuGuanSwitchData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.PuGuanSwitchData);
+            return;
+        }
+
+        index = operation.GetParemater<string>(ParmaterCodes.TurnTableData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.TurnTableData);
+            return;
+        }
+
+        index = operation.GetParemater<string>(ParmaterCodes.CraneHandData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.CraneHandData);
+            return;
+        }
+
+        index = operation.GetParemater<string>(ParmaterCodes.HookData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.HookData);
+            return;
+        }
     }
 
     public override void OnUnconnectedRequestProcess(INetEngine netEngine, IPEndPoint endPoint, OperationResponse operation)

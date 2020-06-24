@@ -81,6 +81,15 @@ public class BoatAnimationControl : MonoBehaviour
         Engine_Shaft[1].DOLocalRotate(vector, time).SetEase(Ease.Linear);
     }
 
+    public void ResetShaft()
+    {
+        foreach (Transform item in Engine_Shaft)
+        {
+            item.DOKill();
+            item.localEulerAngles = Vector3.zero;
+        }
+    }
+
     //public void EngineUp()
     //{
     //    Engine_Liftinglever.transform.DOLocalMoveZ(0f, 3.0f);
