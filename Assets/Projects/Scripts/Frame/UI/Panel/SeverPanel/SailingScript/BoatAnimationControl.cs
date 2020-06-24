@@ -77,6 +77,11 @@ public class BoatAnimationControl : MonoBehaviour
         
         Vector3 vector = Vector3.forward * value;
         //Debug.Log("vector==" + vector);
+        foreach (Transform item in Engine_Shaft)
+        {
+            item.DOKill();
+        }
+
         Engine_Shaft[0].DOLocalRotate(vector, time).SetEase(Ease.Linear);
         Engine_Shaft[1].DOLocalRotate(vector, time).SetEase(Ease.Linear);
     }

@@ -320,7 +320,6 @@ public class AutoDrive : MonoBehaviour
         if(time < 1)
         {
             TimeTool.Instance.AddDelayed(TimeDownType.NoUnityTimeLineImpact, 3.0f, MainCameraRotate);
-            Debug.Log("time==" + time);
             SailingSceneManage.Instance.WaveChange(0.8f);
         }
         else

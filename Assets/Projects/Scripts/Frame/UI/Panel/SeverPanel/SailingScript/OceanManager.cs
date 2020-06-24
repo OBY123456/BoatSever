@@ -36,7 +36,7 @@ public class OceanManager : MonoBehaviour
     void Update()
     {
 #if UNITY_EDITOR
-        SetWaveSize(WaveSize);
+        //SetWaveSize(WaveSize);
 #endif
     }
 

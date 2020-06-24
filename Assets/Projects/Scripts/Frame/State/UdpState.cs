@@ -173,7 +173,6 @@ public class UdpState : BaseState
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.AutoDriveData.ToString(), eventParamete);
                         break;
                     case ParmaterCodes.DriveTurnData:
-                        Debug.Log("DriveTurnData");
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.DriveTurnData.ToString(), eventParamete);
                         break;
                     case ParmaterCodes.DriveSpeed:

@@ -67,6 +67,8 @@ public class SailingSceneManage : MonoBehaviour
     //是否是晚上
     public bool IsNight;
 
+    private bool IsTurnBack;
+
     private void Awake()
     {
         Instance = this;
@@ -174,9 +176,11 @@ public class SailingSceneManage : MonoBehaviour
             case AutoDriveSwitch.Reset:
                 autoDrive.Reset_ZhuanChuang();
                 PipelineManager.instance.Stop();
+                IsTurnBack = false;
                 break;
             case AutoDriveSwitch.Close:
                 autoDrive.CloseAutoDrive();
+                IsTurnBack = false;
                 break;
             default:
                 break;
@@ -189,7 +193,6 @@ public class SailingSceneManage : MonoBehaviour
     /// <param name="msg"></param>
     private void SetDriveTurn(string msg)
     {
-        Debug.Log(msg);
         DriveTurnData turnData = new DriveTurnData();
         turnData = JsonConvert.DeserializeObject<DriveTurnData>(msg);
         DriveTurn state = (DriveTurn)Enum.Parse(typeof(DriveTurn), turnData.state);
@@ -204,12 +207,20 @@ public class SailingSceneManage : MonoBehaviour
                 autoDrive.animationControl.ShaftRotate(-45f, 3.0f);
                 break;
             case DriveTurn.TurnBack:
-                boatProbes._turnPower = 0;
-                boatProbes._enginePower = -boatProbes._enginePower;
+                if(IsTurnBack)
+                {
+                    boatProbes._enginePower = Mathf.Abs(boatProbes._enginePower);
+                    IsTurnBack = false;
+                }
+                else
+                {
+                    boatProbes._enginePower = -boatProbes._enginePower;
+                    IsTurnBack = true;
+                }
                 break;
             case DriveTurn.Complete:
                 boatProbes._turnPower = 0;
-                boatProbes._enginePower = Mathf.Abs(boatProbes._enginePower);
+                //boatProbes._enginePower = Mathf.Abs(boatProbes._enginePower);
                 autoDrive.animationControl.ShaftRotate(0, 3.0f);
                 break;
             default:
@@ -221,7 +232,25 @@ public class SailingSceneManage : MonoBehaviour
     {
         DriveSpeed driveSpeed = new DriveSpeed();
         driveSpeed = JsonConvert.DeserializeObject<DriveSpeed>(msg);
-        boatProbes._enginePower = driveSpeed.value;
+
+        if(driveSpeed.value <= 0)
+        {
+            autoDrive.animationControl.IsRotate = false;
+        }
+        else
+        {
+           autoDrive.animationControl.IsRotate = true;
+        }
+
+        if(IsTurnBack)
+        {
+            boatProbes._enginePower = -(driveSpeed.value / 30.0f * 20.0f);
+        }
+        else
+        {
+            boatProbes._enginePower = driveSpeed.value / 30f * 20f;
+        }
+        
     }
 
     private void SetPuGuanSwitch(string msg)
@@ -295,7 +324,8 @@ public class SailingSceneManage : MonoBehaviour
         OceanWaveSize waveSize = new OceanWaveSize();
         waveSize = JsonConvert.DeserializeObject<OceanWaveSize>(msg);
         //Debug.Log("海浪大小===" + waveSize.value);
-        OceanManager.Instance.SetWaveSize(waveSize.value/9 * 1.7f);
+        OceanManager.Instance.SetWaveSize(waveSize.value/9f * 1.5f + 0.2f);
+        
     }
 
     private void SetOceanLightData(string msg)
@@ -334,6 +364,7 @@ public class SailingSceneManage : MonoBehaviour
         switch (model)
         {
             case TrainModel.Transitions:
+                
                 //DataPanel.Instance.Tiletle.text = "转 场 训 练";
                 //关闭吊装相机
                 //隐藏吊装平台
@@ -354,11 +385,12 @@ public class SailingSceneManage : MonoBehaviour
 
     private void LiftingModelReset()
     {
-        WeatherMakerPrecipitationManagerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
+        WeatherManager.Instance.SetWeather(WeatherMakerPrecipitationType.None, 0);
         Time_Day();
         OceanManager.Instance.SetWaveSize(0.3f);
         autoDrive.Reset_ZhuanChuang();
         PipelineManager.instance.Stop();
+        FirstPersonOpen();
         //打开吊装相机
         //显示吊装平台
     }
