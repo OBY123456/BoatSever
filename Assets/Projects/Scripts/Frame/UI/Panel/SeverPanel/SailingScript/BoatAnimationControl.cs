@@ -5,19 +5,34 @@ using DG.Tweening;
 
 public class BoatAnimationControl : MonoBehaviour
 {
-    //public static BoatAnimationControl Instance;
     //升降杆
     //public GameObject Engine_Liftinglever;
 
-    //旋转轴
+    /// <summary>
+    /// 旋转轴
+    /// </summary>
     public Transform[] Engine_Shaft;
 
-    //螺旋桨
+    /// <summary>
+    /// 螺旋桨
+    /// </summary>
     public Transform[] Engine_Propeller;
 
-    //public ParticleSystem SmokeParticle;
+    /// <summary>
+    /// 转盘,范围0~360
+    /// </summary>
+    public Transform TurnTable;
 
-    //public Material[] SmokeMaterials;
+    /// <summary>
+    /// 吊臂，仰角范围0~30
+    /// </summary>
+    public Transform CraneHand;
+
+    /// <summary>
+    /// 吊钩
+    /// </summary>
+    public Transform Hook;
+
     [HideInInspector]
     public bool IsRotate;
     private float RotateSpeed_Propeller = 50;
@@ -25,10 +40,6 @@ public class BoatAnimationControl : MonoBehaviour
     [Range(0,360)]
     public float RotateSpeed_Engine = 0;
 
-    //private void Awake()
-    //{
-    //    Instance = this;
-    //}
 
     // Start is called before the first frame update
     //void Start()
@@ -41,14 +52,6 @@ public class BoatAnimationControl : MonoBehaviour
     {
         //EngineRotate(RotateSpeed_Engine);
 
-        //if (RotateSpeed_Propeller == 0)
-        //{
-        //    return;
-        //}
-        //else
-        //{
-        //    PropellerRotate();
-        //}
         if(IsRotate)
         {
             PropellerRotate();
@@ -93,6 +96,21 @@ public class BoatAnimationControl : MonoBehaviour
             item.DOKill();
             item.localEulerAngles = Vector3.zero;
         }
+    }
+
+    public void TurnTableRotate(float value)
+    {
+        TurnTable.localEulerAngles = new Vector3(0, 0, -value);
+    }
+
+    public void CraneHandRotate(float value)
+    {
+        CraneHand.localEulerAngles = new Vector3(0, value, 0);
+    }
+
+    public void DiaozhuangReset()
+    {
+        TurnTable.localEulerAngles = CraneHand.localEulerAngles = Vector3.zero;
     }
 
     //public void EngineUp()

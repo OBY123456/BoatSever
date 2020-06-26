@@ -55,7 +55,7 @@ public class SailingSceneManage : MonoBehaviour
     public Material[] Skybox;
 
     //铺管装置
-    public GameObject Boat_PuGuan;
+    //public GameObject Boat_PuGuan;
 
     //public CameraFallow[] MainCameraFallow;
     public RectTransform Display6Rect;
@@ -67,7 +67,19 @@ public class SailingSceneManage : MonoBehaviour
     //是否是晚上
     public bool IsNight;
 
+    /// <summary>
+    /// 是否在倒退状态
+    /// </summary>
     private bool IsTurnBack;
+
+    /// <summary>
+    /// 吊装平台
+    /// </summary>
+    public Transform DiaoZhuangPingTai;
+
+    public Transform DiaoZhuangCanvas;
+
+    public Cargo[] Cargos;
 
     private void Awake()
     {
@@ -95,6 +107,8 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CraneHandData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), Callback);
         //Time_Night();
+        Cargos = DiaoZhuangPingTai.Find("CargoGroup").GetComponent<Transform>().GetComponentsInChildren<Cargo>();
+
         Time_Day();
     }
 
@@ -147,13 +161,13 @@ public class SailingSceneManage : MonoBehaviour
                 SetPuGuanSwitch(msg);
                 break;
             case ParmaterCodes.TurnTableData:
-               
+                SetTurnTable(msg);
                 break;
             case ParmaterCodes.CraneHandData:
-                
+                SetCraneHand(msg);
                 break;
             case ParmaterCodes.HookData:
-                
+                SetHookState(msg);
                 break;
             default:
                 break;
@@ -271,6 +285,48 @@ public class SailingSceneManage : MonoBehaviour
         }
     }
 
+    private void SetTurnTable(string msg)
+    {
+        TurnTableData data = new TurnTableData();
+        data = JsonConvert.DeserializeObject<TurnTableData>(msg);
+        Debug.Log("TurnTable==" + data.value);
+        autoDrive.animationControl.TurnTableRotate(data.value);
+    }
+
+    private void SetCraneHand(string msg)
+    {
+        CraneHandData data = new CraneHandData();
+        data = JsonConvert.DeserializeObject<CraneHandData>(msg);
+        Debug.Log("CraneHand==" + data.value);
+        autoDrive.animationControl.CraneHandRotate(data.value);
+    }
+
+    private void SetHookState(string msg)
+    {
+        HookData data = new HookData();
+        data = JsonConvert.DeserializeObject<HookData>(msg);
+        HookState state = (HookState)Enum.Parse(typeof(HookState), data.state);
+        switch (state)
+        {
+            case HookState.Down:
+                Debug.Log("Down");
+                break;
+            case HookState.Up:
+                Debug.Log("Up");
+                break;
+            case HookState.Stop:
+                Debug.Log("Stop");
+                break;
+            case HookState.Reset:
+                autoDrive.animationControl.DiaozhuangReset();
+                ResetCargos();
+                Debug.Log("Reset");
+                break;
+            default:
+                break;
+        }
+    }
+
     private void SetWeatherType(string msg)
     {
         WeatherType weatherType = new WeatherType();
@@ -364,15 +420,17 @@ public class SailingSceneManage : MonoBehaviour
         switch (model)
         {
             case TrainModel.Transitions:
-                
+
                 //DataPanel.Instance.Tiletle.text = "转 场 训 练";
                 //关闭吊装相机
                 //隐藏吊装平台
+                TransitionsModelReset();
                 break;
             case TrainModel.Laying:
                 //DataPanel.Instance.Tiletle.text = "铺 管 训 练";
                 //关闭吊装相机
                 //隐藏吊装平台
+                LayingModelReset();
                 break;
             case TrainModel.Lifting:
                 LiftingModelReset();
@@ -383,6 +441,9 @@ public class SailingSceneManage : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// 吊装训练初始化
+    /// </summary>
     private void LiftingModelReset()
     {
         WeatherManager.Instance.SetWeather(WeatherMakerPrecipitationType.None, 0);
@@ -391,8 +452,42 @@ public class SailingSceneManage : MonoBehaviour
         autoDrive.Reset_ZhuanChuang();
         PipelineManager.instance.Stop();
         FirstPersonOpen();
+        Display6Rect.gameObject.SetActive(false);
+        ResetCargos();
+        DiaoZhuangPingTai.gameObject.SetActive(true);
         //打开吊装相机
-        //显示吊装平台
+        DiaoZhuangCanvas.gameObject.SetActive(true);
+        autoDrive.animationControl.DiaozhuangReset();
+    }
+
+    /// <summary>
+    /// 转场训练初始化
+    /// </summary>
+    private void TransitionsModelReset()
+    {
+        ResetCargos();
+        DiaoZhuangPingTai.gameObject.SetActive(false);
+        autoDrive.animationControl.DiaozhuangReset();
+        DiaoZhuangCanvas.gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// 铺管训练初始化
+    /// </summary>
+    private void LayingModelReset()
+    {
+        ResetCargos();
+        DiaoZhuangPingTai.gameObject.SetActive(false);
+        autoDrive.animationControl.DiaozhuangReset();
+        DiaoZhuangCanvas.gameObject.SetActive(false);
+    }
+
+    private void ResetCargos()
+    {
+        foreach (Cargo item in Cargos)
+        {
+            item.Reset();
+        }
     }
 
     private void SetPuGuanCameraState(string msg)
@@ -657,4 +752,6 @@ public class SailingSceneManage : MonoBehaviour
                 break;
         }
     }
+
+
 }
