@@ -245,12 +245,25 @@ namespace MTFrame
         Stop,
         //重置
         Reset,
+        //放下
+        PutDown,
     }
 
     public class HookData
     {
         public string state;
     }
+
+    //public enum DZViewSwitch
+    //{
+    //    First,
+    //    ThirdPerson,
+    //}
+
+    //public class DZViewData
+    //{
+    //    public string state;
+    //}
 }
 
 

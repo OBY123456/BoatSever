@@ -67,10 +67,10 @@ public class Main : MonoBehaviour
     private void Start()
     {
         Init();
-        //foreach (Display item in Display.displays)
-        //{
-        //    item.Activate();
-        //}
+        foreach (Display item in Display.displays)
+        {
+            item.Activate();
+        }
     }
     /// <summary>
     ///初始化

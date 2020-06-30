@@ -81,6 +81,11 @@ public class SailingSceneManage : MonoBehaviour
 
     public Cargo[] Cargos;
 
+    public CapsuleCollider BoatCollider;
+    public GameObject DiaoZhuangCollider;
+
+    private TrainModel CurrentTrainModel; 
+
     private void Awake()
     {
         Instance = this;
@@ -107,8 +112,9 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CraneHandData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), Callback);
         //Time_Night();
+        CurrentTrainModel = TrainModel.Transitions;
         Cargos = DiaoZhuangPingTai.Find("CargoGroup").GetComponent<Transform>().GetComponentsInChildren<Cargo>();
-
+        TransitionsModelReset();
         Time_Day();
     }
 
@@ -289,7 +295,6 @@ public class SailingSceneManage : MonoBehaviour
     {
         TurnTableData data = new TurnTableData();
         data = JsonConvert.DeserializeObject<TurnTableData>(msg);
-        Debug.Log("TurnTable==" + data.value);
         autoDrive.animationControl.TurnTableRotate(data.value);
     }
 
@@ -297,7 +302,6 @@ public class SailingSceneManage : MonoBehaviour
     {
         CraneHandData data = new CraneHandData();
         data = JsonConvert.DeserializeObject<CraneHandData>(msg);
-        Debug.Log("CraneHand==" + data.value);
         autoDrive.animationControl.CraneHandRotate(data.value);
     }
 
@@ -309,18 +313,25 @@ public class SailingSceneManage : MonoBehaviour
         switch (state)
         {
             case HookState.Down:
-                Debug.Log("Down");
+                autoDrive.animationControl.Hookstate(HookState.Down);
                 break;
             case HookState.Up:
-                Debug.Log("Up");
+                autoDrive.animationControl.Hookstate(HookState.Up);
                 break;
             case HookState.Stop:
-                Debug.Log("Stop");
+                autoDrive.animationControl.Hookstate(HookState.Stop);
                 break;
             case HookState.Reset:
-                autoDrive.animationControl.DiaozhuangReset();
+                autoDrive.animationControl.Hookstate(HookState.Reset);
                 ResetCargos();
-                Debug.Log("Reset");
+                break;
+            case HookState.PutDown:
+                autoDrive.animationControl.Hookstate(HookState.Stop);
+                foreach (Cargo item in Cargos)
+                {
+                    item.PutDown();
+                }
+                autoDrive.animationControl.Hookstate(HookState.PutDown);
                 break;
             default:
                 break;
@@ -425,15 +436,18 @@ public class SailingSceneManage : MonoBehaviour
                 //关闭吊装相机
                 //隐藏吊装平台
                 TransitionsModelReset();
+                CurrentTrainModel = TrainModel.Transitions;
                 break;
             case TrainModel.Laying:
                 //DataPanel.Instance.Tiletle.text = "铺 管 训 练";
                 //关闭吊装相机
                 //隐藏吊装平台
                 LayingModelReset();
+                CurrentTrainModel = TrainModel.Laying;
                 break;
             case TrainModel.Lifting:
                 LiftingModelReset();
+                CurrentTrainModel = TrainModel.Lifting;
                 //DataPanel.Instance.Tiletle.text = "吊 装 训 练";
                 break;
             default:
@@ -451,13 +465,18 @@ public class SailingSceneManage : MonoBehaviour
         OceanManager.Instance.SetWaveSize(0.3f);
         autoDrive.Reset_ZhuanChuang();
         PipelineManager.instance.Stop();
-        FirstPersonOpen();
+        //FirstPersonOpen();
         Display6Rect.gameObject.SetActive(false);
         ResetCargos();
         DiaoZhuangPingTai.gameObject.SetActive(true);
         //打开吊装相机
-        DiaoZhuangCanvas.gameObject.SetActive(true);
+        //DiaoZhuangCanvas.gameObject.SetActive(true);
         autoDrive.animationControl.DiaozhuangReset();
+        autoDrive.animationControl.ropeControls[0].ScaleOpen();
+        autoDrive.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePosition | RigidbodyConstraints.FreezeRotation;
+        BoatCollider.enabled = false;
+        DiaoZhuangCollider.SetActive(true);
+        RearViewCameraOpen();
     }
 
     /// <summary>
@@ -468,7 +487,17 @@ public class SailingSceneManage : MonoBehaviour
         ResetCargos();
         DiaoZhuangPingTai.gameObject.SetActive(false);
         autoDrive.animationControl.DiaozhuangReset();
-        DiaoZhuangCanvas.gameObject.SetActive(false);
+        //DiaoZhuangCanvas.gameObject.SetActive(false);
+        autoDrive.animationControl.ropeControls[0].ScaleClose();
+        DiaoZhuangCollider.SetActive(false);
+        BoatCollider.enabled = true;
+        autoDrive.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        if(CurrentTrainModel == TrainModel.Lifting)
+        {
+            FirstPersonOpen();
+            Debug.Log("FirstPersonOpen");
+        }
+        
     }
 
     /// <summary>
@@ -479,7 +508,15 @@ public class SailingSceneManage : MonoBehaviour
         ResetCargos();
         DiaoZhuangPingTai.gameObject.SetActive(false);
         autoDrive.animationControl.DiaozhuangReset();
-        DiaoZhuangCanvas.gameObject.SetActive(false);
+        //DiaoZhuangCanvas.gameObject.SetActive(false);
+        autoDrive.animationControl.ropeControls[0].ScaleClose();
+        DiaoZhuangCollider.SetActive(false);
+        BoatCollider.enabled = true;
+        autoDrive.gameObject.GetComponent<Rigidbody>().constraints = RigidbodyConstraints.None;
+        if (CurrentTrainModel == TrainModel.Lifting)
+        {
+            FirstPersonOpen();
+        }
     }
 
     private void ResetCargos()

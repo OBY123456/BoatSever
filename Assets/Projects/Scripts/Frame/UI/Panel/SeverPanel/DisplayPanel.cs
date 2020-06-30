@@ -190,7 +190,7 @@ public class DisplayPanel : BasePanel
             InitialPosition = rect.anchoredPosition;
         }
 
-        image.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, "Video/测试视频.mp4");
+        image.OpenVideoFromFile(MediaPlayer.FileLocation.RelativeToStreamingAssetsFolder, VideoPath);
 
         rect.DOAnchorPos(Vector2.zero, AnimationTime).SetEase(Ease.InExpo);
         rect.DOSizeDelta(MediaRect, AnimationTime).SetEase(Ease.InExpo).OnComplete(()=> {

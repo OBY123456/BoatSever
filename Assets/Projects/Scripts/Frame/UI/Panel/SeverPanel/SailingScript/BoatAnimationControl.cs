@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using MTFrame;
 
 public class BoatAnimationControl : MonoBehaviour
 {
@@ -19,19 +20,14 @@ public class BoatAnimationControl : MonoBehaviour
     public Transform[] Engine_Propeller;
 
     /// <summary>
-    /// 转盘,范围0~360
+    /// 转盘,范围0~90
     /// </summary>
     public Transform TurnTable;
 
     /// <summary>
-    /// 吊臂，仰角范围0~30
+    /// 吊臂，仰角范围0~45
     /// </summary>
     public Transform CraneHand;
-
-    /// <summary>
-    /// 吊钩
-    /// </summary>
-    public Transform Hook;
 
     [HideInInspector]
     public bool IsRotate;
@@ -40,12 +36,18 @@ public class BoatAnimationControl : MonoBehaviour
     [Range(0,360)]
     public float RotateSpeed_Engine = 0;
 
+    public RopeControl[] ropeControls;
+
+    [Header("上方绳子")]
+    public Transform TopRopeBind;//静止状态时绑定的坐标
+    public Transform TopRopeUpdate;//运行时，绳子需要更新到的坐标
 
     // Start is called before the first frame update
-    //void Start()
-    //{
-        
-    //}
+    void Start()
+    {
+        if(TopRopeBind&&TopRopeUpdate)
+        TopRopeBind.transform.position = TopRopeUpdate.transform.position;
+    }
 
     // Update is called once per frame
     void Update()
@@ -106,11 +108,46 @@ public class BoatAnimationControl : MonoBehaviour
     public void CraneHandRotate(float value)
     {
         CraneHand.localEulerAngles = new Vector3(0, value, 0);
+        foreach (RopeControl item in ropeControls)
+        {
+            item.Rope_Node.localEulerAngles = new Vector3(0, -value, 0);
+        }
     }
 
     public void DiaozhuangReset()
     {
-        TurnTable.localEulerAngles = CraneHand.localEulerAngles = Vector3.zero;
+        TurnTableRotate(0);
+        CraneHandRotate(0);
+        ropeControls[0].Reset();
+        ropeControls[1].Rope_Node.localEulerAngles = Vector3.zero;
+    }
+
+    public void Hookstate(HookState state)
+    {
+        switch (state)
+        {
+            case HookState.Down:
+                ropeControls[0].IsShorten = false;
+                ropeControls[0].IsElongate = true;            
+                break;
+            case HookState.Up:
+                ropeControls[0].IsElongate = false;
+                ropeControls[0].IsShorten = true; 
+                break;
+            case HookState.Stop:
+                ropeControls[0].IsElongate = false;
+                ropeControls[0].IsShorten = false;
+                break;
+            case HookState.Reset:
+                DiaozhuangReset();
+                break;
+            case HookState.PutDown:
+                ropeControls[0].IsGrab = false;
+                break;
+            default:
+                break;
+        }
+        
     }
 
     //public void EngineUp()

@@ -8,6 +8,8 @@ TagManager:
   - PipelineHead
   - Obstacle
   - Cargo
+  - Hook
+  - Floor
   layers:
   - Default
   - TransparentFX
@@ -24,8 +26,8 @@ TagManager:
   - Boat
   - zuanjingpingtai
   - smoke
-  - 
-  - 
+  - Robe
+  - Cargo
   - 
   - 
   - 

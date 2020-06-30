@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 5770153874603526244}
   - component: {fileID: 2041605851313736756}
   - component: {fileID: 3375502925978320719}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Line024
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2187018529669167988}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: "\u8D27\u7269 1"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -121,7 +121,9 @@ GameObject:
   - component: {fileID: 2485173263133706999}
   - component: {fileID: 418067331892613055}
   - component: {fileID: 3750205707411950519}
-  m_Layer: 0
+  - component: {fileID: 8067312909107992238}
+  - component: {fileID: 8279951365749800979}
+  m_Layer: 16
   m_Name: "\u8D27\u726920200626"
   m_TagString: Cargo
   m_Icon: {fileID: 0}
@@ -158,6 +160,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Rope: {fileID: 6479481694746605561}
+  Traget: {fileID: 0}
+  IsFllow: 0
+  Offset: {x: 0, y: 9.6, z: 0}
+  InitialPosition: {x: 0, y: 0, z: 0}
+  ropeControl: {fileID: 0}
+  animationControl: {fileID: 0}
 --- !u!54 &3750205707411950519
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -172,8 +180,34 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!65 &8067312909107992238
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451920715039439076}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 180, y: 110, z: 18}
+  m_Center: {x: 0, y: 0, z: 115.5}
+--- !u!65 &8279951365749800979
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1451920715039439076}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 180, y: 110, z: 85}
+  m_Center: {x: 0, y: 0, z: 5.57}
 --- !u!1 &4669355567636279857
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +219,7 @@ GameObject:
   - component: {fileID: 4512540921955915846}
   - component: {fileID: 3421334763712274762}
   - component: {fileID: 6890459435286603972}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Line025
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -263,7 +297,7 @@ GameObject:
   - component: {fileID: 8170460533327573199}
   - component: {fileID: 4544846206376281110}
   - component: {fileID: 5822429071424032299}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Line026
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -339,7 +373,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6479481694746605561}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: "\u7EF3\u5B50"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -375,7 +409,7 @@ GameObject:
   - component: {fileID: 7134600575880297436}
   - component: {fileID: 9119364569792164488}
   - component: {fileID: 5221010013138016209}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: "\u5BF9\u8C61"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -453,7 +487,7 @@ GameObject:
   - component: {fileID: 2210695113569791169}
   - component: {fileID: 2784007765457601456}
   - component: {fileID: 5023901912543904432}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Line023
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -530,7 +564,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4552263710018841471}
   - component: {fileID: 511753403307745579}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -575,7 +609,7 @@ GameObject:
   - component: {fileID: 1246292737953760216}
   - component: {fileID: 1147331608262735945}
   - component: {fileID: 4205462597938728464}
-  m_Layer: 0
+  m_Layer: 16
   m_Name: "\u5BF9\u8C61329"
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -27,9 +27,9 @@ public class UdpSeverLink : MonoBehaviour
     void Start()
     {
         //打印debug信息，如果不需要可以注释掉
-        Log.Init(new UnityDebug(), true);
-        Log.LogIsDebug[Log.LogType.Normal] = true;
-        Log.WriteLine("开始");
+        //Log.Init(new UnityDebug(), true);
+        //Log.LogIsDebug[Log.LogType.Normal] = true;
+        //Log.WriteLine("开始");
 
         UserManager.Instance.LocalUser = new User() { ID = "001", nickname = "xxx" };
         //设置房间信息
@@ -60,7 +60,7 @@ public class UdpSeverLink : MonoBehaviour
                     break;
                 case SceneName.WaitScene:
                     PanelChange(PanelName.WaitPanel);
-                    SceneManager.LoadScene(SceneName.WaitScene.ToString(), MTFrame.MTScene.LoadingModeType.UnityLocal);
+                    MTFrame.SceneManager.LoadScene(SceneName.WaitScene.ToString(), MTFrame.MTScene.LoadingModeType.UnityLocal);
                     Main.Instance.MainCamera.gameObject.SetActive(true);
                     break;
                 case SceneName.DisplayScene:
@@ -76,10 +76,10 @@ public class UdpSeverLink : MonoBehaviour
     private void Update()
     {
         //测试用
-        if(Input.GetKeyDown(KeyCode.A))
-        {
-            SendDataToClient(ParmaterCodes.index,"你好，客户端！");
-        }
+        //if(Input.GetKeyDown(KeyCode.A))
+        //{
+        //    SendDataToClient(ParmaterCodes.index,"你好，客户端！");
+        //}
     }
 
     private void OnDestroy()
