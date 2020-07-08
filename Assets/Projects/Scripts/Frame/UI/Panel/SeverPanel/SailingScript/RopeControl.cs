@@ -50,31 +50,31 @@ public class RopeControl : MonoBehaviour
 
     public float RayLenth;
 
-    public bool IsRayOpen;
+    //public bool IsRayOpen;
 
     public FloorCollider floorCollider;
 
 
-    private void Update()
-    {
-        if(IsRayOpen)
-        {
-            return;
-            Ray ray = new Ray(RayPosition.position, Vector3.down);
-            RaycastHit hit;
-            Vector3 vector3 = Vector3.down * RayLenth;
-            bool IsRaycast = Physics.Raycast(ray, out hit, RayLenth);
-            Debug.DrawRay(ray.origin, vector3, Color.green);
-            if (IsRaycast)
-            {
-                if(hit.transform.name.Contains("SailingBoat") || hit.transform.name.Contains("Floor"))
-                {
-                    //IsElongate = false;
-                   // Debug.Log("Floor");
-                }
-            }
-        }
-    }
+    //private void Update()
+    //{
+    //    if(IsRayOpen)
+    //    {
+    //        return;
+    //        Ray ray = new Ray(RayPosition.position, Vector3.down);
+    //        RaycastHit hit;
+    //        Vector3 vector3 = Vector3.down * RayLenth;
+    //        bool IsRaycast = Physics.Raycast(ray, out hit, RayLenth);
+    //        Debug.DrawRay(ray.origin, vector3, Color.green);
+    //        if (IsRaycast)
+    //        {
+    //            if(hit.transform.name.Contains("SailingBoat") || hit.transform.name.Contains("Floor"))
+    //            {
+    //                //IsElongate = false;
+    //               // Debug.Log("Floor");
+    //            }
+    //        }
+    //    }
+    //}
 
     /// <summary>
     /// 伸长
@@ -150,7 +150,7 @@ public class RopeControl : MonoBehaviour
     public void ScaleClose()
     {
         StopAllCoroutines();
-        IsRayOpen = false;
+        //IsRayOpen = false;
         if (OtherObj.Length > 0)
         {
             foreach (Transform item in OtherObj)

@@ -31,10 +31,14 @@ public class BoatAnimationControl : MonoBehaviour
 
     [HideInInspector]
     public bool IsRotate;
+
+    /// <summary>
+    /// 范围30~70
+    /// </summary>
     private float RotateSpeed_Propeller = 50;
 
-    [Range(0,360)]
-    public float RotateSpeed_Engine = 0;
+    //[Range(0,360)]
+    //public float RotateSpeed_Engine = 0;
 
     public RopeControl[] ropeControls;
 
@@ -45,7 +49,7 @@ public class BoatAnimationControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(TopRopeBind&&TopRopeUpdate)
+        if (TopRopeBind && TopRopeUpdate)
         TopRopeBind.transform.position = TopRopeUpdate.transform.position;
     }
 

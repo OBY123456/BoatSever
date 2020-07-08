@@ -56,7 +56,7 @@ public class Cargo : MonoBehaviour
     {
         Rope.gameObject.SetActive(true);
         boxColliders[0].enabled = false;
-        ropeControl.IsRayOpen = true;
+        //ropeControl.IsRayOpen = true;
         ropeControl.floorCollider.ColliderOpen();
     }
 
@@ -91,7 +91,7 @@ public class Cargo : MonoBehaviour
             
         }
         RopeHide();
-        ropeControl.IsRayOpen = false;
+        //ropeControl.IsRayOpen = false;
         ropeControl.floorCollider.ColliderOpen();
     }
 

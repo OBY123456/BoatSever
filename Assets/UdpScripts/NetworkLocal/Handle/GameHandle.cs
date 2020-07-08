@@ -171,6 +171,13 @@ public class GameHandle : HandleBase
             SentDataToState(index, ParmaterCodes.HookData);
             return;
         }
+
+        index = operation.GetParemater<string>(ParmaterCodes.ControlSwitchData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.ControlSwitchData);
+            return;
+        }
     }
 
     public override void OnUnconnectedRequestProcess(INetEngine netEngine, IPEndPoint endPoint, OperationResponse operation)

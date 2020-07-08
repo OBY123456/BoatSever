@@ -110,6 +110,8 @@ public class WeatherManager : MonoBehaviour
         {
             item.SetActive(false);
         }
+
+        Display5Panel.Instance.SetWeatherText("晴天");
     }
 
     private void SetRainDay(float value)
@@ -129,6 +131,8 @@ public class WeatherManager : MonoBehaviour
         {
             SailingSceneManage.Instance.SetUnityFog(FogType.Night_Cloudy);
         }
+
+        Display5Panel.Instance.SetWeatherText("雨");
     }
 
     private void SetSnowDay(float value)
@@ -148,6 +152,8 @@ public class WeatherManager : MonoBehaviour
         {
             SailingSceneManage.Instance.SetUnityFog(FogType.Night_Cloudy);
         }
+
+        Display5Panel.Instance.SetWeatherText("雪");
     }
 
     public void SetPrecipitationIntensity(float value)

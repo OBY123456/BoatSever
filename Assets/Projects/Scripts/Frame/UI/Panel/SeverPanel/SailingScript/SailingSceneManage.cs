@@ -77,14 +77,15 @@ public class SailingSceneManage : MonoBehaviour
     /// </summary>
     public Transform DiaoZhuangPingTai;
 
-    public Transform DiaoZhuangCanvas;
+    //public Transform DiaoZhuangCanvas;
 
     public Cargo[] Cargos;
 
     public CapsuleCollider BoatCollider;
     public GameObject DiaoZhuangCollider;
 
-    private TrainModel CurrentTrainModel; 
+    private TrainModel CurrentTrainModel;
+    public ControlSwitch ControlState;
 
     private void Awake()
     {
@@ -111,69 +112,117 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TurnTableData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.CraneHandData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), Callback);
+
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.ControlSwitchData.ToString(), Callback2);
         //Time_Night();
         CurrentTrainModel = TrainModel.Transitions;
+        ControlState = ControlSwitch.Hide;
         Cargos = DiaoZhuangPingTai.Find("CargoGroup").GetComponent<Transform>().GetComponentsInChildren<Cargo>();
         TransitionsModelReset();
         Time_Day();
     }
 
-    private void Callback(EventParamete parameteData)
+    private void Callback2(EventParamete parameteData)
     {
         ParmaterCodes codes = (ParmaterCodes)Enum.Parse(typeof(ParmaterCodes), parameteData.EvendName);
         string msg = parameteData.GetParameter<string>()[0];
         switch (codes)
         {
+            case ParmaterCodes.ControlSwitchData:
+                ControlSwitchData data = new ControlSwitchData();
+                data = JsonConvert.DeserializeObject<ControlSwitchData>(msg);
+                ControlSwitch controlSwitch = (ControlSwitch)Enum.Parse(typeof(ControlSwitch), data.state);
+                switch (controlSwitch)
+                {
+                    case ControlSwitch.Open:
+                        ControlState = ControlSwitch.Open;
+                        autoDrive.CloseAutoDrive();
+                        PipelineManager.instance.Stop();
+                        break;
+                    case ControlSwitch.Hide:
+                        ControlState = ControlSwitch.Hide;
+                        break;
+                    default:
+                        break;
+                }
+                break;
+            default:
+                break;
+        }
+        dataManager.Reset();
+    }
+
+    private void Callback(EventParamete parameteData)
+    {
+        if (ControlState == ControlSwitch.Open)
+            return;
+
+        ParmaterCodes codes = (ParmaterCodes)Enum.Parse(typeof(ParmaterCodes), parameteData.EvendName);
+        string msg = parameteData.GetParameter<string>()[0];
+        switch (codes)
+        {
             case ParmaterCodes.WeatherType:
-                SetWeatherType(msg);
+                if (CurrentTrainModel != TrainModel.Lifting)
+                    SetWeatherType(msg);
                 break;
             case ParmaterCodes.WeatherIntensity:
-                SetWeatherIntensity(msg);
+                if (CurrentTrainModel != TrainModel.Lifting)
+                    SetWeatherIntensity(msg);
                 break;
             case ParmaterCodes.DayNightTime:
-                SetDateTime(msg);
+                if (CurrentTrainModel != TrainModel.Lifting)
+                    SetDateTime(msg);
                 break;
             case ParmaterCodes.BoatSpeed:
-                SetBoatSpeed(msg);
+                if (CurrentTrainModel == TrainModel.Transitions && !autoDrive.IsAutoDrive)
+                    SetBoatSpeed(msg);
                 break;
             case ParmaterCodes.OceanWaveSize:
-                SetOceanWaveSize(msg);
+                if (CurrentTrainModel != TrainModel.Lifting)
+                    SetOceanWaveSize(msg);
                 break;
             case ParmaterCodes.OceanLightData:
-                SetOceanLightData(msg);
+                if (CurrentTrainModel != TrainModel.Lifting)
+                    SetOceanLightData(msg);
                 break;
             case ParmaterCodes.CameraState:
-                SetCameraState(msg);
+                if (CurrentTrainModel != TrainModel.Lifting)
+                    SetCameraState(msg);
                 break;
-            //case ParmaterCodes.TargetPosition:
-            //    SetTargetPosition(msg);
-            //    break;
             case ParmaterCodes.TrainModelData:
                 TrainModelChange(msg);
                 break;
             case ParmaterCodes.PuGuanCameraData:
+                if(CurrentTrainModel != TrainModel.Lifting)
                 SetPuGuanCameraState(msg);
                 break;
             case ParmaterCodes.AutoDriveData:
-                StartDrive(msg);
+                if (CurrentTrainModel == TrainModel.Transitions)
+                    StartDrive(msg);
                 break;
             case ParmaterCodes.DriveTurnData:
-                SetDriveTurn(msg);
+                if (CurrentTrainModel == TrainModel.Transitions && !autoDrive.IsAutoDrive)
+                    SetDriveTurn(msg);
                 break;
             case ParmaterCodes.DriveSpeed:
-                SetDriveSpeed(msg);
+                if (CurrentTrainModel == TrainModel.Transitions && !autoDrive.IsAutoDrive)
+                    SetDriveSpeed(msg);
                 break;
             case ParmaterCodes.PuGuanSwitchData:
-                SetPuGuanSwitch(msg);
+                if (CurrentTrainModel != TrainModel.Lifting)
+                    SetPuGuanSwitch(msg);
                 break;
             case ParmaterCodes.TurnTableData:
-                SetTurnTable(msg);
+                if (CurrentTrainModel == TrainModel.Lifting)
+                    SetTurnTable(msg);
                 break;
             case ParmaterCodes.CraneHandData:
-                SetCraneHand(msg);
+                if (CurrentTrainModel == TrainModel.Lifting)
+                    SetCraneHand(msg);
                 break;
             case ParmaterCodes.HookData:
-                SetHookState(msg);
+                if (CurrentTrainModel == TrainModel.Lifting)
+                    SetHookState(msg);
                 break;
             default:
                 break;
@@ -392,7 +441,7 @@ public class SailingSceneManage : MonoBehaviour
         waveSize = JsonConvert.DeserializeObject<OceanWaveSize>(msg);
         //Debug.Log("海浪大小===" + waveSize.value);
         OceanManager.Instance.SetWaveSize(waveSize.value/9f * 1.5f + 0.2f);
-        
+        Display5Panel.Instance.SetOceanText(waveSize.value.ToString());
     }
 
     private void SetOceanLightData(string msg)
@@ -463,6 +512,7 @@ public class SailingSceneManage : MonoBehaviour
         WeatherManager.Instance.SetWeather(WeatherMakerPrecipitationType.None, 0);
         Time_Day();
         OceanManager.Instance.SetWaveSize(0.3f);
+        Display5Panel.Instance.Reset();
         autoDrive.Reset_ZhuanChuang();
         PipelineManager.instance.Stop();
         //FirstPersonOpen();
@@ -660,7 +710,8 @@ public class SailingSceneManage : MonoBehaviour
         //WeatherLight.enabled = true;
         RenderSettings.skybox = Skybox[0];
         DayLightGroup.SetActive(true);
-        if(WeatherMakerPrecipitationManagerScript.Instance.Precipitation == WeatherMakerPrecipitationType.None)
+        Display5Panel.Instance.SetDayText("白天");
+        if (WeatherMakerPrecipitationManagerScript.Instance.Precipitation == WeatherMakerPrecipitationType.None)
         {
             SetUnityFog(FogType.Day_Sunny);
         }
@@ -682,6 +733,7 @@ public class SailingSceneManage : MonoBehaviour
         WeatherManager.Instance.SetNightColor();
         DayLightGroup.SetActive(false);
         //WeatherLight.enabled = false;
+        Display5Panel.Instance.SetDayText("黑夜");
         if (WeatherMakerPrecipitationManagerScript.Instance.Precipitation == WeatherMakerPrecipitationType.None)
         {
             SetUnityFog(FogType.Night_Sunny);
@@ -735,6 +787,7 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TurnTableData.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.CraneHandData.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.ControlSwitchData.ToString(), Callback2);
     }
 
     public void SetUnityFog(FogType fogType)
@@ -756,6 +809,15 @@ public class SailingSceneManage : MonoBehaviour
                 foreach (GameObject item in autoDrive.BoatLightGroup)
                 {
                     item.GetComponent<Light>().intensity = 10000;
+                    if(item.name == "Spot Light (3)")
+                    {
+                        item.GetComponent<Light>().intensity = 400;
+                    }
+
+                    if (item.name == "Spot Light (2)")
+                    {
+                        item.GetComponent<Light>().intensity = 5000;
+                    }
                 }
                 DayLightGroup.SetActive(true);
                 break;
@@ -770,6 +832,15 @@ public class SailingSceneManage : MonoBehaviour
                 foreach (GameObject item in autoDrive.BoatLightGroup)
                 {
                     item.GetComponent<Light>().intensity = 1000;
+                    if (item.name == "Spot Light (3)")
+                    {
+                        item.GetComponent<Light>().intensity = 100;
+                    }
+
+                    if (item.name == "Spot Light (2)")
+                    {
+                        item.GetComponent<Light>().intensity = 400;
+                    }
                 }
                 break;
             case FogType.Night_Sunny:

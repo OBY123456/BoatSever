@@ -190,6 +190,58 @@ public class UdpState : BaseState
                     case ParmaterCodes.HookData:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), eventParamete);
                         break;
+                    case ParmaterCodes.ControlSwitchData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.ControlSwitchData.ToString(), eventParamete);
+                        break;
+                    /*模拟航行页——UI接口数据类型*/
+                    case ParmaterCodes.TimeData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.TimeData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.TemperatureData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.TemperatureData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.DepthData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.DepthData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.RoteOfTurnData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.RoteOfTurnData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.LogData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.LogData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.RAPData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.RAPData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.GyroData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.GyroData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.RollData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.RollData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.RelDirectionData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.RelDirectionData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.RelSpeedData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.RelSpeedData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.PropellerState:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.PropellerState.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.GeneratorData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.GeneratorData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.WindData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.WindData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.TrueData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.TrueData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.RelativeData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.RelativeData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.RotData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.RotData.ToString(), eventParamete);
+                        break;
                     default:
                         break;
                 }

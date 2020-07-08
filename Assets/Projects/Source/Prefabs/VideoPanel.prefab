@@ -93,7 +93,7 @@ MonoBehaviour:
   m_AutoOpen: 1
   m_AutoStart: 1
   m_Loop: 1
-  m_Volume: 1
+  m_Volume: 0
   m_Balance: 0
   m_Muted: 0
   m_PlaybackRate: 1

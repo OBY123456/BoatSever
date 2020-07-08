@@ -69,7 +69,7 @@ namespace MTFrame.MTEvent
             }
             else
             {
-                Debug.Log(string.Concat("事件《｛0｝》不存在", eventName));
+                //Debug.Log(string.Concat("事件《｛0｝》不存在", eventName));
             }
         }
         /// <summary>

@@ -39,8 +39,12 @@ namespace Crest
         [Header("Control")]
         [SerializeField, FormerlySerializedAs("EnginePower")]
         public float _enginePower = 7;
+        public float _enginePower2 = 0;
+
         [SerializeField, FormerlySerializedAs("TurnPower")]
         public float _turnPower = 0.5f;
+        public float _turnPower2 = 0f;
+
         [SerializeField]
         bool _playerControlled = true;
         [Tooltip("Used to automatically add throttle input"), SerializeField]
@@ -168,11 +172,13 @@ namespace Crest
             var forward = _engineBias;
             if (_playerControlled) forward += Input.GetAxis("Vertical");
             _rb.AddForceAtPosition(transform.forward * _enginePower * forward, forcePosition, ForceMode.Acceleration);
+            _rb.AddForceAtPosition(transform.forward * _enginePower2 * forward, forcePosition, ForceMode.Acceleration);
 
             var sideways = _turnBias;
             if (_playerControlled) sideways += (Input.GetKey(KeyCode.A) ? -1f : 0f) + (Input.GetKey(KeyCode.D) ? 1f : 0f);
             var rotVec = transform.up + _turningHeel * transform.forward;
             _rb.AddTorque(rotVec * _turnPower * sideways, ForceMode.Acceleration);
+            _rb.AddTorque(rotVec * _turnPower2 * sideways, ForceMode.Acceleration);
         }
 
         void FixedUpdateBuoyancy(ICollProvider collProvider)
