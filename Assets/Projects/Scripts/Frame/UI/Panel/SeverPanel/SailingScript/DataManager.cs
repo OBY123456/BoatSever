@@ -62,6 +62,9 @@ public class DataManager : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.TrueData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.RelativeData.ToString(), Callback);
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.RotData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.BoatPositionData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.BoatRotateData.ToString(), Callback);
+        EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.BoatSpeedData.ToString(), Callback);
     }
 
     private void Callback(EventParamete parameteData)
@@ -90,7 +93,7 @@ public class DataManager : MonoBehaviour
             case ParmaterCodes.RAPData:
                 SentDataToPanel(msg, ParmaterCodes.RAPData, DataPanelName.FirstPersonDataPanel);
                 SentDataToPanel(msg, ParmaterCodes.RAPData, DataPanelName.PropellerStatePanel);
-                SetPropeller(msg);
+                //SetPropeller(msg);
                 break;
             case ParmaterCodes.GyroData:
                 SentDataToPanel(msg, ParmaterCodes.GyroData, DataPanelName.FirstPersonDataPanel);
@@ -123,9 +126,81 @@ public class DataManager : MonoBehaviour
             case ParmaterCodes.RotData:
                 SentDataToPanel(msg, ParmaterCodes.RotData, DataPanelName.RearViewDataPanel);
                 break;
+            case ParmaterCodes.BoatPositionData:
+                if (SailingSceneManage.Instance.CurrentTrainModel != TrainModel.Lifting)
+                    SetBoatPosition(msg);
+                break;
+            case ParmaterCodes.BoatRotateData:
+                if (SailingSceneManage.Instance.CurrentTrainModel != TrainModel.Lifting)
+                    SetBoatRotate(msg);
+                break;
+            case ParmaterCodes.BoatSpeedData:
+                if (SailingSceneManage.Instance.CurrentTrainModel != TrainModel.Lifting)
+                    SetBoatSpeed(msg);
+                break;
             default:
                 break;
         }
+    }
+
+    private void SetBoatSpeed(string msg)
+    {
+        BoatSpeedData boatspeed = new BoatSpeedData();
+        boatspeed = JsonConvert.DeserializeObject<BoatSpeedData>(msg);
+        if (boatspeed.value > 20)
+        {
+            boatspeed.value = 20;
+        }
+
+        if (boatspeed.value < -20)
+        {
+            boatspeed.value = -20;
+        }
+        SailingSceneManage.Instance.boatProbes._enginePower = boatspeed.value;
+
+    }
+
+    private void SetBoatPosition(string msg)
+    {
+        BoatPositionData data = new BoatPositionData();
+        data = JsonConvert.DeserializeObject<BoatPositionData>(msg);
+
+        if(data.x < -4000)
+        {
+            data.x = -4000;
+        }
+
+        if(data.x > 4000)
+        {
+            data.x = 4000;
+        }
+
+        if (data.z < -4000)
+        {
+            data.z = -4000;
+        }
+
+        if (data.z > 4000)
+        {
+            data.z = 4000;
+        }
+        SailingSceneManage.Instance.boatProbes.gameObject.GetComponent<Transform>().position = new Vector3(data.x, SailingSceneManage.Instance.boatProbes.gameObject.GetComponent<Transform>().position.y, data.z);
+    }
+
+    private void SetBoatRotate(string msg)
+    {
+        BoatRotateData data = new BoatRotateData();
+        data = JsonConvert.DeserializeObject<BoatRotateData>(msg);
+        if (data.value < 0)
+        {
+            data.value = 0;
+        }
+
+        if (data.value > 360)
+        {
+            data.value = 360;
+        }
+        SailingSceneManage.Instance.boatProbes.gameObject.GetComponent<Transform>().localEulerAngles = new Vector3(SailingSceneManage.Instance.boatProbes.gameObject.GetComponent<Transform>().localEulerAngles.x, data.value, SailingSceneManage.Instance.boatProbes.gameObject.GetComponent<Transform>().localEulerAngles.z);
     }
 
     /// <summary>
@@ -352,6 +427,9 @@ public class DataManager : MonoBehaviour
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.TrueData.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.RelativeData.ToString(), Callback);
         EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.RotData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.BoatPositionData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.BoatRotateData.ToString(), Callback);
+        EventManager.RemoveListener(GenericEventEnumType.Message, ParmaterCodes.BoatSpeedData.ToString(), Callback);
     }
 
     public void Reset()

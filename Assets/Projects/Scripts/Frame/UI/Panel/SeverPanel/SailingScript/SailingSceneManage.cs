@@ -84,7 +84,7 @@ public class SailingSceneManage : MonoBehaviour
     public CapsuleCollider BoatCollider;
     public GameObject DiaoZhuangCollider;
 
-    private TrainModel CurrentTrainModel;
+    public TrainModel CurrentTrainModel;
     public ControlSwitch ControlState;
 
     private void Awake()
@@ -114,6 +114,7 @@ public class SailingSceneManage : MonoBehaviour
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.HookData.ToString(), Callback);
 
         EventManager.AddListener(GenericEventEnumType.Message, ParmaterCodes.ControlSwitchData.ToString(), Callback2);
+
         //Time_Night();
         CurrentTrainModel = TrainModel.Transitions;
         ControlState = ControlSwitch.Hide;
@@ -154,8 +155,6 @@ public class SailingSceneManage : MonoBehaviour
 
     private void Callback(EventParamete parameteData)
     {
-        if (ControlState == ControlSwitch.Open)
-            return;
 
         ParmaterCodes codes = (ParmaterCodes)Enum.Parse(typeof(ParmaterCodes), parameteData.EvendName);
         string msg = parameteData.GetParameter<string>()[0];
@@ -434,6 +433,8 @@ public class SailingSceneManage : MonoBehaviour
         boatProbes._enginePower = boatspeed.speed;
         autoDrive.SailingSpeed = boatspeed.speed;
     }
+
+ 
 
     private void SetOceanWaveSize(string msg)
     {

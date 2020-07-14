@@ -178,5 +178,17 @@ public enum ParmaterCodes : byte
     /// UI接口数据类型16
     /// </summary>
     RotData,
-
+    /*船体数据*/
+    /// <summary>
+    /// 船体数据1
+    /// </summary>
+    BoatPositionData,
+    /// <summary>
+    /// 船体数据2
+    /// </summary>
+    BoatRotateData,
+    /// <summary>
+    /// 船体数据3
+    /// </summary>
+    BoatSpeedData,
 }

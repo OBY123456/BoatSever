@@ -125,7 +125,7 @@ public class RearViewDataPanel : BasePanel
         }
 
         WindImage.localEulerAngles = Vector3.back * value;
-        WeatherManager.Instance.SetWindRotate(value);
+        //WeatherManager.Instance.SetWindRotate(value);
     }
 
     /// <summary>

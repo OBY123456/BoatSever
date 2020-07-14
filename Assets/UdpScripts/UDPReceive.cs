@@ -205,6 +205,15 @@ public class UDPReceive : MonoBehaviour
             case ParmaterCodes.RotData:
                 SentDataToState(dataProtocol.DataMsg, ParmaterCodes.RotData);
                 break;
+            case ParmaterCodes.BoatPositionData:
+                SentDataToState(dataProtocol.DataMsg, ParmaterCodes.BoatPositionData);
+                break;
+            case ParmaterCodes.BoatRotateData:
+                SentDataToState(dataProtocol.DataMsg, ParmaterCodes.BoatRotateData);
+                break;
+            case ParmaterCodes.BoatSpeedData:
+                SentDataToState(dataProtocol.DataMsg, ParmaterCodes.BoatSpeedData);
+                break;
             default:
                 break;
             

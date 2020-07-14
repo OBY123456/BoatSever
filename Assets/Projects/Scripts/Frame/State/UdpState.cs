@@ -242,6 +242,16 @@ public class UdpState : BaseState
                     case ParmaterCodes.RotData:
                         EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.RotData.ToString(), eventParamete);
                         break;
+                    /*船体数据*/
+                    case ParmaterCodes.BoatPositionData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatPositionData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.BoatRotateData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatRotateData.ToString(), eventParamete);
+                        break;
+                    case ParmaterCodes.BoatSpeedData:
+                        EventManager.TriggerEvent(GenericEventEnumType.Message, ParmaterCodes.BoatSpeedData.ToString(), eventParamete);
+                        break;
                     default:
                         break;
                 }

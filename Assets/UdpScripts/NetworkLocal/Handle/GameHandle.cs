@@ -4,6 +4,7 @@ using System.Net;
 using LiteNetLib;
 using Proto;
 using NetworkCommonTools.LiteNetLibEngine;
+using MTFrame;
 
 public class GameHandle : HandleBase
 {
@@ -13,6 +14,15 @@ public class GameHandle : HandleBase
 
     public override void OnReceiveProcess(INetEngine netEngine, NetPeer netPeer, OperationResponse operation)
     {
+        index = operation.GetParemater<string>(ParmaterCodes.ControlSwitchData);
+        if (index != null)
+        {
+            SentDataToState(index, ParmaterCodes.ControlSwitchData);
+            return;
+        }
+
+        if (SailingSceneManage.Instance!=null && SailingSceneManage.Instance.ControlState == ControlSwitch.Open)
+            return;
         //字符串数据
         index = operation.GetParemater<string>(ParmaterCodes.index);
         if (index != null)
@@ -169,13 +179,6 @@ public class GameHandle : HandleBase
         if (index != null)
         {
             SentDataToState(index, ParmaterCodes.HookData);
-            return;
-        }
-
-        index = operation.GetParemater<string>(ParmaterCodes.ControlSwitchData);
-        if (index != null)
-        {
-            SentDataToState(index, ParmaterCodes.ControlSwitchData);
             return;
         }
     }

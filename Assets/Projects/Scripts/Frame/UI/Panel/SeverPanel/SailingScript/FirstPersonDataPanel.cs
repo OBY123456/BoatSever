@@ -327,7 +327,7 @@ public class FirstPersonDataPanel : BasePanel
             value = 100;
         }
 
-        WeatherManager.Instance.SetWindIntensity(value / 100f);
+       // WeatherManager.Instance.SetWindIntensity(value / 100f);
     }
 
     protected override void OnDestroy()

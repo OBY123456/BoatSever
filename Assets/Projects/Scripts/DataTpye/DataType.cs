@@ -414,6 +414,39 @@ namespace MTFrame
         public float Bogvalue;
         public float Pitchvalue;
     }
+
+    /*船体数据*/
+    /// <summary>
+    /// 船体位置数据，以初始位置为（0,0）
+    /// </summary>
+    public class BoatPositionData
+    {
+        /// <summary>
+        /// 水平横坐标,范围-4000~4000
+        /// </summary>
+        public float x;
+        /// <summary>
+        /// 水平纵坐标,范围-4000~4000
+        /// </summary>
+        public float z;
+    }
+
+    /// <summary>
+    /// 船体角度数据
+    /// </summary>
+    public class BoatRotateData
+    {
+        //范围0~360
+        public float value;
+    }
+
+    /// <summary>
+    /// 船体航行速度,最大速度为20节
+    /// </summary>
+    public class BoatSpeedData
+    {
+        public float value;
+    }
 }
 
 
